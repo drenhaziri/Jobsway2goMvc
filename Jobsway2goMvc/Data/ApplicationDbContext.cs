@@ -3,15 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using static System.Collections.Specialized.BitVector32;
 using System.Data;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Jobsway2goMvc.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
-        //public DbSet<Post> Posts { get; set; }
+        public DbSet<Post> Posts { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Job> Jobs { get; set; }
@@ -20,9 +21,5 @@ namespace Jobsway2goMvc.Data
         //public DbSet<Notification> Notifications { get; set; }
         //public DbSet<Section> Sections { get; set; }
         //public DbSet<Role> Roles { get; set; }
-        //public override Task<int> SaveChangesAsync()
-        //{
-        //    return await base.SaveChangesAsync();
-        //}
     }
 }
