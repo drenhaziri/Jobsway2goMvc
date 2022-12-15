@@ -56,6 +56,7 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment")] Job job)
         {
+            ModelState.Remove("Category");
             if (ModelState.IsValid)
             {
                 _context.Add(job);
