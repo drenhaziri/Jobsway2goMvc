@@ -1,0 +1,6 @@
+﻿namespace Jobsway2goMvc.Models
+{
+    public class Job
+    {
+    }
+}
