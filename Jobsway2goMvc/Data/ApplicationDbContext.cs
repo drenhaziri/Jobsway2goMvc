@@ -19,9 +19,9 @@ namespace Jobsway2goMvc.Data
         //public DbSet<Notification> Notifications { get; set; }
         //public DbSet<Section> Sections { get; set; }
         //public DbSet<Role> Roles { get; set; }
-        //public Task<int> SaveChangesAsync()
+        //public override Task<int> SaveChangesAsync()
         //{
-        //    return base.SaveChangesAsync();
+        //    return await base.SaveChangesAsync();
         //}
     }
 }
