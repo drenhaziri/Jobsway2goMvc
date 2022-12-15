@@ -8,7 +8,7 @@ namespace Jobsway2goMvc.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime CreatedAtUTC { get; set; }
-        public ApplicationUser CreatedByUserId { get; set; }
+        public ApplicationUser CreatedBy { get; set; }
         public PostType Type { get; set; }
     }
 }
