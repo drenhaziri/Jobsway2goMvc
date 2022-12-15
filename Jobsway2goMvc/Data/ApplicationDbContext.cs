@@ -12,7 +12,7 @@ namespace Jobsway2goMvc.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
-        //public DbSet<Post> Posts { get; set; }
+        public DbSet<Post> Posts { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Job> Jobs { get; set; }
@@ -21,9 +21,5 @@ namespace Jobsway2goMvc.Data
         //public DbSet<Notification> Notifications { get; set; }
         //public DbSet<Section> Sections { get; set; }
         //public DbSet<Role> Roles { get; set; }
-        //public override Task<int> SaveChangesAsync()
-        //{
-        //    return await base.SaveChangesAsync();
-        //}
     }
 }

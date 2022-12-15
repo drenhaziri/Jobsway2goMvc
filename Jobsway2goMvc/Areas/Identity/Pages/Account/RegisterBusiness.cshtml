@@ -1,7 +1,8 @@
 ﻿@page
-@model RegisterModel
+@model Jobsway2goMvc.Areas.Identity.Pages.Account.RegisterBusinessModel
+
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Register as a Business";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -23,6 +24,16 @@
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
             <div class="form-floating">
+                <input asp-for="Input.CompanyName" class="form-control" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.CompanyName"></label>
+                <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="Input.CompanyArea" class="form-control" autocomplete="username" aria-required="true" />
+                <label asp-for="Input.CompanyArea"></label>
+                <span asp-validation-for="Input.CompanyArea" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
                 <label asp-for="Input.Email"></label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
@@ -39,7 +50,6 @@
             </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
-            <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/RegisterBusiness">Register as a Business, Click </a>
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
