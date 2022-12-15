@@ -13,5 +13,7 @@
         public DateTime DateTo { get; set; }
         public decimal Payment { get; set; }
         //public List<User> Applicants { get; set; }
+        public JobCategory Category { get; set; }
+
     }
 }
