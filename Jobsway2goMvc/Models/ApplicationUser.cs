@@ -9,7 +9,6 @@ namespace Jobsway2goMvc.Models
         public string? CompanyName { get; set; }
         public string? CompanyArea { get; set; }
         public string? Address { get; set; }
-        public int? PhoneNumber { get; set; }
         public string? ImagePath { get; set; }
         public string? Certificates { get; set; }
 
