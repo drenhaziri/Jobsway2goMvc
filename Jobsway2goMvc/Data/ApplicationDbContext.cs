@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using static System.Collections.Specialized.BitVector32;
 using System.Data;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Jobsway2goMvc.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
         //public DbSet<Post> Posts { get; set; }
