@@ -14,12 +14,12 @@ namespace Jobsway2goMvc.Controllers
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly HttpContext _httpContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PostController(ApplicationDbContext context, HttpContext httpContext)
+        public PostController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-            _httpContext = httpContext;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Post
@@ -62,15 +62,14 @@ namespace Jobsway2goMvc.Controllers
         }
 
         // POST: Post/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
         {
+            ModelState.Remove("CreatedBy");
             if (ModelState.IsValid)
             {
-                var user = _httpContext.User;
+                var user = _httpContextAccessor.HttpContext.User;
                 var applicationUser = GetApplicationUser(user);
                 post.CreatedBy = applicationUser;
                 _context.Add(post);
@@ -107,7 +106,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-
+            ModelState.Remove("CreatedBy");
             if (ModelState.IsValid)
             {
                 try
