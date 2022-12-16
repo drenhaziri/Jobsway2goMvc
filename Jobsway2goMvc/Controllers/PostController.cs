@@ -22,13 +22,11 @@ namespace Jobsway2goMvc.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        // GET: Post
         public async Task<IActionResult> Index()
         {
             return View(await _context.Posts.ToListAsync());
         }
 
-        // GET: Post/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Posts == null)
@@ -55,13 +53,11 @@ namespace Jobsway2goMvc.Controllers
             return user;
         }
 
-        // GET: Post/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Post/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
@@ -69,9 +65,8 @@ namespace Jobsway2goMvc.Controllers
             ModelState.Remove("CreatedBy");
             if (ModelState.IsValid)
             {
-                var user = _httpContextAccessor.HttpContext.User;
-                var applicationUser = GetApplicationUser(user);
-                post.CreatedBy = applicationUser;
+                var userAccessor = _httpContextAccessor.HttpContext.User;
+                post.CreatedBy = GetApplicationUser(userAccessor);
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -79,7 +74,6 @@ namespace Jobsway2goMvc.Controllers
             return View(post);
         }
 
-        // GET: Post/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Posts == null)
@@ -95,9 +89,6 @@ namespace Jobsway2goMvc.Controllers
             return View(post);
         }
 
-        // POST: Post/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
@@ -111,6 +102,8 @@ namespace Jobsway2goMvc.Controllers
             {
                 try
                 {
+                    var userAccessor = _httpContextAccessor.HttpContext.User;
+                    post.CreatedBy = GetApplicationUser(userAccessor);
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
@@ -130,7 +123,6 @@ namespace Jobsway2goMvc.Controllers
             return View(post);
         }
 
-        // GET: Post/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Posts == null)
@@ -148,7 +140,6 @@ namespace Jobsway2goMvc.Controllers
             return View(post);
         }
 
-        // POST: Post/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
