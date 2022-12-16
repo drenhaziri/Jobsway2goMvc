@@ -74,8 +74,7 @@ namespace Jobsway2goMvc.Controllers
             if (ModelState.IsValid)
             {
                 var user = _httpContextAccessor.HttpContext.User;
-                var applicationUser = GetUser(user);
-                collection.User = applicationUser;
+                collection.User = GetUser(user);
                 _context.Add(collection);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -111,10 +110,13 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
 
+            ModelState.Remove("User");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var user = _httpContextAccessor.HttpContext.User;
+                    collection.User = GetUser(user);
                     _context.Update(collection);
                     await _context.SaveChangesAsync();
                 }
