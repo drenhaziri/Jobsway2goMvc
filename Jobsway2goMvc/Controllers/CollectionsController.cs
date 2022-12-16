@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.Extensions.Hosting;
 
 namespace Jobsway2goMvc.Controllers
 {
     public class CollectionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CollectionsController(ApplicationDbContext context)
+        public CollectionsController(ApplicationDbContext context,IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Collections
@@ -49,6 +54,15 @@ namespace Jobsway2goMvc.Controllers
             return View();
         }
 
+        private ApplicationUser GetUser(ClaimsPrincipal principal)
+        {
+            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            return user;
+        }
+
         // POST: Collections/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -56,8 +70,12 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Collection collection)
         {
+            ModelState.Remove("User");
             if (ModelState.IsValid)
             {
+                var user = _httpContextAccessor.HttpContext.User;
+                var applicationUser = GetUser(user);
+                collection.User = applicationUser;
                 _context.Add(collection);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
