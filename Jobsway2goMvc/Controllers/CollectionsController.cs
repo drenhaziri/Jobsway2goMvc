@@ -10,6 +10,8 @@ using Jobsway2goMvc.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.Extensions.Hosting;
+using Jobsway2goMvc.Validations.Collections;
+using FluentValidation.Results;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -28,6 +30,19 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Index()
         {
               return View(await _context.Collections.ToListAsync());
+        }
+
+        [HttpPost]
+        public ActionResult Index(Collection collection)
+        {
+            CollectionValidator validator = new CollectionValidator();
+            ValidationResult result = validator.Validate(collection);
+
+            if (!result.IsValid) {
+                foreach (ValidationFailure failure in result.Errors) {
+                    ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                }
+            }
         }
 
         // GET: Collections/Details/5
