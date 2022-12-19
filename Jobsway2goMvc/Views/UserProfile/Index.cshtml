@@ -1,0 +1,69 @@
+﻿@model Jobsway2goMvc.Models.ViewModel.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Profile"] - Jobsway2goMvc</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Jobsway2goMvc.styles.css" asp-append-version="true" />
+</head>
+<body>       
+        <div class="container">
+            <div class="profile-main">
+                <div class="profile-container">
+                    <img src="Images/cover-pic.png" width="100%"/>
+                    <div class="profile-container-inner">
+                        <img src="Images/user.jpg" class="profile-pic"/>
+                        <h1> @Model.FirstName @Model.LastName</h1>
+                        <b>@Model.Email && Profession Web Developer etc</b>
+                        <p>@Model.CompanyName</p>
+                        <p>@Model.CompanyArea</p>
+                        <div class="profile-btn">
+                        <a class="btn btn-primary">Connect</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-description">
+                <h2>About</h2>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the i
+                ndustry's standard dummy text ever since the 1500s, when an unknown printer took a galley 
+                of type and scrambled it to make a type specimen book. It has survived not only five centu
+                ries, but also the leap into electronic</p>
+            </div>
+        <div class="profile-description">
+            <h2>Education</h2>
+            <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the i
+                ndustry's standard dummy text ever since the 1500s, when an unknown printer took a galley
+                of type and scrambled it to make a type specimen book. It has survived not only five centu
+                ries, but also the leap into electronic
+            </p>
+        </div>
+        <div class="profile-description">
+            <h2>Experience</h2>
+            <p>
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the i
+                ndustry's standard dummy text ever since the 1500s, when an unknown printer took a galley
+                of type and scrambled it to make a type specimen book. It has survived not only five centu
+                ries, but also the leap into electronic
+            </p>
+        </div>
+
+        <div class="profile-sidebar">
+        </div>
+        </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>
