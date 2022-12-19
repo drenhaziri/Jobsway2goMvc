@@ -1,0 +1,30 @@
+﻿@model RoleDetailsViewModel
+    
+
+@{
+    ViewBag.Title = "Edit Role";
+}
+
+<h1>Details</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h3> Users in this role: @Model.RoleName</h3>
+        </div>
+        <div class="card-body" >
+            @if (Model.Users.Any())
+            {
+                foreach (var user in Model.Users)
+                {
+                    <h5 class="card-title">@user</h5>
+                    <br />
+                }
+            }
+            else
+            {
+                <h5 class="card-title">No users at the moment</h5>
+            }
+        </div>
+    </div>
+
+<a class="btn btn-primary" asp-controller="Role" asp-action="Index">Role Manager</a>
