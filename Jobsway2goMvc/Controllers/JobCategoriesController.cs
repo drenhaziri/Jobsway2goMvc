@@ -115,7 +115,6 @@ namespace Jobsway2goMvc.Controllers
             }
             return View(jobCategory);
         }
-
         // GET: JobCategories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
