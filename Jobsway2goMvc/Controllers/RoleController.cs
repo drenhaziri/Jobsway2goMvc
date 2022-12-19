@@ -1,7 +1,9 @@
-﻿using Jobsway2goMvc.Models;
+﻿using Jobsway2goMvc.Data;
+using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Models.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Data;
@@ -12,7 +14,7 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        public RoleController (RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -52,7 +54,7 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Details(string id)
         {
             var role = await _roleManager.Roles
-            .FirstOrDefaultAsync(r => r.Id == id);
+                .FirstOrDefaultAsync(r => r.Id == id);
 
             if (role == null)
             {
@@ -82,7 +84,7 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string roleName)
         {
-            if(roleName != null)
+            if (roleName != null)
             {
                 await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
             }
@@ -108,10 +110,10 @@ namespace Jobsway2goMvc.Controllers
             return View(role);
         }
 
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Edit(IdentityRole model)
-            {
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(IdentityRole model)
+        {
 
             var role = await _roleManager.FindByIdAsync(model.Id);
 
@@ -139,8 +141,50 @@ namespace Jobsway2goMvc.Controllers
 
                 return View(model);
             }
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null || _roleManager.Roles == null)
+            {
+                return NotFound();
             }
 
+            var role = await _roleManager.Roles
+                .FirstOrDefaultAsync(r => r.Id == id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            return View(role);
         }
- }
+
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            if (_roleManager.Roles == null)
+            {
+                return Problem("Entity set 'RoleManager'  is null.");
+            }
+
+            var role = await _roleManager.Roles
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            var user = await _userManager.GetUsersInRoleAsync(role.Name);
+
+            if (role != null && !user.Any())
+            {
+                await _roleManager.DeleteAsync(role);
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.Delete = "Cannot delete role beacuse there are users assigned to it";
+            return View();
+        }
+
+    }
+}
 
