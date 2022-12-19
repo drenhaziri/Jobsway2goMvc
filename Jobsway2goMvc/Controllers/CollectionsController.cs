@@ -32,19 +32,6 @@ namespace Jobsway2goMvc.Controllers
               return View(await _context.Collections.ToListAsync());
         }
 
-        [HttpPost]
-        public ActionResult Index(Collection collection)
-        {
-            CollectionValidator validator = new CollectionValidator();
-            ValidationResult result = validator.Validate(collection);
-
-            if (!result.IsValid) {
-                foreach (ValidationFailure failure in result.Errors) {
-                    ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
-                }
-            }
-        }
-
         // GET: Collections/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -89,10 +76,24 @@ namespace Jobsway2goMvc.Controllers
             if (ModelState.IsValid)
             {
                 var user = _httpContextAccessor.HttpContext.User;
-                collection.User = GetUser(user);
-                _context.Add(collection);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                CollectionValidator validator = new CollectionValidator();
+                ValidationResult result = validator.Validate(collection);
+
+                if (!result.IsValid)
+                {
+                    foreach (ValidationFailure failure in result.Errors)
+                    {
+                        ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                    }
+                }
+                else
+                {
+                    collection.User = GetUser(user);
+                    _context.Add(collection);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(collection);
         }
@@ -131,9 +132,24 @@ namespace Jobsway2goMvc.Controllers
                 try
                 {
                     var user = _httpContextAccessor.HttpContext.User;
-                    collection.User = GetUser(user);
-                    _context.Update(collection);
-                    await _context.SaveChangesAsync();
+
+                    CollectionValidator validator = new CollectionValidator();
+                    ValidationResult result = validator.Validate(collection);
+
+                    if (!result.IsValid)
+                    {
+                        foreach (ValidationFailure failure in result.Errors)
+                        {
+                            ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                        }
+                    }
+                    else
+                    {
+
+                        collection.User = GetUser(user);
+                        _context.Update(collection);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
