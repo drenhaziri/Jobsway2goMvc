@@ -394,7 +394,7 @@ namespace Jobsway2goMvc.Migrations
             modelBuilder.Entity("Jobsway2goMvc.Models.Job", b =>
                 {
                     b.HasOne("Jobsway2goMvc.Models.JobCategory", "Category")
-                        .WithMany()
+                        .WithMany("Jobs")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -460,6 +460,11 @@ namespace Jobsway2goMvc.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Jobsway2goMvc.Models.JobCategory", b =>
+                {
+                    b.Navigation("Jobs");
                 });
 #pragma warning restore 612, 618
         }

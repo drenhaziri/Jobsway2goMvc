@@ -1,4 +1,8 @@
-﻿namespace Jobsway2goMvc.Models
+﻿using MessagePack;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Jobsway2goMvc.Models
 {
     public class Job
     {
@@ -13,6 +17,8 @@
         public DateTime DateTo { get; set; }
         public decimal Payment { get; set; }
         //public List<User> Applicants { get; set; }
+        public int CategoryID { get; set; }
+
         public JobCategory Category { get; set; }
 
     }

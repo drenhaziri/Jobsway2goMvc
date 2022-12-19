@@ -39,6 +39,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Payment)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category.Name)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -71,6 +74,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Payment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
