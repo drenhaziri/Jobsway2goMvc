@@ -17,8 +17,6 @@ namespace Jobsway2goMvc.Models
         public DateTime DateTo { get; set; }
         public decimal Payment { get; set; }
         //public List<User> Applicants { get; set; }
-        public int CategoryID { get; set; }
-
         public JobCategory Category { get; set; }
 
     }

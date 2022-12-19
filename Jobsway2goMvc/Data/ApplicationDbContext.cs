@@ -20,6 +20,5 @@ namespace Jobsway2goMvc.Data
         //public DbSet<Event> Events { get; set; }
         //public DbSet<Notification> Notifications { get; set; }
         //public DbSet<Section> Sections { get; set; }
-        //public DbSet<Role> Roles { get; set; }
     }
 }

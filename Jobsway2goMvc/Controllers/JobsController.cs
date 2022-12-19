@@ -20,10 +20,8 @@ namespace Jobsway2goMvc.Controllers
         }
 
         // GET: Jobs
-        public async Task<IActionResult> Index(string search)
-        {
-            var applicationDBContext = from m in _context.Jobs.Include(p => p.Category)
-                                       select m;
+        public async Task<IActionResult> Index()
+        {           
             return View(await _context.Jobs.ToListAsync());
         }
 
@@ -48,7 +46,7 @@ namespace Jobsway2goMvc.Controllers
         // GET: Jobs/Create
         public IActionResult Create()
         {
-            ViewData["Category"] = new SelectList(_context.JobCategories, "Id", "Name", 1);
+            ViewBag.Category = new SelectList(_context.JobCategories, "Id", "Name", 1);
             return View();
         }
 
@@ -57,7 +55,7 @@ namespace Jobsway2goMvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment,CategoryID")] Job job)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment")] Job job)
         {
             ModelState.Remove("Category");
             if (ModelState.IsValid)
