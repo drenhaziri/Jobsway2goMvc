@@ -142,7 +142,12 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Collections");
                 });
@@ -440,10 +445,19 @@ namespace Jobsway2goMvc.Migrations
                         .HasForeignKey("EventId");
                 });
 
+            modelBuilder.Entity("Jobsway2goMvc.Models.Collection", b =>
+                {
+                    b.HasOne("Jobsway2goMvc.Models.ApplicationUser", "User")
+                        .WithMany("Collections")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.Job", b =>
                 {
                     b.HasOne("Jobsway2goMvc.Models.JobCategory", "Category")
-                        .WithMany()
+                        .WithMany("Jobs")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -511,9 +525,19 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Collections");
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.Event", b =>
                 {
                     b.Navigation("Speakers");
+                });
+
+            modelBuilder.Entity("Jobsway2goMvc.Models.JobCategory", b =>
+                {
+                    b.Navigation("Jobs");
                 });
 #pragma warning restore 612, 618
         }
