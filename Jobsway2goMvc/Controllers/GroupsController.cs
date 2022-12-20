@@ -51,6 +51,7 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Group @group)
         {
+            ModelState.Remove("Posts");
             if (ModelState.IsValid)
             {
                 _context.Add(@group);
