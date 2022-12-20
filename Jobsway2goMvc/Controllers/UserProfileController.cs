@@ -27,9 +27,9 @@ namespace Jobsway2goMvc.Controllers
             else
             {
                 ApplicationUser user = _userManager.FindByIdAsync(userid).Result;
-                var mapper = _mapper.Map<UserProfileViewModel>(user);
+                var profile = _mapper.Map<UserProfileViewModel>(user);
 
-                return View(mapper);
+                return View(profile);
             }
         }
 
