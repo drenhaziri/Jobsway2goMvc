@@ -1,5 +1,6 @@
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
 
+
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

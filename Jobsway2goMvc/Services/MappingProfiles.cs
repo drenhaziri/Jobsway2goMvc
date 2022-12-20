@@ -8,7 +8,7 @@ namespace Jobsway2goMvc.Services
     {
         public MappingProfiles()
         {
-                CreateMap<ApplicationUser, UserProfileViewModel>();
+            CreateMap<ApplicationUser, UserProfileViewModel>();
         }
     }
 }

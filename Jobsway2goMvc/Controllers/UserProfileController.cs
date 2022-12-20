@@ -1,4 +1,5 @@
-﻿using Jobsway2goMvc.Models;
+﻿using AutoMapper;
+using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,10 +11,11 @@ namespace Jobsway2goMvc.Controllers
     public class UserProfileController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public UserProfileController(UserManager<ApplicationUser> userManager)
+        private readonly IMapper _mapper;
+        public UserProfileController(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
+            _mapper = mapper;
         }
         public IActionResult Index()
         {
@@ -25,16 +27,9 @@ namespace Jobsway2goMvc.Controllers
             else
             {
                 ApplicationUser user = _userManager.FindByIdAsync(userid).Result;
-                UserProfileViewModel userViewModel = new UserProfileViewModel
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email =user.Email,
-                    CompanyName = user.CompanyName,
-                    CompanyArea = user.CompanyArea,
-                    ImagePath = user.ImagePath,
-                };
-                return View(userViewModel);
+                var mapper = _mapper.Map<UserProfileViewModel>(user);
+
+                return View(mapper);
             }
         }
 
