@@ -11,8 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 
-
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("JobPortalConString"));
@@ -24,7 +22,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 
-builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+builder.Services.AddAutoMapper(typeof(UserProfileMapper).Assembly);
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
@@ -40,7 +38,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthentication();;
+app.UseAuthentication(); ;
 
 app.UseAuthorization();
 app.MapRazorPages();

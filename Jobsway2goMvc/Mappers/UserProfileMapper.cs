@@ -4,9 +4,9 @@ using Jobsway2goMvc.Models.ViewModel;
 
 namespace Jobsway2goMvc.Services
 {
-    public class MappingProfiles :Profile
+    public class UserProfileMapper :Profile
     {
-        public MappingProfiles()
+        public UserProfileMapper()
         {
             CreateMap<ApplicationUser, UserProfileViewModel>();
         }

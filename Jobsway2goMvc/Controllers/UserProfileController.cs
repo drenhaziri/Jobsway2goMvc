@@ -20,10 +20,10 @@ namespace Jobsway2goMvc.Controllers
         public IActionResult Index()
         {
             var userid = _userManager.GetUserId(HttpContext.User);
-            if(userid == null)
+            if (userid == null)
             {
-                return RedirectToAction("Index","Home");
-            } 
+                return RedirectToAction("Index", "Home");
+            }
             else
             {
                 ApplicationUser user = _userManager.FindByIdAsync(userid).Result;
