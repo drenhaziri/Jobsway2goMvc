@@ -27,7 +27,7 @@ namespace Jobsway2goMvc.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ApplicationUser>().HasKey(u => u.Id);
+            //modelBuilder.Entity<ApplicationUser>().HasKey(u => u.Id);
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.Group)
                 .WithMany(g => g.Posts)
