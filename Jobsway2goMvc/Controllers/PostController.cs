@@ -22,7 +22,7 @@ namespace Jobsway2goMvc.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? groupId)
         {
             var userAccessor = _httpContextAccessor.HttpContext.User;
             var user = GetApplicationUser(userAccessor);
@@ -33,10 +33,14 @@ namespace Jobsway2goMvc.Controllers
                 .ToList();
 
             var posts = _context.Posts
-                .Where(p => userGroups.Contains(p.Group))
-                .ToList();
+                .Where(p => userGroups.Contains(p.Group));
 
-            return View(posts);
+            if (groupId.HasValue)
+            {
+                posts = posts.Where(p => p.GroupId == groupId);
+            }
+
+            return View(await posts.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -78,7 +82,7 @@ namespace Jobsway2goMvc.Controllers
             return user;
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? groupId)
         {
             var userAccessor = _httpContextAccessor.HttpContext.User;
             var user = GetApplicationUser(userAccessor);
@@ -93,10 +97,19 @@ namespace Jobsway2goMvc.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
+            if (groupId.HasValue)
+            {
+                var group = _context.Groups.FirstOrDefault(g => g.Id == groupId);
+                if (group == null || !userGroups.Contains(group))
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
+
+            ViewBag.GroupId = groupId;
             ViewBag.Groups = new SelectList(userGroups, "Id", "Name");
             return View();
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
