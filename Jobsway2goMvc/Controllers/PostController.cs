@@ -24,21 +24,46 @@ namespace Jobsway2goMvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Posts.ToListAsync());
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+
+            var userGroups = _context.GroupMemberships
+                .Where(gm => gm.User == user)
+                .Select(gm => gm.Group)
+                .ToList();
+
+            var posts = _context.Posts
+                .Where(p => userGroups.Contains(p.Group))
+                .ToList();
+
+            return View(posts);
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Posts == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var post = await _context.Posts
+                .Include(p => p.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (post == null)
             {
                 return NotFound();
+            }
+
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+
+            var isMember = _context.GroupMemberships
+                .Any(gm => gm.User == user && gm.Group == post.Group);
+
+            if (!isMember)
+            {
+                return RedirectToAction("Error", "Home");
             }
 
             return View(post);
@@ -53,26 +78,50 @@ namespace Jobsway2goMvc.Controllers
             return user;
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+
+            var userGroups = _context.GroupMemberships
+                .Where(gm => gm.User == user)
+                .Select(gm => gm.Group)
+                .ToList();
+
+            if (!userGroups.Any())
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            ViewBag.Groups = new SelectList(userGroups, "Id", "Name");
             return View();
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
+        public async Task<IActionResult> Create(int groupId, [Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
         {
+            var group = _context.Groups.FirstOrDefault(g => g.Id == groupId);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
             ModelState.Remove("CreatedBy");
             if (ModelState.IsValid)
             {
                 var userAccessor = _httpContextAccessor.HttpContext.User;
                 post.CreatedBy = GetApplicationUser(userAccessor);
+                post.Group = group;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Groups = new SelectList(_context.Groups, "Id", "Name");
             return View(post);
         }
+
 
         public async Task<IActionResult> Edit(int? id)
         {

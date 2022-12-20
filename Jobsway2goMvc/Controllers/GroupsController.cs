@@ -20,13 +20,11 @@ namespace Jobsway2goMvc.Controllers
             _context = context;
         }
 
-        // GET: Groups
         public async Task<IActionResult> Index()
         {
               return View(await _context.Groups.ToListAsync());
         }
 
-        // GET: Groups/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Groups == null)
@@ -41,18 +39,14 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
 
-            return View(@group);
+            return RedirectToAction("Index", "Posts", new { groupId = id });
         }
-
-        // GET: Groups/Create
+        
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Groups/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Group @group)
@@ -66,7 +60,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
-        // GET: Groups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Groups == null)
@@ -82,9 +75,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
-        // POST: Groups/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Group @group)
@@ -117,7 +107,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
-        // GET: Groups/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Groups == null)
@@ -135,7 +124,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
-        // POST: Groups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
