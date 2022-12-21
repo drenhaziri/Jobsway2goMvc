@@ -122,6 +122,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             ModelState.Remove("CreatedBy");
+            ModelState.Remove("Group");
             if (ModelState.IsValid)
             {
                 var userAccessor = _httpContextAccessor.HttpContext.User;
@@ -153,13 +154,18 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
+        public async Task<IActionResult> Edit([FromRoute] int groupId, int id, [Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
         {
+            var group = _context.Groups.FirstOrDefault(g => g.Id == groupId);
+            post.Group = group;
+
             if (id != post.Id)
             {
                 return NotFound();
             }
+
             ModelState.Remove("CreatedBy");
+            ModelState.Remove("Group");
             if (ModelState.IsValid)
             {
                 try
