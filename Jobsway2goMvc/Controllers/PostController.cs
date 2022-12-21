@@ -137,33 +137,26 @@ namespace Jobsway2goMvc.Controllers
         }
 
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null || _context.Posts == null)
-            {
-                return NotFound();
-            }
-
-            var post = await _context.Posts.FindAsync(id);
+            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
             if (post == null)
             {
                 return NotFound();
             }
+
+            ViewBag.GroupId = post.GroupId;
             return View(post);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([FromRoute] int groupId, int id, [Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupId,Title,Description,CreatedAtUTC,Type")] Post post)
         {
-            var group = _context.Groups.FirstOrDefault(g => g.Id == groupId);
-            post.Group = group;
-
             if (id != post.Id)
             {
                 return NotFound();
             }
-
             ModelState.Remove("CreatedBy");
             ModelState.Remove("Group");
             if (ModelState.IsValid)
@@ -188,6 +181,7 @@ namespace Jobsway2goMvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.GroupId = post.GroupId;
             return View(post);
         }
 
