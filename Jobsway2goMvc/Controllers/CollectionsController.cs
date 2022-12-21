@@ -73,8 +73,6 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name")] Collection collection)
         {
             ModelState.Remove("User");
-            if (ModelState.IsValid)
-            {
                 var user = _httpContextAccessor.HttpContext.User;
 
                 CollectionValidator validator = new CollectionValidator();
@@ -94,7 +92,6 @@ namespace Jobsway2goMvc.Controllers
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-            }
             return View(collection);
         }
 
