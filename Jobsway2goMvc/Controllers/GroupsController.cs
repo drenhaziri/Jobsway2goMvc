@@ -45,6 +45,11 @@ namespace Jobsway2goMvc.Controllers
             return View(group);
         }
 
+        public IActionResult DetailsPost(int id)
+        {
+            return RedirectToAction("Details", "Post", new { id = id });
+        }
+
         private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
         {
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -130,6 +135,11 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
+        public IActionResult EditPost(int id)
+        {
+            return RedirectToAction("Edit", "Post", new { id = id });
+        }
+
         public async Task<IActionResult> Delete([FromQuery] int groupId)
         {
             var group = _context.Groups.FirstOrDefault(g => g.Id == groupId);
@@ -160,6 +170,10 @@ namespace Jobsway2goMvc.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+        public IActionResult DeletePost(int id)
+        {
+            return RedirectToAction("Delete", "Post", new { id = id });
         }
 
         private bool GroupExists(int id)
