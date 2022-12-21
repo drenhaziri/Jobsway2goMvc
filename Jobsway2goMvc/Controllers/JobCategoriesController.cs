@@ -156,5 +156,30 @@ namespace Jobsway2goMvc.Controllers
         {
           return _context.JobCategories.Any(e => e.Id == id);
         }
+
+        public IActionResult SaveToCollection()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveToCollection(Job job, Collection collection)
+        {
+
+            var c = _context.Collections.FirstOrDefault(g => g.Id == collection.Id);
+            if (c != null && job != null)
+            {
+                if (!c.Job.Contains(job))
+                {
+                    c.Job.Add(job);
+                    _context.Collections.Update(c);
+                    await _context.SaveChangesAsync();
+                    return View(collection);
+
+                }
+            }
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
