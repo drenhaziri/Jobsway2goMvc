@@ -155,6 +155,11 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed([FromQuery] int groupId)
         {
+            if (_context.Groups == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Groups'  is null.");
+            }
+
             var group = _context.Groups.FirstOrDefault(g => g.Id == groupId);
             if (group == null)
             {

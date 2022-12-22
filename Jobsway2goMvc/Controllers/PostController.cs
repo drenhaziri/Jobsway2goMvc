@@ -136,36 +136,58 @@ namespace Jobsway2goMvc.Controllers
             return View(post);
         }
 
-
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var post = await _context.Posts.FindAsync(id);
             if (post == null)
             {
                 return NotFound();
             }
 
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            if (post.CreatedBy != user)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
             ViewBag.GroupId = post.GroupId;
+            ViewBag.Groups = new SelectList(_context.Groups, "Id", "Name", post.GroupId);
             return View(post);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GroupId,Title,Description,CreatedAtUTC,Type")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
         {
             if (id != post.Id)
             {
                 return NotFound();
             }
+
+            var originalPost = await _context.Posts.FindAsync(id);
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            if (originalPost.CreatedBy != user)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
             ModelState.Remove("CreatedBy");
             ModelState.Remove("Group");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var userAccessor = _httpContextAccessor.HttpContext.User;
-                    post.CreatedBy = GetApplicationUser(userAccessor);
-                    _context.Update(post);
+                    originalPost.Title = post.Title;
+                    originalPost.Description = post.Description;
+                    originalPost.Type = post.Type;
+                    _context.Update(originalPost);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -179,24 +201,34 @@ namespace Jobsway2goMvc.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { groupId = originalPost.GroupId });
             }
-            ViewBag.GroupId = post.GroupId;
+
+            ViewBag.GroupId = originalPost.GroupId;
+            ViewBag.Groups = new SelectList(_context.Groups, "Id", "Name", originalPost.GroupId);
             return View(post);
         }
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Posts == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var post = await _context.Posts
+                .Include(p => p.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
                 return NotFound();
+            }
+
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            if (post.CreatedBy != user)
+            {
+                return RedirectToAction("Error", "Home");
             }
 
             return View(post);
@@ -210,14 +242,11 @@ namespace Jobsway2goMvc.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Posts'  is null.");
             }
-            var post = await _context.Posts.FindAsync(id);
-            if (post != null)
-            {
-                _context.Posts.Remove(post);
-            }
 
+            var post = await _context.Posts.FindAsync(id);
+            _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { groupId = post.GroupId });
         }
 
         private bool PostExists(int id)
