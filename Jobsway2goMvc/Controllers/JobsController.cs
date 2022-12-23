@@ -47,7 +47,7 @@ namespace Jobsway2goMvc.Controllers
         public IActionResult Create()
         {
             var categories = _context.JobCategories.ToList();
-            ViewBag.Categories = new SelectList(_context.JobCategories, "CategoryId", "Name");
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View();
         }
 
