@@ -274,7 +274,8 @@ namespace Jobsway2goMvc.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Type = table.Column<int>(type: "int", nullable: false)
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -284,6 +285,12 @@ namespace Jobsway2goMvc.Migrations
                         column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Posts_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -344,6 +351,11 @@ namespace Jobsway2goMvc.Migrations
                 name: "IX_Posts_CreatedById",
                 table: "Posts",
                 column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_GroupId",
+                table: "Posts",
+                column: "GroupId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -367,9 +379,6 @@ namespace Jobsway2goMvc.Migrations
                 name: "Collections");
 
             migrationBuilder.DropTable(
-                name: "Groups");
-
-            migrationBuilder.DropTable(
                 name: "Jobs");
 
             migrationBuilder.DropTable(
@@ -383,6 +392,9 @@ namespace Jobsway2goMvc.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Groups");
 
             migrationBuilder.DropTable(
                 name: "Events");
