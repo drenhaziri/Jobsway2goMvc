@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Models.ViewModel;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -45,7 +46,7 @@ namespace Jobsway2goMvc.Controllers
 
         // GET: JobCategories/Create
         public IActionResult Create()
-        {
+        {           
             return View();
         }
 

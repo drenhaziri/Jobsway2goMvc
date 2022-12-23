@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Models.ViewModel;
+using Jobsway2goMvc.Migrations;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -22,7 +24,7 @@ namespace Jobsway2goMvc.Controllers
         // GET: Jobs
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Jobs.ToListAsync());
+            return View(await _context.Jobs.ToListAsync());
         }
 
         // GET: Jobs/Details/5
@@ -46,6 +48,7 @@ namespace Jobsway2goMvc.Controllers
         // GET: Jobs/Create
         public IActionResult Create()
         {
+            //ViewBag.Category = new SelectList(_context.JobCategories, "Id", "Name", 1);
             return View();
         }
 
@@ -54,16 +57,41 @@ namespace Jobsway2goMvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment")] Job job)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment,Category")] Job job)
         {
-            ModelState.Remove("Category");
-            if (ModelState.IsValid)
+            string strDDLValue = Request.Form["ddlVendor"].ToString();
+            //ModelState.Remove("Category");
+
+
+            var items = await _context.JobCategories.ToListAsync();
+            var list = new List<SelectListItem>();
+            //var list = _test;
+
+            foreach (var item in items)
             {
-                _context.Add(job);
+                list.Add(new SelectListItem(item.Name, item.Id.ToString(), true));
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
+            //var tes =  _context.Add(job);
+            await _context.SaveChangesAsync();
+            ViewBag.Category = new SelectList(_context.JobCategories, "Id", "Name", job.Category);
+            var obj = new NewJobViewModel()
+            {
+                Categories = list
+            };
+            //ViewBag.Category = new SelectList(_context.JobCategories, "Id", "Name", job.Category);
             return View(job);
+            //string strDDLValue = Request.Form["ddlVendor"].ToString();
+            //ModelState.Remove("Category");
+            //if (ModelState.IsValid)
+            //{
+            //    _context.Add(job);
+            //    await _context.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
+            //ViewBag.Category = new SelectList(_context.JobCategories, "Id", "Name", job.Category);
+            //return View(job);
         }
 
         // GET: Jobs/Edit/5
@@ -79,6 +107,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
+            ViewData["Category"] = new SelectList(_context.JobCategories, "Id", "Name", job.Category);
             return View(job);
         }
 
@@ -114,6 +143,7 @@ namespace Jobsway2goMvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["Category"] = new SelectList(_context.JobCategories, "Id", "Name", job.Category);
             return View(job);
         }
 
@@ -149,14 +179,14 @@ namespace Jobsway2goMvc.Controllers
             {
                 _context.Jobs.Remove(job);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool JobExists(int id)
         {
-          return _context.Jobs.Any(e => e.Id == id);
+            return _context.Jobs.Any(e => e.Id == id);
         }
     }
 }
