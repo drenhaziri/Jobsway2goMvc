@@ -10,86 +10,86 @@ using Jobsway2goMvc.Models;
 
 namespace Jobsway2goMvc.Controllers
 {
-    public class JobCategoriesController : Controller
+    public class JobsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public JobCategoriesController(ApplicationDbContext context)
+        public JobsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: JobCategories
+        // GET: Jobs
         public async Task<IActionResult> Index()
         {
-              return View(await _context.JobCategories.ToListAsync());
+              return View(await _context.Jobs.ToListAsync());
         }
 
-        // GET: JobCategories/Details/5
+        // GET: Jobs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.JobCategories == null)
+            if (id == null || _context.Jobs == null)
             {
                 return NotFound();
             }
 
-            var jobCategory = await _context.JobCategories
+            var job = await _context.Jobs
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (jobCategory == null)
+            if (job == null)
             {
                 return NotFound();
             }
 
-            return View(jobCategory);
+            return View(job);
         }
 
-        // GET: JobCategories/Create
+        // GET: Jobs/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: JobCategories/Create
+        // POST: Jobs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] JobCategory jobCategory)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment")] Job job)
         {
-            ModelState.Remove("Jobs");
+            ModelState.Remove("Category");
             if (ModelState.IsValid)
             {
-                _context.Add(jobCategory);
+                _context.Add(job);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(jobCategory);
+            return View(job);
         }
 
-        // GET: JobCategories/Edit/5
+        // GET: Jobs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.JobCategories == null)
+            if (id == null || _context.Jobs == null)
             {
                 return NotFound();
             }
 
-            var jobCategory = await _context.JobCategories.FindAsync(id);
-            if (jobCategory == null)
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
             {
                 return NotFound();
             }
-            return View(jobCategory);
+            return View(job);
         }
 
-        // POST: JobCategories/Edit/5
+        // POST: Jobs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] JobCategory jobCategory)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment")] Job job)
         {
-            if (id != jobCategory.Id)
+            if (id != job.Id)
             {
                 return NotFound();
             }
@@ -98,12 +98,12 @@ namespace Jobsway2goMvc.Controllers
             {
                 try
                 {
-                    _context.Update(jobCategory);
+                    _context.Update(job);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!JobCategoryExists(jobCategory.Id))
+                    if (!JobExists(job.Id))
                     {
                         return NotFound();
                     }
@@ -114,48 +114,49 @@ namespace Jobsway2goMvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(jobCategory);
+            return View(job);
         }
-        // GET: JobCategories/Delete/5
+
+        // GET: Jobs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.JobCategories == null)
+            if (id == null || _context.Jobs == null)
             {
                 return NotFound();
             }
 
-            var jobCategory = await _context.JobCategories
+            var job = await _context.Jobs
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (jobCategory == null)
+            if (job == null)
             {
                 return NotFound();
             }
 
-            return View(jobCategory);
+            return View(job);
         }
 
-        // POST: JobCategories/Delete/5
+        // POST: Jobs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.JobCategories == null)
+            if (_context.Jobs == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.JobCategories'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Jobs'  is null.");
             }
-            var jobCategory = await _context.JobCategories.FindAsync(id);
-            if (jobCategory != null)
+            var job = await _context.Jobs.FindAsync(id);
+            if (job != null)
             {
-                _context.JobCategories.Remove(jobCategory);
+                _context.Jobs.Remove(job);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool JobCategoryExists(int id)
+        private bool JobExists(int id)
         {
-          return _context.JobCategories.Any(e => e.Id == id);
+          return _context.Jobs.Any(e => e.Id == id);
         }
     }
 }
