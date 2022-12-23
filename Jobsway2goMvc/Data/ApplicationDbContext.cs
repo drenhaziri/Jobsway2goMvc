@@ -5,12 +5,14 @@ using static System.Collections.Specialized.BitVector32;
 using System.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Jobsway2goMvc.Models.ViewModel;
+using System.Diagnostics;
 
 namespace Jobsway2goMvc.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
         }
         public DbSet<Post> Posts { get; set; }
@@ -26,15 +28,12 @@ namespace Jobsway2goMvc.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Job>()
-                .HasOne(p => p.Category)
-                .WithMany(g => g.Jobs)
-                .HasForeignKey(p => p.CategoryId);
-            modelBuilder.Entity<Post>()
-                .HasOne(p => p.Group)
-                .WithMany(g => g.Posts)
-                .HasForeignKey(p => p.GroupId);
+            // configures one-to-many relationship
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Job>()
+                .HasOne<Collection>(s => s.Collection)
+                .WithMany(g => g.Jobs)
+                .HasForeignKey(s => s.CollectionId);
         }
     }
 }

@@ -29,6 +29,11 @@ namespace Jobsway2goMvc.Controllers
         {
               return View(await _context.Collections.ToListAsync());
         }
+        //Get List Jobs
+        public async Task<IActionResult> GetJobs()
+        { 
+            return View(await _context.Jobs.ToListAsync());
+        }
 
         // GET: Collections/Details/5
         public async Task<IActionResult> Details(int? id)
