@@ -37,7 +37,10 @@
                 @Html.DisplayNameFor(model => model.DateTo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Payment)
+                @Html.DisplayNameFor(model => model.MinSalary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxSalary)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Category)
@@ -73,7 +76,10 @@
                 @Html.DisplayFor(modelItem => item.DateTo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Payment)
+                @Html.DisplayFor(modelItem => item.MinSalary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxSalary)
             </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.Name)
