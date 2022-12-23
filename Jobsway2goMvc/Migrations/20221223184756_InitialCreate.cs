@@ -145,7 +145,8 @@ namespace Jobsway2goMvc.Migrations
                     Requirements = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateFrom = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateTo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Payment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MinSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MaxSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

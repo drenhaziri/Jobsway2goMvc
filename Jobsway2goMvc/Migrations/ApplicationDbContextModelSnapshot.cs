@@ -235,11 +235,14 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("MaxSalary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MinSalary")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("OpenSpots")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("Payment")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Requirements")
                         .IsRequired()

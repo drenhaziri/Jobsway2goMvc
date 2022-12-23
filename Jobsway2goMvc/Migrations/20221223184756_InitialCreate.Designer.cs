@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221223195708_joblist")]
-    partial class joblist
+    [Migration("20221223184756_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -237,11 +237,14 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("MaxSalary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MinSalary")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("OpenSpots")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("Payment")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Requirements")
                         .IsRequired()
