@@ -22,7 +22,7 @@ namespace Jobsway2goMvc.Controllers
         // GET: Jobs
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Jobs.ToListAsync());
+            return View(await _context.Jobs.Include(j => j.Category).ToListAsync());
         }
 
         // GET: Jobs/Details/5
@@ -32,8 +32,8 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-
             var job = await _context.Jobs
+                .Include(j => j.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (job == null)
             {
@@ -46,6 +46,8 @@ namespace Jobsway2goMvc.Controllers
         // GET: Jobs/Create
         public IActionResult Create()
         {
+            var categories = _context.JobCategories.ToList();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View();
         }
 
@@ -54,7 +56,7 @@ namespace Jobsway2goMvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment")] Job job)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment,CategoryId")] Job job)
         {
             ModelState.Remove("Category");
             if (ModelState.IsValid)
@@ -79,6 +81,8 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
+            var categories = _context.JobCategories.ToList();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View(job);
         }
 
@@ -87,13 +91,13 @@ namespace Jobsway2goMvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment")] Job job)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment,CategoryId")] Job job)
         {
             if (id != job.Id)
             {
                 return NotFound();
             }
-
+            ModelState.Remove("Category");
             if (ModelState.IsValid)
             {
                 try
@@ -126,7 +130,8 @@ namespace Jobsway2goMvc.Controllers
             }
 
             var job = await _context.Jobs
-                .FirstOrDefaultAsync(m => m.Id == id);
+                 .Include(j => j.Category)
+                 .FirstOrDefaultAsync(m => m.Id == id);
             if (job == null)
             {
                 return NotFound();
