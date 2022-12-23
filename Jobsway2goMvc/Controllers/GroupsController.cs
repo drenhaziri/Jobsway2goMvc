@@ -7,17 +7,27 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Jobsway2goMvc.Models.ViewModel;
+using AutoMapper;
+using System.Text.RegularExpressions;
+using Group = Jobsway2goMvc.Models.Group;
+using System.Data;
 
 namespace Jobsway2goMvc.Controllers
 {
+    [Authorize]
     public class GroupsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public GroupsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+        public GroupsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,IMapper mapper)
         {
             _context = context;
+            _userManager = userManager;
+            _mapper = mapper;
         }
 
         // GET: Groups
@@ -27,21 +37,36 @@ namespace Jobsway2goMvc.Controllers
         }
 
         // GET: Groups/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? groupId)
         {
-            if (id == null || _context.Groups == null)
+            var user = _userManager.Users.ToList();
+            ViewBag.Id = groupId;
+            return View(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddMember(string? userId, int? groupId)
+        {
+            var user = _userManager.FindByIdAsync(userId).Result;
+            if(user == null)
+            {
+                return NotFound();
+            }
+            var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
+            if(group == null)
             {
                 return NotFound();
             }
 
-            var @group = await _context.Groups
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@group == null)
-            {
-                return NotFound();
-            }
+            ViewBag.id = groupId; 
 
-            return View(@group);
+            var members = new GroupMembership
+            {
+                GroupId = group.Id,
+                UserId = user.Id
+            };
+
+            return View(members);
         }
 
         // GET: Groups/Create
@@ -55,17 +80,34 @@ namespace Jobsway2goMvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Group @group)
+        public async Task<IActionResult> Create(Group @group)
         {
+            var userid = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser owner = _userManager.FindByIdAsync(userid).Result;
+
+            ModelState.Remove("Posts");
             if (ModelState.IsValid)
             {
-                _context.Add(@group);
+                _context.Add(new Group
+                {
+                    Name = @group.Name,
+                    CreatedBy = owner.UserName
+                });
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(@group);
         }
 
+     /*   [HttpGet]
+        public JsonResult UserList()
+        {
+            var user =  _userManager.Users.ToList();
+            return new JsonResult(Ok(user));
+        }
+
+        */
+       
         // GET: Groups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -87,7 +129,7 @@ namespace Jobsway2goMvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Group @group)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedBy")] Group @group)
         {
             if (id != @group.Id)
             {
