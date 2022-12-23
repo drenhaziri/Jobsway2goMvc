@@ -22,9 +22,13 @@ namespace Jobsway2goMvc.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int groupId)
         {
-            return View(await _context.Posts.ToListAsync());
+            var posts = await _context.Posts
+                .Where(p => p.GroupId == groupId)
+                .ToListAsync();
+
+            return View(posts);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -35,6 +39,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             var post = await _context.Posts
+                .Include(p => p.Group)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
@@ -43,6 +48,7 @@ namespace Jobsway2goMvc.Controllers
 
             return View(post);
         }
+
 
         private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
         {
@@ -53,25 +59,27 @@ namespace Jobsway2goMvc.Controllers
             return user;
         }
 
-        public IActionResult Create()
+        public IActionResult Create(int groupId)
         {
-            return View();
+            var post = new Post { GroupId = groupId };
+            return View(post);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,CreatedAtUTC,Type,GroupId")] Post post)
         {
             ModelState.Remove("CreatedBy");
+            ModelState.Remove("Group");
             if (ModelState.IsValid)
             {
                 var userAccessor = _httpContextAccessor.HttpContext.User;
                 post.CreatedBy = GetApplicationUser(userAccessor);
                 _context.Add(post);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Groups", new { id = post.GroupId });
             }
-            return View(post);
+            return RedirectToAction("Details", "Groups", new { id = post.GroupId });
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -91,13 +99,14 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,CreatedAtUTC,Type")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,CreatedAtUTC,Type,GroupId")] Post post)
         {
             if (id != post.Id)
             {
                 return NotFound();
             }
             ModelState.Remove("CreatedBy");
+            ModelState.Remove("Group");
             if (ModelState.IsValid)
             {
                 try
@@ -106,6 +115,7 @@ namespace Jobsway2goMvc.Controllers
                     post.CreatedBy = GetApplicationUser(userAccessor);
                     _context.Update(post);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", "Groups", new { id = post.GroupId });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,9 +128,8 @@ namespace Jobsway2goMvc.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(post);
+            return RedirectToAction("Details", "Groups", new { id = post.GroupId });
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -155,7 +164,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Groups", new { id = post.GroupId });
         }
 
         private bool PostExists(int id)

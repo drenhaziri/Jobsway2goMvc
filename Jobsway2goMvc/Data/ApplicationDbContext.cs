@@ -30,6 +30,10 @@ namespace Jobsway2goMvc.Data
                 .HasOne(p => p.Category)
                 .WithMany(g => g.Jobs)
                 .HasForeignKey(p => p.CategoryId);
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.Group)
+                .WithMany(g => g.Posts)
+                .HasForeignKey(p => p.GroupId);
             base.OnModelCreating(modelBuilder);
         }
     }
