@@ -4,6 +4,7 @@ using Jobsway2goMvc.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -33,5 +34,25 @@ namespace Jobsway2goMvc.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UploadFile([FromForm(Name = "file")] IFormFile file)
+        {           
+            if (file.Length > 0)
+            {
+                var filepath = Path.Combine(Directory.GetCurrentDirectory(), file.FileName);
+                using var stream = new FileStream(filepath, FileMode.Create);
+                await file.CopyToAsync(stream);
+                var userid = _userManager.GetUserId(HttpContext.User);
+                ApplicationUser user = _userManager.FindByIdAsync(userid).Result;
+                user.ImagePath = filepath;
+                await _userManager.UpdateAsync(user);
+            }            
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult EditProfile()
+        {
+            return View();
+        }
     }
 }

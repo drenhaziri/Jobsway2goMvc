@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Profile";
+    var photoPath = "~/Images/" + (Model.ImagePath);
 }
 
 <!DOCTYPE html>
@@ -18,15 +19,16 @@
         <div class="container">
             <div class="profile-main">
                 <div class="profile-container">
-                    <img src="Images/cover-pic.png" width="100%"/>
+                    <img src="@photoPath" width="100%" asp-append-version = "true"/>
                     <div class="profile-container-inner">
-                        <img src="Images/user.jpg" class="profile-pic"/>
+                        <img src=@Model.ImagePath class="profile-pic"/>
                         <h1> @Model.FirstName @Model.LastName</h1>
                         <b>@Model.Email && Profession Web Developer etc</b>
                         <p>@Model.CompanyName</p>
                         <p>@Model.CompanyArea</p>
                         <div class="profile-btn">
                         <a class="btn btn-primary">Connect</a>
+                        <a class="btn btn-primary" asp-action = "EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
                         </div>
                     </div>
                 </div>
