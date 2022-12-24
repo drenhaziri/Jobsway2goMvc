@@ -27,29 +27,32 @@ namespace Jobsway2goMvc.Controllers
             }
             else
             {
-                ApplicationUser user = _userManager.FindByIdAsync(userid).Result;
+                var user = _userManager.FindByIdAsync(userid).Result;
                 var profile = _mapper.Map<UserProfileViewModel>(user);
-
                 return View(profile);
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> UploadFile([FromForm(Name = "file")] IFormFile file)
-        {           
+        {
             if (file.Length > 0)
             {
-                var filepath = Path.Combine(Directory.GetCurrentDirectory(), file.FileName);
-                using var stream = new FileStream(filepath, FileMode.Create);
-                await file.CopyToAsync(stream);
+                var filePath = Path.Combine(
+                    Directory.GetCurrentDirectory(), "wwwroot/images",
+                    file.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
                 var userid = _userManager.GetUserId(HttpContext.User);
-                ApplicationUser user = _userManager.FindByIdAsync(userid).Result;
-                user.ImagePath = filepath;
+                var user = await _userManager.FindByIdAsync(userid);
+                user.ImagePath = "/images/" + file.FileName;
                 await _userManager.UpdateAsync(user);
-            }            
+            }
             return RedirectToAction("Index");
         }
-
         public IActionResult EditProfile()
         {
             return View();

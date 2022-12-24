@@ -8,7 +8,7 @@
         public string? CompanyName { get; set; }
         public string? CompanyArea { get; set; }
         public string? Address { get; set; }
-        public IFormFile? ImagePath { get; set; }
+        public string? ImagePath { get; set; }
         public string? Certificates { get; set; }
         public string? Badges { get; set; }
         public string? Courses { get; set; }
