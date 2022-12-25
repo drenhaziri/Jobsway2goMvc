@@ -8,98 +8,96 @@ using Microsoft.EntityFrameworkCore;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
 
-
 namespace Jobsway2goMvc.Controllers
 {
-    public class GroupsController : Controller
+    public class JobsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public GroupsController(ApplicationDbContext context)
+        public JobsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Groups.ToListAsync());
+            return View(await _context.Jobs.Include(j => j.Category).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Groups == null)
+            if (id == null || _context.Jobs == null)
+            {
+                return NotFound();
+            }
+            var job = await _context.Jobs
+                .Include(j => j.Category)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (job == null)
             {
                 return NotFound();
             }
 
-            var @group = await _context.Groups
-                .Include(g => g.Posts)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@group == null)
-            {
-                return NotFound();
-            }
-            ViewBag.GroupId = id;
-            return View(group);
-        }
-        public IActionResult DetailsPost(int id)
-        {
-            return RedirectToAction("Details", "Post", new { id = id });
+            return View(job);
         }
 
         public IActionResult Create()
         {
+            var categories = _context.JobCategories.ToList();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Group @group)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
         {
-            ModelState.Remove("Posts");
+            ModelState.Remove("Category");
             if (ModelState.IsValid)
             {
-                _context.Add(@group);
+                _context.Add(job);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(@group);
+            return View(job);
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Groups == null)
+            if (id == null || _context.Jobs == null)
             {
                 return NotFound();
             }
 
-            var @group = await _context.Groups.FindAsync(id);
-            if (@group == null)
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
             {
                 return NotFound();
             }
-            return View(@group);
+            var categories = _context.JobCategories.ToList();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+            return View(job);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Group @group)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
         {
-            if (id != @group.Id)
+            if (id != job.Id)
             {
                 return NotFound();
             }
-            ModelState.Remove("Posts");
+            ModelState.Remove("Category");
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(@group);
+                    _context.Update(job);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GroupExists(@group.Id))
+                    if (!JobExists(job.Id))
                     {
                         return NotFound();
                     }
@@ -110,61 +108,48 @@ namespace Jobsway2goMvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(@group);
-        }
-
-        public IActionResult EditPost(int id)
-        {
-            return RedirectToAction("Edit", "Post", new { id = id });
+            return View(job);
         }
 
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Groups == null)
+            if (id == null || _context.Jobs == null)
             {
                 return NotFound();
             }
 
-            var @group = await _context.Groups
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@group == null)
+            var job = await _context.Jobs
+                 .Include(j => j.Category)
+                 .FirstOrDefaultAsync(m => m.Id == id);
+            if (job == null)
             {
                 return NotFound();
             }
 
-            return View(@group);
+            return View(job);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Groups == null || _context.Posts == null)
+            if (_context.Jobs == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Groups' or 'ApplicationDbContext.Posts'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Jobs'  is null.");
             }
-            var @group = await _context.Groups.FindAsync(id);
-            if (@group != null)
+            var job = await _context.Jobs.FindAsync(id);
+            if (job != null)
             {
-
-                var posts = _context.Posts.Where(p => p.GroupId == id);
-                _context.Posts.RemoveRange(posts);
-
-                _context.Groups.Remove(@group);
+                _context.Jobs.Remove(job);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult DeletePost(int id)
+        private bool JobExists(int id)
         {
-            return RedirectToAction("Delete", "Post", new { id = id });
-        }
-
-        private bool GroupExists(int id)
-        {
-          return _context.Groups.Any(e => e.Id == id);
+          return _context.Jobs.Any(e => e.Id == id);
         }
     }
 }

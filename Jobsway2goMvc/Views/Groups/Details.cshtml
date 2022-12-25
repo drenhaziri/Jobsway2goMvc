@@ -18,6 +18,51 @@
         </dd>
     </dl>
 </div>
+<h4>Posts</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Posts.First().Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Posts.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Posts.First().CreatedAtUTC)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Posts.First().Type)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var post in Model.Posts)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => post.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => post.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => post.CreatedAtUTC)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => post.Type)
+                </td>
+                <td>
+                    <a asp-action="EditPost" asp-route-id="@post.Id">Edit</a> |
+                    <a asp-action="DetailsPost" asp-route-id="@post.Id">Details</a> |
+                    <a asp-action="DeletePost" asp-route-id="@post.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary">Create New Post</a>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
