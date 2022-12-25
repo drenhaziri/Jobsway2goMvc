@@ -10,6 +10,8 @@ using Jobsway2goMvc.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.Extensions.Hosting;
+using Jobsway2goMvc.Validations.Collections;
+using FluentValidation.Results;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -71,14 +73,25 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name")] Collection collection)
         {
             ModelState.Remove("User");
-            if (ModelState.IsValid)
-            {
                 var user = _httpContextAccessor.HttpContext.User;
-                collection.User = GetUser(user);
-                _context.Add(collection);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+
+                CollectionValidator validator = new CollectionValidator();
+                ValidationResult result = validator.Validate(collection);
+
+                if (!result.IsValid)
+                {
+                    foreach (ValidationFailure failure in result.Errors)
+                    {
+                        ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                    }
+                }
+                else
+                {
+                    collection.User = GetUser(user);
+                    _context.Add(collection);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             return View(collection);
         }
 
@@ -116,9 +129,24 @@ namespace Jobsway2goMvc.Controllers
                 try
                 {
                     var user = _httpContextAccessor.HttpContext.User;
-                    collection.User = GetUser(user);
-                    _context.Update(collection);
-                    await _context.SaveChangesAsync();
+
+                    CollectionValidator validator = new CollectionValidator();
+                    ValidationResult result = validator.Validate(collection);
+
+                    if (!result.IsValid)
+                    {
+                        foreach (ValidationFailure failure in result.Errors)
+                        {
+                            ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                        }
+                    }
+                    else
+                    {
+
+                        collection.User = GetUser(user);
+                        _context.Update(collection);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
