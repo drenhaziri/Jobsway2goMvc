@@ -16,12 +16,12 @@ namespace Jobsway2goMvc.Controllers
     public class CollectionsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _usermanager;
 
-        public CollectionsController(ApplicationDbContext context,IHttpContextAccessor httpContextAccessor)
+        public CollectionsController(ApplicationDbContext context, UserManager<ApplicationUser> usermanager)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _usermanager= usermanager;
         }
 
         // GET: Collections
@@ -54,14 +54,7 @@ namespace Jobsway2goMvc.Controllers
             return View();
         }
 
-        private ApplicationUser GetUser(ClaimsPrincipal principal)
-        {
-            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-
-            return user;
-        }
+        private Task<ApplicationUser> GetCurrentUser() { return _usermanager.GetUserAsync(HttpContext.User); }
 
         // POST: Collections/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -73,8 +66,8 @@ namespace Jobsway2goMvc.Controllers
             ModelState.Remove("User");
             if (ModelState.IsValid)
             {
-                var user = _httpContextAccessor.HttpContext.User;
-                collection.User = GetUser(user);
+                var user = await GetCurrentUser();
+                collection.User = user;
                 _context.Add(collection);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -115,8 +108,8 @@ namespace Jobsway2goMvc.Controllers
             {
                 try
                 {
-                    var user = _httpContextAccessor.HttpContext.User;
-                    collection.User = GetUser(user);
+                    var user = await GetCurrentUser();
+                    collection.User = user;
                     _context.Update(collection);
                     await _context.SaveChangesAsync();
                 }
