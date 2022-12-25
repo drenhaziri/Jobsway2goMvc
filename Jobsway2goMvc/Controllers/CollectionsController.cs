@@ -78,7 +78,6 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name")] Collection collection)
         {
             ModelState.Remove("User");
-                var user = _httpContextAccessor.HttpContext.User;
 
                 CollectionValidator validator = new CollectionValidator();
                 ValidationResult result = validator.Validate(collection);
@@ -92,7 +91,8 @@ namespace Jobsway2goMvc.Controllers
                 }
                 else
                 {
-                    collection.User = GetUser(user);
+                    var user = await GetCurrentUser();
+                    collection.User = user;
                     _context.Add(collection);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -133,7 +133,6 @@ namespace Jobsway2goMvc.Controllers
             {
                 try
                 {
-                    var user = _httpContextAccessor.HttpContext.User;
 
                     CollectionValidator validator = new CollectionValidator();
                     ValidationResult result = validator.Validate(collection);
@@ -147,8 +146,8 @@ namespace Jobsway2goMvc.Controllers
                     }
                     else
                     {
-
-                        collection.User = GetUser(user);
+                        var user = await GetCurrentUser();
+                        collection.User = user;
                         _context.Update(collection);
                         await _context.SaveChangesAsync();
                     }
