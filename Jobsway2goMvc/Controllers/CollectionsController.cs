@@ -18,19 +18,28 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _usermanager;
+        private readonly SignInManager<ApplicationUser> _signinmanager;
 
-        public CollectionsController(ApplicationDbContext context, UserManager<ApplicationUser> usermanager)
+        public CollectionsController(ApplicationDbContext context, UserManager<ApplicationUser> usermanager, SignInManager<ApplicationUser> signinmanager)
         {
             _context = context;
             _usermanager = usermanager;
+            _signinmanager = signinmanager;
         }
 
         // GET: Collections
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Collections
+            if (_signinmanager.IsSignedIn(User))
+            {
+                return View(await _context.Collections
                     .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
                     .ToListAsync());
+            }
+            else 
+            {
+                return RedirectToAction("Register", "Identity");
+            }
         }
 
         // GET: Collections/Details/5
