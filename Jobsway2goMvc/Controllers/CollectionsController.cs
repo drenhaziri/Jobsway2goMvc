@@ -38,7 +38,7 @@ namespace Jobsway2goMvc.Controllers
             }
             else 
             {
-                return RedirectToAction("Register", "Identity");
+                return NotFound();
             }
         }
 
