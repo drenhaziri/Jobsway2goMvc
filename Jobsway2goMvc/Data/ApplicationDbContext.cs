@@ -23,5 +23,18 @@ namespace Jobsway2goMvc.Data
         //public DbSet<Notification> Notifications { get; set; }
         //public DbSet<Section> Sections { get; set; }
         //public DbSet<Role> Roles { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Job>()
+                .HasOne(p => p.Category)
+                .WithMany(g => g.Jobs)
+                .HasForeignKey(p => p.CategoryId);
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.Group)
+                .WithMany(g => g.Posts)
+                .HasForeignKey(p => p.GroupId);
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

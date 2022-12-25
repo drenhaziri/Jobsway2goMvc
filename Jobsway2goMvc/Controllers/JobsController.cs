@@ -19,21 +19,19 @@ namespace Jobsway2goMvc.Controllers
             _context = context;
         }
 
-        // GET: Jobs
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Jobs.ToListAsync());
+            return View(await _context.Jobs.Include(j => j.Category).ToListAsync());
         }
 
-        // GET: Jobs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Jobs == null)
             {
                 return NotFound();
             }
-
             var job = await _context.Jobs
+                .Include(j => j.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (job == null)
             {
@@ -43,18 +41,16 @@ namespace Jobsway2goMvc.Controllers
             return View(job);
         }
 
-        // GET: Jobs/Create
         public IActionResult Create()
         {
+            var categories = _context.JobCategories.ToList();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View();
         }
 
-        // POST: Jobs/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment")] Job job)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
         {
             ModelState.Remove("Category");
             if (ModelState.IsValid)
@@ -66,7 +62,6 @@ namespace Jobsway2goMvc.Controllers
             return View(job);
         }
 
-        // GET: Jobs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Jobs == null)
@@ -79,21 +74,20 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
+            var categories = _context.JobCategories.ToList();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
             return View(job);
         }
 
-        // POST: Jobs/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,Payment")] Job job)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
         {
             if (id != job.Id)
             {
                 return NotFound();
             }
-
+            ModelState.Remove("Category");
             if (ModelState.IsValid)
             {
                 try
@@ -117,7 +111,6 @@ namespace Jobsway2goMvc.Controllers
             return View(job);
         }
 
-        // GET: Jobs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Jobs == null)
@@ -126,7 +119,8 @@ namespace Jobsway2goMvc.Controllers
             }
 
             var job = await _context.Jobs
-                .FirstOrDefaultAsync(m => m.Id == id);
+                 .Include(j => j.Category)
+                 .FirstOrDefaultAsync(m => m.Id == id);
             if (job == null)
             {
                 return NotFound();
@@ -135,7 +129,6 @@ namespace Jobsway2goMvc.Controllers
             return View(job);
         }
 
-        // POST: Jobs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

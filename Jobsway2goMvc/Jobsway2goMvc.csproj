@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Validator\**" />
+    <Content Remove="Validator\**" />
+    <EmbeddedResource Remove="Validator\**" />
+    <None Remove="Validator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.12" />
@@ -19,10 +27,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\UserProfile\" />
   </ItemGroup>
 
 </Project>

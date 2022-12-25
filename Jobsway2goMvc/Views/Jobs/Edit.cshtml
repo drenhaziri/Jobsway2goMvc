@@ -54,10 +54,20 @@
                 <span asp-validation-for="DateTo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Payment" class="control-label"></label>
-                <input asp-for="Payment" class="form-control" />
-                <span asp-validation-for="Payment" class="text-danger"></span>
+                <label asp-for="MinSalary" class="control-label"></label>
+                <input asp-for="MinSalary" class="form-control" />
+                <span asp-validation-for="MinSalary" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="MaxSalary" class="control-label"></label>
+                <input asp-for="MaxSalary" class="form-control" />
+                <span asp-validation-for="MaxSalary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                @Html.DropDownList("CategoryId", ViewBag.Categories, "-- Select Category --", new { @class = "form-control" })
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>>       
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
