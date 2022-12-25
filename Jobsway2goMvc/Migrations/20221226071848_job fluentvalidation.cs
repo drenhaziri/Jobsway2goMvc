@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Jobsway2goMvc.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class jobfluentvalidation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
