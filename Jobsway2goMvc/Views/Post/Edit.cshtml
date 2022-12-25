@@ -34,6 +34,7 @@
                 <select asp-for="Type" class="form-control" asp-items="Html.GetEnumSelectList<PostType>()"></select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="GroupId" value="@Model.GroupId" />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -42,7 +43,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Details" asp-controller="Groups" asp-route-id="@Model.GroupId">Back to Group</a>
 </div>
 
 @section Scripts {
