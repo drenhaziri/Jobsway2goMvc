@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Validators.Job_Category;
+using Jobsway2goMvc.Validators.Jobs;
+using FluentValidation.Results;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -53,13 +56,21 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
         {
             ModelState.Remove("Category");
-            if (ModelState.IsValid)
+            var validator = new JobValidator();
+            ValidationResult result = validator.Validate(job);
+            if (!result.IsValid)
             {
-                _context.Add(job);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+
+                return View(job);
             }
-            return View(job);
+
+            _context.Add(job);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -88,27 +99,37 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
             ModelState.Remove("Category");
-            if (ModelState.IsValid)
+
+            var validator = new JobValidator();
+            ValidationResult result = validator.Validate(job);
+
+            if (!result.IsValid)
             {
-                try
+                foreach (var error in result.Errors)
                 {
-                    _context.Update(job);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError("", error.ErrorMessage);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!JobExists(job.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(job);
             }
-            return View(job);
+
+            try
+            {
+                _context.Update(job);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!JobExists(job.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(int? id)
