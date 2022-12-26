@@ -62,10 +62,11 @@
                 <input asp-for="MaxSalary" class="form-control" />
                 <span asp-validation-for="MaxSalary" class="text-danger"></span>
             </div>
-            <div class ="form-group">
-                @Html.DropDownListFor(model => model.CategoryId, ViewBag.Categories as SelectList, "Select a Category", new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Category)
+            <div class="form-group">
+                @Html.DropDownListFor(model => model.CategoryId, (IEnumerable<SelectListItem>)ViewBag.Categories, "-- Select a category --", htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CategoryId, "Please Select a Category", new { @class = "text-danger" })
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
