@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221223204542_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20221226071848_job fluentvalidation")]
+    partial class jobfluentvalidation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

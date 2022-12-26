@@ -7,8 +7,7 @@ namespace Jobsway2goMvc.Validators.Job_Category
     {
         public JobCategoryValidator()
         {
-            RuleFor(e => e.Name).NotEmpty().WithMessage("Please specify a job category name"); ;
-            RuleFor(e => e.Jobs).NotEmpty();
+            RuleFor(e => e.Name).NotEmpty().WithMessage("Please specify a job category name"); 
         }
     }
 }
