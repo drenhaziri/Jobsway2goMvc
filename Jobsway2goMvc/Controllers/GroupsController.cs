@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -133,6 +133,35 @@ namespace Jobsway2goMvc.Controllers
             }
 
             return View(@group);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> UpdatePrivacy([FromRoute] int id, [FromBody] bool isPublic)
+        {
+            var @group = await _context.Groups.FindAsync(id);
+            if (@group != null)
+            {
+                try
+                {
+                    @group.IsPublic = isPublic;
+                    _context.Update(@group);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!GroupExists(@group.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            
+            return Ok(@group);
         }
 
         [HttpPost, ActionName("Delete")]
