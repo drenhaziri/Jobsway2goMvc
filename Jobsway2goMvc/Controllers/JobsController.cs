@@ -59,6 +59,10 @@ namespace Jobsway2goMvc.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            var categories = _context.JobCategories.ToList();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+
             return View(job);
         }
 
