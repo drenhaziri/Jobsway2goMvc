@@ -72,7 +72,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
-                    model.Users.Add(user.Id);
+                    model.Users.Add(user.UserName);
                 }
 
             }

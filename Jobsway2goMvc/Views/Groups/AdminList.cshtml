@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Jobsway2goMvc.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Admin List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int groupId = ViewBag.Id;
+}
+
+<h1>Member List</h1>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr class="table-dark">
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td>No Admins at the moment</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="Details" asp-route-id="@groupId">Back to Details</a> |
+</div>

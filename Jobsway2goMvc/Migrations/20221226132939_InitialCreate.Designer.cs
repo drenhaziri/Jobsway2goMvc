@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221222212522_InitialCreate")]
+    [Migration("20221226132939_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -222,7 +222,20 @@ namespace Jobsway2goMvc.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsBanned")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsMember")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsModerator")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -263,11 +276,14 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("MaxSalary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("MinSalary")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("OpenSpots")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("Payment")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Requirements")
                         .IsRequired()
@@ -497,7 +513,9 @@ namespace Jobsway2goMvc.Migrations
 
                     b.HasOne("Jobsway2goMvc.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Group");
 
@@ -507,7 +525,7 @@ namespace Jobsway2goMvc.Migrations
             modelBuilder.Entity("Jobsway2goMvc.Models.Job", b =>
                 {
                     b.HasOne("Jobsway2goMvc.Models.JobCategory", "Category")
-                        .WithMany()
+                        .WithMany("Jobs")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -596,6 +614,11 @@ namespace Jobsway2goMvc.Migrations
             modelBuilder.Entity("Jobsway2goMvc.Models.Group", b =>
                 {
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("Jobsway2goMvc.Models.JobCategory", b =>
+                {
+                    b.Navigation("Jobs");
                 });
 #pragma warning restore 612, 618
         }

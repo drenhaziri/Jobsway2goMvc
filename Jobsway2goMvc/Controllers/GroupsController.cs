@@ -14,6 +14,7 @@ using AutoMapper;
 using System.Text.RegularExpressions;
 using Group = Jobsway2goMvc.Models.Group;
 using System.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -37,36 +38,254 @@ namespace Jobsway2goMvc.Controllers
         }
 
         // GET: Groups/Details/5
-        public async Task<IActionResult> Details(int? groupId)
+        public async Task<IActionResult> Details(int? id)
         {
-            var user = _userManager.Users.ToList();
-            ViewBag.Id = groupId;
-            return View(user);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var group = await _context.Groups
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Id = group.Id;
+            var users = _userManager.Users.ToList();
+            return View(users);
+        }
+        public async Task<IActionResult> MemberList(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var group = await _context.Groups
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Id = group.Id;
+            var users = from u in _userManager.Users
+                        join g in _context.GroupMemberships
+                        on u.Id equals g.UserId
+                        where g.GroupId == id && g.IsMember == true
+                        select u;
+
+            var result = users.ToList();
+            return View(users);
+        }
+
+        public async Task<IActionResult> AdminList(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var group = await _context.Groups
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Id = group.Id;
+            var users = from u in _userManager.Users
+                        join g in _context.GroupMemberships
+                        on u.Id equals g.UserId
+                        where g.GroupId == id && g.IsAdmin == true
+                        select u;
+
+            var result = users.ToList();
+            return View(users);
+        }
+        public async Task<IActionResult> ModeratorList(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var group = await _context.Groups
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Id = group.Id;
+            var users = from u in _userManager.Users
+                        join g in _context.GroupMemberships
+                        on u.Id equals g.UserId
+                        where g.GroupId == id && g.IsModerator == true
+                        select u;
+
+            var result = users.ToList();
+            return View(users);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddMember(string? userId, int? groupId)
+        public async Task<IActionResult> AddMember(string userId, int groupId)
         {
-            var user = _userManager.FindByIdAsync(userId).Result;
-            if(user == null)
+        
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
+                if (group == null)
+                {
+                    return NotFound();
+                }
+
+                var userExist = _context.GroupMemberships
+                    .Where(x => x.GroupId == groupId)
+                    .ToList()
+                    .Any(x => x.UserId == userId);
+
+                if (userExist)
+                {
+                    ViewBag.MemberExist = "User Already Exists";
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+                
+                if (ModelState.IsValid)
+                {
+                    var members = new GroupMembership
+                    {
+                        GroupId = group.Id,
+                        UserId = user.Id,
+                        IsMember = true,
+                        IsAdmin = false,
+                        IsModerator = false
+                    };
+
+                    _context.GroupMemberships.Add(members);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> AddModerator(string userId, int groupId)
+        {
+            try
             {
-                return NotFound();
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
+                if (group == null)
+                {
+                    return NotFound();
+                }
+                var userExist = _context.GroupMemberships
+                 .Where(x => x.GroupId == groupId)
+                 .ToList()
+                 .Any(x => x.IsModerator == true);
+
+                if (userExist)
+                {
+                    ViewBag.ModeratorExist = "Moderator Already Exists";
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+
+                if (ModelState.IsValid)
+                {
+                    var members = new GroupMembership
+                    {
+                        GroupId = group.Id,
+                        UserId = user.Id,
+                        IsAdmin = false,
+                        IsMember= true,
+                        IsModerator = true
+                    };
+
+                    _context.GroupMemberships.Add(members);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
             }
-            var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
-            if(group == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
+        }
 
-            ViewBag.id = groupId; 
-
-            var members = new GroupMembership
+        [HttpPost]
+        public async Task<IActionResult> AddAdmin(string userId, int groupId)
+        {
+            try
             {
-                GroupId = group.Id,
-                UserId = user.Id
-            };
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
+                if (group == null)
+                {
+                    return NotFound();
+                }
 
-            return View(members);
+                var userExist = _context.GroupMemberships
+              .Where(x => x.GroupId == groupId)
+              .ToList()
+              .Any(x => x.IsAdmin == true);
+
+                if (userExist)
+                {
+                    ViewBag.AdminExist = "Admin Already Exists";
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+
+
+                if (ModelState.IsValid)
+                {
+                    var members = new GroupMembership
+                    {
+                        GroupId = group.Id,
+                        UserId = user.Id,
+                        IsAdmin = true,
+                        IsMember = true,
+                        IsModerator = true
+                    };
+
+                    _context.GroupMemberships.Add(members);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Groups/Create
@@ -75,9 +294,7 @@ namespace Jobsway2goMvc.Controllers
             return View();
         }
 
-        // POST: Groups/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Group @group)
@@ -91,7 +308,7 @@ namespace Jobsway2goMvc.Controllers
                 _context.Add(new Group
                 {
                     Name = @group.Name,
-                    CreatedBy = owner.UserName
+                    CreatedBy = owner.UserName,
                 });
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -99,14 +316,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
-     /*   [HttpGet]
-        public JsonResult UserList()
-        {
-            var user =  _userManager.Users.ToList();
-            return new JsonResult(Ok(user));
-        }
-
-        */
        
         // GET: Groups/Edit/5
         public async Task<IActionResult> Edit(int? id)

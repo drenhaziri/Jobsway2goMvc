@@ -7,13 +7,10 @@ namespace Jobsway2goMvc.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string? CreatedBy { get; set; }
-/*
-        [NotMapped]
-        public List<ApplicationUser> Members { get; set; }
-        public bool IsMember { get; set; }*/
 
-        [NotMapped]
         public ICollection<Post> Posts { get; set; }
+        //public List<ApplicationUser> Admin {get;set;}
+        //public List<ApplicationUser> Moderator {get;set;}
 
     }
 }

@@ -146,7 +146,8 @@ namespace Jobsway2goMvc.Migrations
                     Requirements = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateFrom = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateTo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Payment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MinSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    MaxSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -270,8 +271,12 @@ namespace Jobsway2goMvc.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    GroupId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: false),
+                    IsMember = table.Column<bool>(type: "bit", nullable: true),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: true),
+                    IsModerator = table.Column<bool>(type: "bit", nullable: true),
+                    IsBanned = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -280,7 +285,8 @@ namespace Jobsway2goMvc.Migrations
                         name: "FK_GroupMemberships_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GroupMemberships_Groups_GroupId",
                         column: x => x.GroupId,

@@ -7,7 +7,10 @@
         public string UserId { get; set; }
         public Group Group { get; set; }
         public int GroupId { get; set; }
-        public bool IsAdmin { get; set; }
-        public bool IsModerator { get; set; }
+        
+        public bool? IsMember { get; set; }
+        public bool? IsAdmin { get; set; }
+        public bool? IsModerator { get; set; }
+        public bool? IsBanned { get; set; }
     }
 }
