@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221226015516_AddIsPublicColumn")]
+    [Migration("20221226134003_AddIsPublicColumn")]
     partial class AddIsPublicColumn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
