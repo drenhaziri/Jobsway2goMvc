@@ -77,9 +77,15 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Collection collection)
         {
-            ModelState.Remove("User");
+            var user = await GetCurrentUser();
+            if (user == null)
+            {
+                ViewBag.NullUser = "User is not logged in";
+                return View();
+            }
+            collection.User = user;
 
-                CollectionValidator validator = new CollectionValidator();
+            CollectionValidator validator = new CollectionValidator();
                 ValidationResult result = validator.Validate(collection);
 
                 if (!result.IsValid)
@@ -91,8 +97,6 @@ namespace Jobsway2goMvc.Controllers
                 }
                 else
                 {
-                    var user = await GetCurrentUser();
-                    collection.User = user;
                     _context.Add(collection);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -127,12 +131,18 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-
-            ModelState.Remove("User");
-            if (ModelState.IsValid)
-            {
+         
                 try
                 {
+                    var user = await GetCurrentUser();
+
+                    if (user == null)
+                    {
+                        ViewBag.NullUser = "User is not logged in";
+                        return View();  
+                    }
+                    
+                    collection.User = user;
 
                     CollectionValidator validator = new CollectionValidator();
                     ValidationResult result = validator.Validate(collection);
@@ -146,8 +156,6 @@ namespace Jobsway2goMvc.Controllers
                     }
                     else
                     {
-                        var user = await GetCurrentUser();
-                        collection.User = user;
                         _context.Update(collection);
                         await _context.SaveChangesAsync();
                     }
@@ -164,7 +172,7 @@ namespace Jobsway2goMvc.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            
             return View(collection);
         }
 
