@@ -55,6 +55,24 @@ namespace Jobsway2goMvc.Controllers
             var users = _userManager.Users.ToList();
             return View(users);
         }
+        public async Task<IActionResult> DetailsPostsGroup(int? id)
+        {
+            if (id == null || _context.Groups == null)
+            {
+                return NotFound();
+            }
+
+            var @group = await _context.Groups
+                .Include(g => g.Posts)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (@group == null)
+            {
+                return NotFound();
+            }
+            ViewBag.GroupId = id;
+            return View(group);
+        }
+
         public async Task<IActionResult> MemberList(int? id)
         {
             if (id == null)
