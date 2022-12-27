@@ -48,9 +48,11 @@ namespace Jobsway2goMvc.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221226132939_InitialCreate.cs
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+=======
                     IsPublic = table.Column<bool>(type: "bit", nullable: false)
-
+>>>>>>> dev:Jobsway2goMvc/Migrations/20221226134003_AddIsPublicColumn.cs
                 },
                 constraints: table =>
                 {

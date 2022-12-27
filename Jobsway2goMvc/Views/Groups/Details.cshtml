@@ -1,87 +1,58 @@
-﻿@model Jobsway2goMvc.Models.Group
+﻿@model IEnumerable<Jobsway2goMvc.Models.ApplicationUser>
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int groupId = ViewBag.Id;
+    @ViewBag.MemberExist
 }
 
-<h1>Details</h1>
+<h1>User List, manage group members, moderators and admins</h1>
+<p class="text-danger"> @ViewBag.MemberExist </p>
+<p class="text-danger"> @ViewBag.ModeratorExist</p>
+<p class="text-danger"> @ViewBag.AdminExist</p>
 
-<div>
-    <h4>Group</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        </dl>
-        <dl class="row">
-        <dt class="col-sm-2">
-            Is Public
-        </dt>
-         <dd class = "col-sm-10">
-            <label class="switch switch-handle"  data-id="@Model.Id">
-                @Html.CheckBoxFor(model => model.IsPublic)
-                <div class="slider round">
-                </div>
-            </label>
-        </dd>
-    </dl>
-</div>
-<h4>Posts</h4>
-<hr />
-<table class="table">
+<table class="table table-hover table-bordered">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().CreatedAtUTC)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Type)
-            </th>
+        <tr class="table-dark">
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Options</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var post in Model.Posts)
+        @foreach (var user in Model)
         {
             <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
                 <td>
-                    @Html.DisplayFor(model => post.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => post.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => post.CreatedAtUTC)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => post.Type)
-                </td>
-                <td>
-                    <a asp-action="EditPost" asp-route-id="@post.Id">Edit</a> |
-                    <a asp-action="DetailsPost" asp-route-id="@post.Id">Details</a> |
-                    <a asp-action="DeletePost" asp-route-id="@post.Id">Delete</a>
+                    <form asp-action="AddMember" asp-controller="Groups">
+                        <input asp-for="@user.Id" name="userId" hidden />
+                        <input asp-for="@groupId" name="groupId" hidden />
+                        <button class="btn btn-secondary">Add Member </button>
+                    </form>
+                    <form asp-action="AddModerator" asp-controller="Groups">
+                        <input asp-for="@user.Id" name="userId" hidden />
+                        <input asp-for="@groupId" name="groupId" hidden />
+                        <button class="btn btn-primary">Add Moderator </button>
+                    </form>
+                    <form asp-action="AddAdmin" asp-controller="Groups">
+                        <input asp-for="@user.Id" name="userId" hidden />
+                        <input asp-for="@groupId" name="groupId" hidden />
+                        <button class="btn btn-info">Add Admin </button>
+                    </form>
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
-<a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary">Create New Post</a>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts
-{
-    <link rel="stylesheet" href="~/css/group.css" />
-    <script type="text/javascript" src="~/js/group.js"></script>
-}  
+            }
+        </tbody>
+    </table>
+  
+    <div>
+        <a asp-action="Index">Back to List</a>
+        <a asp-action="MemberList" asp-route-id="@groupId">View Member List</a>
+        <a asp-action="ModeratorList" asp-route-id="@groupId">View Moderator List</a>
+        <a asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
+    </div>
