@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Validatiors\" />
+    <Folder Include="Validators\" />
   </ItemGroup>
 
 </Project>
