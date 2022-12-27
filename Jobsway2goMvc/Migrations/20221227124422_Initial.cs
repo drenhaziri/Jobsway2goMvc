@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Jobsway2goMvc.Migrations
 {
-    public partial class AddIsPublicColumn : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,11 +48,8 @@ namespace Jobsway2goMvc.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221226132939_InitialCreate.cs
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-=======
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false)
->>>>>>> dev:Jobsway2goMvc/Migrations/20221226134003_AddIsPublicColumn.cs
                 },
                 constraints: table =>
                 {
@@ -424,12 +421,9 @@ namespace Jobsway2goMvc.Migrations
                 name: "Collections");
 
             migrationBuilder.DropTable(
-<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221226132939_InitialCreate.cs
                 name: "GroupMemberships");
 
             migrationBuilder.DropTable(
-=======
->>>>>>> dev:Jobsway2goMvc/Migrations/20221226134003_AddIsPublicColumn.cs
                 name: "Jobs");
 
             migrationBuilder.DropTable(

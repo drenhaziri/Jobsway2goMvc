@@ -78,8 +78,14 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name")] Collection collection)
         {
             ModelState.Remove("User");
+            var user = await GetCurrentUser();
+            if (user == null)
+            {
+                ViewBag.NullUser = "User is not logged in";
+            }
+            collection.User = user;
 
-                CollectionValidator validator = new CollectionValidator();
+            CollectionValidator validator = new CollectionValidator();
                 ValidationResult result = validator.Validate(collection);
 
                 if (!result.IsValid)
@@ -91,8 +97,6 @@ namespace Jobsway2goMvc.Controllers
                 }
                 else
                 {
-                    var user = await GetCurrentUser();
-                    collection.User = user;
                     _context.Add(collection);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -133,6 +137,14 @@ namespace Jobsway2goMvc.Controllers
             {
                 try
                 {
+                    var user = await GetCurrentUser();
+
+                    if (user == null)
+                    {
+                        ViewBag.NullUser = "User is not logged in";
+                    }
+
+                    collection.User = user;
 
                     CollectionValidator validator = new CollectionValidator();
                     ValidationResult result = validator.Validate(collection);
@@ -146,8 +158,6 @@ namespace Jobsway2goMvc.Controllers
                     }
                     else
                     {
-                        var user = await GetCurrentUser();
-                        collection.User = user;
                         _context.Update(collection);
                         await _context.SaveChangesAsync();
                     }

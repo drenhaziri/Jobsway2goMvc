@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221226132939_InitialCreate.Designer.cs
-    [Migration("20221226132939_InitialCreate")]
-    partial class InitialCreate
-=======
-    [Migration("20221226134003_AddIsPublicColumn")]
-    partial class AddIsPublicColumn
->>>>>>> dev:Jobsway2goMvc/Migrations/20221226134003_AddIsPublicColumn.Designer.cs
+    [Migration("20221227124422_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -204,13 +199,11 @@ namespace Jobsway2goMvc.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221226132939_InitialCreate.Designer.cs
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
-=======
+
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
->>>>>>> dev:Jobsway2goMvc/Migrations/20221226134003_AddIsPublicColumn.Designer.cs
 
                     b.Property<string>("Name")
                         .IsRequired()
