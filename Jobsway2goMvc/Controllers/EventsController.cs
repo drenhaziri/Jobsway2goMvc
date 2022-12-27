@@ -1,5 +1,7 @@
-﻿using Jobsway2goMvc.Data;
+﻿using FluentValidation.Results;
+using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Validators.Events;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +19,7 @@ namespace Jobsway2goMvc.Controllers
         // GET: Events
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Events.ToListAsync());
+            return View(await _context.Events.ToListAsync());
         }
 
         // GET: Events/Details/5
@@ -53,13 +55,22 @@ namespace Jobsway2goMvc.Controllers
         {
             ModelState.Remove("Speakers");
 
-            if (ModelState.IsValid)
+            var validator = new EventValidator();
+            ValidationResult result = validator.Validate(@event);
+
+            if (!result.IsValid)
             {
-                _context.Add(@event);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+
+                return View(@event);
             }
-            return View(@event);
+
+            _context.Add(@event);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Events/Edit/5
@@ -92,27 +103,37 @@ namespace Jobsway2goMvc.Controllers
 
             ModelState.Remove("Speakers");
 
-            if (ModelState.IsValid)
+            var validator = new EventValidator();
+            ValidationResult result = validator.Validate(@event);
+
+            if (!result.IsValid)
             {
-                try
+                foreach (var error in result.Errors)
                 {
-                    _context.Update(@event);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError("", error.ErrorMessage);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EventExists(@event.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+
+                return View(@event);
             }
-            return View(@event);
+
+            try
+            {
+                _context.Update(@event);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EventExists(@event.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Events/Delete/5
@@ -147,14 +168,14 @@ namespace Jobsway2goMvc.Controllers
             {
                 _context.Events.Remove(@event);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EventExists(int id)
         {
-          return _context.Events.Any(e => e.Id == id);
+            return _context.Events.Any(e => e.Id == id);
         }
     }
 }

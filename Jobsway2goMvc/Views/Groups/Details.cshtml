@@ -44,15 +44,15 @@
                         <input asp-for="@groupId" name="groupId" hidden />
                         <button class="btn btn-info">Add Admin </button>
                     </form>
-
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
-<div>
-    <a asp-action="Index">Back to List</a>
-    <a asp-action="MemberList" asp-route-id="@groupId">View Member List</a>
-    <a asp-action="ModeratorList" asp-route-id="@groupId">View Moderator List</a>
-    <a asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
-</div>
+            }
+        </tbody>
+    </table>
+  
+    <div>
+        <a asp-action="Index">Back to List</a>
+        <a asp-action="MemberList" asp-route-id="@groupId">View Member List</a>
+        <a asp-action="ModeratorList" asp-route-id="@groupId">View Moderator List</a>
+        <a asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
+    </div>

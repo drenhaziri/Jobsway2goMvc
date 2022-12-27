@@ -11,6 +11,7 @@ namespace Jobsway2goMvc.Models
         public ICollection<Post> Posts { get; set; }
         //public List<ApplicationUser> Admin {get;set;}
         //public List<ApplicationUser> Moderator {get;set;}
+        public Boolean IsPublic { get; set; } = true;
 
     }
 }

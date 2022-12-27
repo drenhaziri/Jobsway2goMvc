@@ -10,24 +10,38 @@ using Jobsway2goMvc.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
+using Jobsway2goMvc.Validations.Collections;
+using FluentValidation.Results;
 
 namespace Jobsway2goMvc.Controllers
 {
     public class CollectionsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _usermanager;
+        private readonly SignInManager<ApplicationUser> _signinmanager;
 
-        public CollectionsController(ApplicationDbContext context,IHttpContextAccessor httpContextAccessor)
+        public CollectionsController(ApplicationDbContext context, UserManager<ApplicationUser> usermanager, SignInManager<ApplicationUser> signinmanager)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _usermanager = usermanager;
+            _signinmanager = signinmanager;
         }
 
         // GET: Collections
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Collections.ToListAsync());
+            if (_signinmanager.IsSignedIn(User))
+            {
+                return View(await _context.Collections
+                    .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                    .ToListAsync());
+            }
+            else 
+            {
+                return NotFound();
+            }
         }
 
         // GET: Collections/Details/5
@@ -54,14 +68,7 @@ namespace Jobsway2goMvc.Controllers
             return View();
         }
 
-        private ApplicationUser GetUser(ClaimsPrincipal principal)
-        {
-            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-
-            return user;
-        }
+        private Task<ApplicationUser> GetCurrentUser() { return _usermanager.GetUserAsync(HttpContext.User); }
 
         // POST: Collections/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -71,14 +78,25 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name")] Collection collection)
         {
             ModelState.Remove("User");
-            if (ModelState.IsValid)
-            {
-                var user = _httpContextAccessor.HttpContext.User;
-                collection.User = GetUser(user);
-                _context.Add(collection);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+
+                CollectionValidator validator = new CollectionValidator();
+                ValidationResult result = validator.Validate(collection);
+
+                if (!result.IsValid)
+                {
+                    foreach (ValidationFailure failure in result.Errors)
+                    {
+                        ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                    }
+                }
+                else
+                {
+                    var user = await GetCurrentUser();
+                    collection.User = user;
+                    _context.Add(collection);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             return View(collection);
         }
 
@@ -115,10 +133,24 @@ namespace Jobsway2goMvc.Controllers
             {
                 try
                 {
-                    var user = _httpContextAccessor.HttpContext.User;
-                    collection.User = GetUser(user);
-                    _context.Update(collection);
-                    await _context.SaveChangesAsync();
+
+                    CollectionValidator validator = new CollectionValidator();
+                    ValidationResult result = validator.Validate(collection);
+
+                    if (!result.IsValid)
+                    {
+                        foreach (ValidationFailure failure in result.Errors)
+                        {
+                            ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
+                        }
+                    }
+                    else
+                    {
+                        var user = await GetCurrentUser();
+                        collection.User = user;
+                        _context.Update(collection);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -177,5 +209,6 @@ namespace Jobsway2goMvc.Controllers
         {
           return _context.Collections.Any(e => e.Id == id);
         }
+
     }
 }

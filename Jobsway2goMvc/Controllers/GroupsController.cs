@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,13 +31,11 @@ namespace Jobsway2goMvc.Controllers
             _mapper = mapper;
         }
 
-        // GET: Groups
         public async Task<IActionResult> Index()
         {
               return View(await _context.Groups.ToListAsync());
         }
 
-        // GET: Groups/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,6 +44,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             var group = await _context.Groups
+                .Include(g => g.Posts)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (group == null)
             {
@@ -287,14 +286,19 @@ namespace Jobsway2goMvc.Controllers
                 return RedirectToAction("Index");
             }
         }
+        public IActionResult DetailsPost(int id)
+        {
+            return RedirectToAction("Details", "Post", new { id = id });
+        }
 
-        // GET: Groups/Create
         public IActionResult Create()
         {
             return View();
         }
 
-       
+        // POST: Groups/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Group @group)
@@ -316,7 +320,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
-       
         // GET: Groups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -333,9 +336,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
-        // POST: Groups/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedBy")] Group @group)
@@ -344,7 +344,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-
+            ModelState.Remove("Posts");
             if (ModelState.IsValid)
             {
                 try
@@ -368,7 +368,11 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
-        // GET: Groups/Delete/5
+        public IActionResult EditPost(int id)
+        {
+            return RedirectToAction("Edit", "Post", new { id = id });
+        }
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Groups == null)
@@ -385,24 +389,61 @@ namespace Jobsway2goMvc.Controllers
 
             return View(@group);
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> UpdatePrivacy([FromRoute] int id, [FromBody] bool isPublic)
+        {
+            var @group = await _context.Groups.FindAsync(id);
+            if (@group != null)
+            {
+                try
+                {
+                    @group.IsPublic = isPublic;
+                    _context.Update(@group);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!GroupExists(@group.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            
+            return Ok(@group);
+        }
 
-        // POST: Groups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Groups == null)
+            if (_context.Groups == null || _context.Posts == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Groups'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Groups' or 'ApplicationDbContext.Posts'  is null.");
             }
             var @group = await _context.Groups.FindAsync(id);
             if (@group != null)
             {
+
+                var posts = _context.Posts.Where(p => p.GroupId == id);
+                _context.Posts.RemoveRange(posts);
+
                 _context.Groups.Remove(@group);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult DeletePost(int id)
+        {
+            return RedirectToAction("Delete", "Post", new { id = id });
         }
 
         private bool GroupExists(int id)
