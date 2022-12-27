@@ -10,7 +10,9 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews().AddViewOptions(options=>options.HtmlHelperOptions.ClientValidationEnabled = false);
+builder.Services.AddControllersWithViews()
+            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()))
+            .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -21,10 +23,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
-
-builder.Services.AddControllersWithViews()
-            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()))
-            .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false);
 
 builder.Services.AddAutoMapper(typeof(UserProfileMapper).Assembly);
 builder.Services.AddRazorPages();
