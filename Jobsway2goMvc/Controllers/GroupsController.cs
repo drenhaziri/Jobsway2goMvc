@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ namespace Jobsway2goMvc.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        public GroupsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,IMapper mapper)
+        public GroupsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _context = context;
             _userManager = userManager;
@@ -33,7 +33,7 @@ namespace Jobsway2goMvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Groups.ToListAsync());
+            return View(await _context.Groups.ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -132,52 +132,52 @@ namespace Jobsway2goMvc.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMember(string userId, int groupId)
         {
-        
-                var user = await _userManager.FindByIdAsync(userId);
-                if (user == null)
-                {
-                    return NotFound();
-                }
 
-                var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
-                if (group == null)
-                {
-                    return NotFound();
-                }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-                var userExist = _context.GroupMemberships
-                    .Where(x => x.GroupId == groupId)
-                    .ToList()
-                    .Any(x => x.UserId == userId);
+            var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
+            if (group == null)
+            {
+                return NotFound();
+            }
 
-                if (userExist)
-                {
-                    ViewBag.MemberExist = "User Already Exists";
-                    return RedirectToAction("Details", new { id = groupId });
-                }
-                
-                if (ModelState.IsValid)
-                {
-                    var members = new GroupMembership
-                    {
-                        GroupId = group.Id,
-                        UserId = user.Id,
-                        IsMember = true,
-                        IsAdmin = false,
-                        IsModerator = false
-                    };
+            var userExist = _context.GroupMemberships
+                .Where(x => x.GroupId == groupId)
+                .ToList()
+                .Any(x => x.UserId == userId);
 
-                    _context.GroupMemberships.Add(members);
-                    await _context.SaveChangesAsync();
+            if (userExist)
+            {
+                ViewBag.MemberExist = "User Already Exists";
+                return RedirectToAction("Details", new { id = groupId });
+            }
 
-                    return RedirectToAction("Details", new { id = groupId });
-                }
-                else
+            if (ModelState.IsValid)
+            {
+                var members = new GroupMembership
                 {
-                    return RedirectToAction("Index");
-                }
+                    GroupId = group.Id,
+                    UserId = user.Id,
+                    IsMember = true,
+                    IsAdmin = false,
+                    IsModerator = false
+                };
+
+                _context.GroupMemberships.Add(members);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", new { id = groupId });
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> AddModerator(string userId, int groupId)
         {
@@ -212,7 +212,7 @@ namespace Jobsway2goMvc.Controllers
                         GroupId = group.Id,
                         UserId = user.Id,
                         IsAdmin = false,
-                        IsMember= true,
+                        IsMember = true,
                         IsModerator = true
                     };
 
@@ -296,9 +296,6 @@ namespace Jobsway2goMvc.Controllers
             return View();
         }
 
-        // POST: Groups/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Group @group)
@@ -320,7 +317,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@group);
         }
 
-        // GET: Groups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Groups == null)
@@ -389,7 +385,7 @@ namespace Jobsway2goMvc.Controllers
 
             return View(@group);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> UpdatePrivacy([FromRoute] int id, [FromBody] bool isPublic)
         {
@@ -415,7 +411,7 @@ namespace Jobsway2goMvc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            
+
             return Ok(@group);
         }
 
@@ -448,7 +444,7 @@ namespace Jobsway2goMvc.Controllers
 
         private bool GroupExists(int id)
         {
-          return _context.Groups.Any(e => e.Id == id);
+            return _context.Groups.Any(e => e.Id == id);
         }
     }
 }
