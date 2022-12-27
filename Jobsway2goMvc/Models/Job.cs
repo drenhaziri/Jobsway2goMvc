@@ -13,8 +13,8 @@
         public DateTime DateTo { get; set; }
         public decimal MinSalary { get; set; }
         public decimal MaxSalary { get; set; }
-        //public List<User> Applicants { get; set; }
         public int CategoryId { get; set; } 
+
         public JobCategory Category { get; set; }
 
     }

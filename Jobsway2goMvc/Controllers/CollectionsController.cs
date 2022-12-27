@@ -10,26 +10,38 @@ using Jobsway2goMvc.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.Extensions.Hosting;
-using Jobsway2goMvc.Validations.Collections;
+using Microsoft.AspNetCore.Http;
 using FluentValidation.Results;
+using Jobsway2goMvc.Validators.Collections;
 
 namespace Jobsway2goMvc.Controllers
 {
     public class CollectionsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _usermanager;
+        private readonly SignInManager<ApplicationUser> _signinmanager;
 
-        public CollectionsController(ApplicationDbContext context,IHttpContextAccessor httpContextAccessor)
+        public CollectionsController(ApplicationDbContext context, UserManager<ApplicationUser> usermanager, SignInManager<ApplicationUser> signinmanager)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _usermanager = usermanager;
+            _signinmanager = signinmanager;
         }
 
         // GET: Collections
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Collections.ToListAsync());
+            if (_signinmanager.IsSignedIn(User))
+            {
+                return View(await _context.Collections
+                    .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                    .ToListAsync());
+            }
+            else 
+            {
+                return NotFound();
+            }
         }
 
         // GET: Collections/Details/5
@@ -56,14 +68,7 @@ namespace Jobsway2goMvc.Controllers
             return View();
         }
 
-        private ApplicationUser GetUser(ClaimsPrincipal principal)
-        {
-            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-
-            return user;
-        }
+        private Task<ApplicationUser> GetCurrentUser() { return _usermanager.GetUserAsync(HttpContext.User); }
 
         // POST: Collections/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -73,7 +78,6 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Create([Bind("Id,Name")] Collection collection)
         {
             ModelState.Remove("User");
-                var user = _httpContextAccessor.HttpContext.User;
 
                 CollectionValidator validator = new CollectionValidator();
                 ValidationResult result = validator.Validate(collection);
@@ -87,7 +91,8 @@ namespace Jobsway2goMvc.Controllers
                 }
                 else
                 {
-                    collection.User = GetUser(user);
+                    var user = await GetCurrentUser();
+                    collection.User = user;
                     _context.Add(collection);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -128,7 +133,6 @@ namespace Jobsway2goMvc.Controllers
             {
                 try
                 {
-                    var user = _httpContextAccessor.HttpContext.User;
 
                     CollectionValidator validator = new CollectionValidator();
                     ValidationResult result = validator.Validate(collection);
@@ -142,8 +146,8 @@ namespace Jobsway2goMvc.Controllers
                     }
                     else
                     {
-
-                        collection.User = GetUser(user);
+                        var user = await GetCurrentUser();
+                        collection.User = user;
                         _context.Update(collection);
                         await _context.SaveChangesAsync();
                     }
@@ -205,5 +209,6 @@ namespace Jobsway2goMvc.Controllers
         {
           return _context.Collections.Any(e => e.Id == id);
         }
+
     }
 }

@@ -77,9 +77,9 @@ namespace Jobsway2goMvc.Controllers
                 post.CreatedBy = GetApplicationUser(userAccessor);
                 _context.Add(post);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+                return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
             }
-            return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -115,7 +115,7 @@ namespace Jobsway2goMvc.Controllers
                     post.CreatedBy = GetApplicationUser(userAccessor);
                     _context.Update(post);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+                    return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -129,7 +129,7 @@ namespace Jobsway2goMvc.Controllers
                     }
                 }
             }
-            return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -164,7 +164,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }
 
         private bool PostExists(int id)

@@ -55,15 +55,18 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
         {
-            ModelState.Remove("Category");
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
+            
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
+                
+                var categories = _context.JobCategories.ToList();
+                ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
                 return View(job);
             }

@@ -11,7 +11,6 @@ namespace Jobsway2goMvc.Models
         public string? Address { get; set; }
         public string? ImagePath { get; set; }
         public string? Certificates { get; set; }
-
         public List<Collection> Collections {get;set;} 
         /*
          * public List<Language> Languages { get; set; }
