@@ -77,11 +77,11 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Collection collection)
         {
-            ModelState.Remove("User");
             var user = await GetCurrentUser();
             if (user == null)
             {
                 ViewBag.NullUser = "User is not logged in";
+                return View();
             }
             collection.User = user;
 
@@ -131,10 +131,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-
-            ModelState.Remove("User");
-            if (ModelState.IsValid)
-            {
+         
                 try
                 {
                     var user = await GetCurrentUser();
@@ -142,8 +139,9 @@ namespace Jobsway2goMvc.Controllers
                     if (user == null)
                     {
                         ViewBag.NullUser = "User is not logged in";
+                        return View();  
                     }
-
+                    
                     collection.User = user;
 
                     CollectionValidator validator = new CollectionValidator();
@@ -174,7 +172,7 @@ namespace Jobsway2goMvc.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            
             return View(collection);
         }
 
