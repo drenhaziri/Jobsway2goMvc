@@ -37,6 +37,11 @@ namespace Jobsway2goMvc.Data
                 .WithMany(g => g.Posts)
                 .HasForeignKey(p => p.GroupId);
             base.OnModelCreating(modelBuilder);
+            modelBuilder
+                .Entity<Collection>()
+                .HasMany(p => p.Jobs)
+                .WithMany(p => p.Collections)
+                .UsingEntity(j => j.ToTable("JobCollections"));
         }
 
     }
