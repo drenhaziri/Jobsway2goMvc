@@ -55,24 +55,6 @@ namespace Jobsway2goMvc.Controllers
             var users = _userManager.Users.ToList();
             return View(users);
         }
-        public async Task<IActionResult> DetailsPostsGroup(int? id)
-        {
-            if (id == null || _context.Groups == null)
-            {
-                return NotFound();
-            }
-
-            var @group = await _context.Groups
-                .Include(g => g.Posts)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@group == null)
-            {
-                return NotFound();
-            }
-            ViewBag.GroupId = id;
-            return View(group);
-        }
-
         public async Task<IActionResult> MemberList(int? id)
         {
             if (id == null)
@@ -215,7 +197,7 @@ namespace Jobsway2goMvc.Controllers
                 var userExist = _context.GroupMemberships
                  .Where(x => x.GroupId == groupId)
                  .ToList()
-                 .Any(x => x.IsModerator == true);
+                 .Any(x => x.UserId == userId && x.IsModerator == true);
 
                 if (userExist)
                 {
@@ -267,16 +249,15 @@ namespace Jobsway2goMvc.Controllers
                 }
 
                 var userExist = _context.GroupMemberships
-              .Where(x => x.GroupId == groupId)
-              .ToList()
-              .Any(x => x.IsAdmin == true);
+               .Where(x => x.GroupId == groupId)
+               .ToList()
+               .Any(x => x.UserId == userId && x.IsAdmin == true);
 
                 if (userExist)
                 {
                     ViewBag.AdminExist = "Admin Already Exists";
                     return RedirectToAction("Details", new { id = groupId });
                 }
-
 
                 if (ModelState.IsValid)
                 {
@@ -286,7 +267,7 @@ namespace Jobsway2goMvc.Controllers
                         UserId = user.Id,
                         IsAdmin = true,
                         IsMember = true,
-                        IsModerator = true
+                        IsModerator = false
                     };
 
                     _context.GroupMemberships.Add(members);
@@ -334,6 +315,7 @@ namespace Jobsway2goMvc.Controllers
             }
             return View(@group);
         }
+
 
         public async Task<IActionResult> Edit(int? id)
         {
