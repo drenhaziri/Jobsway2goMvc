@@ -1,9 +1,8 @@
-﻿
 namespace Jobsway2goMvc.Enums
 {
     public enum Approval
-    {       
-        Pending ,
+    {
+        Pending,
         Accepted,
         Rejected
     }
