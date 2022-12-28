@@ -16,6 +16,6 @@
         public int CategoryId { get; set; } 
 
         public JobCategory Category { get; set; }
-
+        public List<Collection> Collections { get; set; } 
     }
 }
