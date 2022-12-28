@@ -1,0 +1,17 @@
+﻿@model GroupMembership
+
+@{
+    ViewData["Title"] = "Leave";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Leave Group</h1>
+
+<h3>Are you sure you want to leave this group?</h3>
+<div>
+    <form asp-action="Leave" method="post">
+        <input type="hidden" asp-for="GroupId" />
+        <input type="submit" value="Leave" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
