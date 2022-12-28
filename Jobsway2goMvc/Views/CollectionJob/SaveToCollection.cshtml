@@ -1,0 +1,24 @@
+﻿@model Jobsway2goMvc.Models.ViewModel.CollectionJobViewModel;
+
+@{
+    ViewData["Title"] = "SaveToCollecetion";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SaveToCollection">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Jobs.Id" class="control-label"></label>
+                <input asp-for="Jobs.Id" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Collections.Name" class="control-label"></label>
+                @Html.DropDownList("Collections.Name", ViewBag.Collections, "-- Select Collection --", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save To Collection" class="btn btn-outline-secondary" />
+            </div>
+        </form>
+    </div>
+</div>
