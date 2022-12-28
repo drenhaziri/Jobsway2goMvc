@@ -14,6 +14,7 @@
         public decimal MinSalary { get; set; }
         public decimal MaxSalary { get; set; }
         public int CategoryId { get; set; } 
+        public int CollectionId { get; set; }
 
         public JobCategory Category { get; set; }
 
