@@ -147,24 +147,49 @@ namespace Jobsway2goMvc.Controllers
             return View(jobCategory);
         }
 
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    if (_context.JobCategories == null)
+        //    {
+        //        return Problem("Entity set 'ApplicationDbContext.JobCategories'  is null.");
+        //    }
+        //    var jobCategory = await _context.JobCategories.FindAsync(id);
+        //    if (jobCategory != null)
+        //    {
+        //        _context.JobCategories.Remove(jobCategory);
+        //    }
+            
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            if (_context.JobCategories == null)
+            ViewBag.Delete = "";
+            if(_context.Jobs == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.JobCategories'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Jobs'  is null.");
             }
-            var jobCategory = await _context.JobCategories.FindAsync(id);
-            if (jobCategory != null)
-            {
-                _context.JobCategories.Remove(jobCategory);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
+            var jobs = _context.Jobs.Where(x => x.CategoryId == id);
+            var category = _context.JobCategories.Where(x => x.Id == id);
+            //var category = _context.JobCategories.Include(c => c.Jobs).Where(c => c.Id == id).Select(x=>x);
+
+            if (jobs.Count() > 0)
+            {
+                ViewBag.Delete = "Cannot delete Job Category because it has jobs assigned to it.";
+                return View();
+            }
+            else
+            {
+                _context.JobCategories.Remove(category.SingleOrDefault());
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+        }
         private bool JobCategoryExists(int id)
         {
           return _context.JobCategories.Any(e => e.Id == id);
