@@ -1,4 +1,4 @@
-﻿namespace Jobsway2goMvc.Enums
+namespace Jobsway2goMvc.Enums
 {
     public enum Approval
     {
