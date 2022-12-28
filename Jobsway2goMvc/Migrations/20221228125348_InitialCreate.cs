@@ -274,9 +274,10 @@ namespace Jobsway2goMvc.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     GroupId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     IsMember = table.Column<bool>(type: "bit", nullable: true),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: true),
-                    IsModerator = table.Column<bool>(type: "bit", nullable: true),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
+                    IsModerator = table.Column<bool>(type: "bit", nullable: false),
                     IsBanned = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
