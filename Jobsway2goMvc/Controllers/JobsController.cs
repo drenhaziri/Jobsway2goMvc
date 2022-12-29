@@ -219,6 +219,7 @@ namespace Jobsway2goMvc.Controllers
                 }
                 return RedirectToAction("Index", "Jobs");
             }
+            return NotFound();
         }
 
         private bool JobExists(int id)
