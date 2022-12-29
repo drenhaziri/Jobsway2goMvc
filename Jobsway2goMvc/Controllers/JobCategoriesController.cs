@@ -157,7 +157,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             var jobs = _context.Jobs.Where(x => x.CategoryId == id);
-            //var category = _context.JobCategories.Where(x => x.Id == id);
+            var category = _context.JobCategories.Where(x => x.Id == id);
  
             if (jobs.Count() > 0)
             {
