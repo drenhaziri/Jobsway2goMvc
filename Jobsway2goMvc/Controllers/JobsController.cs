@@ -204,25 +204,21 @@ namespace Jobsway2goMvc.Controllers
                 Job = job,
                 Collection = collection
             };
+
             if (job.Id != 0 || collection.Id != 0)
             {
                 if (collection != null && job != null)
                 {
                     if (!collection.Jobs.Contains(job))
                     {
-                        GetJobs(collection).Add(job);
+                        collection.Jobs.Add(job);
+                        _context.Entry(collection).Collection(c => c.Jobs).IsModified = true;
                         await _context.SaveChangesAsync();
                         return RedirectToAction("Index", "Collections");
                     }
                 }
                 return RedirectToAction("Index", "Jobs");
             }
-            return NotFound();
-        }
-
-        private static List<Job> GetJobs(Collection collection)
-        {
-            return collection.Jobs;
         }
 
         private bool JobExists(int id)
