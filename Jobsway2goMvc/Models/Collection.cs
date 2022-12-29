@@ -12,7 +12,7 @@ namespace Jobsway2goMvc.Models
         public int Id { get; set; }
         public ApplicationUser User { get; set; }
         public string Name { get; set; }
-        public List<Job> Jobs { get; set; }
+        public List<Job> Jobs { get; set; } = new List<Job>();
         //public List<Post> Post { get; set; }
     }
 }
