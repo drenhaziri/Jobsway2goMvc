@@ -14,5 +14,21 @@ public class EventValidator : AbstractValidator<Event>
         //RuleFor(e => e.Speakers).NotEmpty().WithMessage(" Please Choose  speaker ");
         RuleFor(e => e.URL).NotEmpty().WithMessage("Please add a link");
         RuleFor(e => e.Location).NotEmpty().WithMessage("Please specify a Location");
+        RuleFor(e => e.EventDate).NotEmpty().WithMessage("Please specify a date")
+            .Must(ValidDate).WithMessage("Please specify a Valid Date");
     }
+
+    protected bool ValidDate(DateTime eventDate)
+    {
+        DateTime currentDate = DateTime.Now;
+        if(eventDate < currentDate)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
 }
