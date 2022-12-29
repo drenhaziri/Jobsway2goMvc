@@ -199,11 +199,6 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveToCollection(Job job, Collection collection)
         {
-            JobCollectionViewModel jobCollection = new JobCollectionViewModel
-            {
-                Job = job,
-                Collection = collection
-            };
 
             if (job.Id != 0 || collection.Id != 0)
             {
