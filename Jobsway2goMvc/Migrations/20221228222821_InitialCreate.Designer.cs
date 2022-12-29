@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221227174845_InitialCreate")]
+    [Migration("20221228222821_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,21 @@ namespace Jobsway2goMvc.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("CollectionJob", b =>
+                {
+                    b.Property<int>("CollectionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CollectionsId", "JobsId");
+
+                    b.HasIndex("JobsId");
+
+                    b.ToTable("JobCollections", (string)null);
+                });
 
             modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>
                 {
@@ -225,7 +240,7 @@ namespace Jobsway2goMvc.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsAdmin")
+                    b.Property<bool>("IsAdmin")
                         .HasColumnType("bit");
 
                     b.Property<bool?>("IsBanned")
@@ -234,8 +249,11 @@ namespace Jobsway2goMvc.Migrations
                     b.Property<bool?>("IsMember")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("IsModerator")
+                    b.Property<bool>("IsModerator")
                         .HasColumnType("bit");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -339,6 +357,9 @@ namespace Jobsway2goMvc.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -488,6 +509,21 @@ namespace Jobsway2goMvc.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("CollectionJob", b =>
+                {
+                    b.HasOne("Jobsway2goMvc.Models.Collection", null)
+                        .WithMany()
+                        .HasForeignKey("CollectionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Jobsway2goMvc.Models.Job", null)
+                        .WithMany()
+                        .HasForeignKey("JobsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>

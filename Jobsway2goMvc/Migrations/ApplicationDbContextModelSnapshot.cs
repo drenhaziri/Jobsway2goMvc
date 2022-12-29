@@ -22,6 +22,21 @@ namespace Jobsway2goMvc.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("CollectionJob", b =>
+                {
+                    b.Property<int>("CollectionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CollectionsId", "JobsId");
+
+                    b.HasIndex("JobsId");
+
+                    b.ToTable("JobCollections", (string)null);
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -492,6 +507,21 @@ namespace Jobsway2goMvc.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("CollectionJob", b =>
+                {
+                    b.HasOne("Jobsway2goMvc.Models.Collection", null)
+                        .WithMany()
+                        .HasForeignKey("CollectionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Jobsway2goMvc.Models.Job", null)
+                        .WithMany()
+                        .HasForeignKey("JobsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>

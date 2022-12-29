@@ -10,6 +10,8 @@ using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Validators.Job_Category;
 using Jobsway2goMvc.Validators.Jobs;
 using FluentValidation.Results;
+using Jobsway2goMvc.Models.ViewModel;
+using System.Security.Claims;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -169,6 +171,50 @@ namespace Jobsway2goMvc.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> SaveToCollection(int? id)
+        {
+            if (id == null || _context.Jobs == null)
+            {
+                return NotFound();
+            }
+
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
+
+            JobCollectionViewModel jobCollection = new JobCollectionViewModel();
+
+             jobCollection.Job = job;
+
+            var collections = _context.Collections.Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
+            ViewBag.Collections = new SelectList(collections, "Id", "Name");
+            return View(jobCollection);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveToCollection(int JobId, Job job,int CollectionId, Collection collection)
+        {
+            if (JobId != job.Id && CollectionId != collection.Id)
+            {
+                return NotFound();
+            }
+
+            if (collection != null && job != null)
+            {
+                if (!collection.Jobs.Contains(job))
+                {
+                    collection.Jobs.Add(job);
+                    _context.Collections.Update(collection);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "Collections");
+                }
+            }
+            return RedirectToAction("Index", "Jobs");
         }
 
         private bool JobExists(int id)

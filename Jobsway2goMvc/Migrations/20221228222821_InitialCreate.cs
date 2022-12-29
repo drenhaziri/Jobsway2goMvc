@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Jobsway2goMvc.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -274,9 +274,10 @@ namespace Jobsway2goMvc.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     GroupId = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     IsMember = table.Column<bool>(type: "bit", nullable: true),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: true),
-                    IsModerator = table.Column<bool>(type: "bit", nullable: true),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
+                    IsModerator = table.Column<bool>(type: "bit", nullable: false),
                     IsBanned = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
@@ -322,6 +323,30 @@ namespace Jobsway2goMvc.Migrations
                         name: "FK_Posts_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JobCollections",
+                columns: table => new
+                {
+                    CollectionsId = table.Column<int>(type: "int", nullable: false),
+                    JobsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobCollections", x => new { x.CollectionsId, x.JobsId });
+                    table.ForeignKey(
+                        name: "FK_JobCollections_Collections_CollectionsId",
+                        column: x => x.CollectionsId,
+                        principalTable: "Collections",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JobCollections_Jobs_JobsId",
+                        column: x => x.JobsId,
+                        principalTable: "Jobs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -386,6 +411,11 @@ namespace Jobsway2goMvc.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_JobCollections_JobsId",
+                table: "JobCollections",
+                column: "JobsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Jobs_CategoryId",
                 table: "Jobs",
                 column: "CategoryId");
@@ -419,13 +449,10 @@ namespace Jobsway2goMvc.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Collections");
-
-            migrationBuilder.DropTable(
                 name: "GroupMemberships");
 
             migrationBuilder.DropTable(
-                name: "Jobs");
+                name: "JobCollections");
 
             migrationBuilder.DropTable(
                 name: "Posts");
@@ -434,13 +461,19 @@ namespace Jobsway2goMvc.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "JobCategories");
+                name: "Collections");
+
+            migrationBuilder.DropTable(
+                name: "Jobs");
+
+            migrationBuilder.DropTable(
+                name: "Groups");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Groups");
+                name: "JobCategories");
 
             migrationBuilder.DropTable(
                 name: "Events");
