@@ -197,24 +197,33 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveToCollection(int JobId, Job job,int CollectionId, Collection collection)
+        public async Task<IActionResult> SaveToCollection(Job job, Collection collection)
         {
-            if (JobId != job.Id && CollectionId != collection.Id)
+            JobCollectionViewModel jobCollection = new JobCollectionViewModel
             {
-                return NotFound();
-            }
-
-            if (collection != null && job != null)
+                Job = job,
+                Collection = collection
+            };
+            if (job.Id != 0 || collection.Id != 0)
             {
-                if (!collection.Jobs.Contains(job))
+                if (collection != null && job != null)
                 {
-                    collection.Jobs.Add(job);
-                    _context.Collections.Update(collection);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction("Index", "Collections");
+                    if (!collection.Jobs.Contains(job))
+                    {
+                        GetJobs(collection).Add(job);
+                        _context.Collections.Update(collection);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction("Index", "Collections");
+                    }
                 }
+                return RedirectToAction("Index", "Jobs");
             }
-            return RedirectToAction("Index", "Jobs");
+            return NotFound();
+        }
+
+        private static List<Job> GetJobs(Collection collection)
+        {
+            return collection.Jobs;
         }
 
         private bool JobExists(int id)
