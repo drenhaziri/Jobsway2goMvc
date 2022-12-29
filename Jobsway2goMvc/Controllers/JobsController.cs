@@ -211,7 +211,6 @@ namespace Jobsway2goMvc.Controllers
                     if (!collection.Jobs.Contains(job))
                     {
                         GetJobs(collection).Add(job);
-                        _context.Collections.Update(collection);
                         await _context.SaveChangesAsync();
                         return RedirectToAction("Index", "Collections");
                     }
