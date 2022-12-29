@@ -1,0 +1,54 @@
+﻿@model GroupDetailsViewModel
+@using Jobsway2goMvc.Enums
+
+@{
+    ViewData["Title"] = "Membership Requests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Membership Requests</h1>
+
+@if (Model.GroupMemberships.Any())
+{
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr class="table-dark">
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var membership in Model.GroupMemberships)
+            {
+                <tr>
+                    <td>@membership.User.FirstName</td>
+                    <td>@membership.User.LastName</td>
+                    <td>@membership.User.Email</td>
+                    <td>
+                        @if (membership.Status == Approval.Pending)
+                        {
+                            <form asp-action="Accept" asp-controller="Groups">
+                                <input type="hidden" name="id" value="@ViewBag.GroupId" />
+                                <input asp-for="@membership.UserId" name="userId" hidden />
+                                <button class="btn btn-success">Accept</button>
+                            </form>
+                            <form asp-action="Reject" asp-controller="Groups">
+                                <input type="hidden" name="id" value="@ViewBag.GroupId" />
+                                <input asp-for="@membership.UserId" name="userId" hidden />
+                                <button class="btn btn-danger">Reject</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>There are no membership requests at this time.</p>
+}
+
+<a asp-action="Details" asp-route-id="@ViewBag.GroupId">Back to Details</a>

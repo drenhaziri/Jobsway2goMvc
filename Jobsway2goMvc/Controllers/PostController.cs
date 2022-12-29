@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Enums;
 using System.Security.Claims;
+using System.Timers;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -55,7 +57,7 @@ namespace Jobsway2goMvc.Controllers
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-            
+
             return user;
         }
 
@@ -75,11 +77,44 @@ namespace Jobsway2goMvc.Controllers
             {
                 var userAccessor = _httpContextAccessor.HttpContext.User;
                 post.CreatedBy = GetApplicationUser(userAccessor);
+                post.Status = Approval.Pending;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+                return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
             }
-            return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
+        }
+
+        public async Task<IActionResult> Accept(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Status = Approval.Accepted;
+            _context.Update(post);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
+        }
+
+        public async Task<IActionResult> Reject(int id)
+        {
+            var post = await _context.Posts.FindAsync(id);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Status = Approval.Rejected;   
+            _context.Remove(post);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -94,7 +129,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-            return View(post);
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }
 
         [HttpPost]
@@ -115,7 +150,7 @@ namespace Jobsway2goMvc.Controllers
                     post.CreatedBy = GetApplicationUser(userAccessor);
                     _context.Update(post);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+                    return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -129,7 +164,7 @@ namespace Jobsway2goMvc.Controllers
                     }
                 }
             }
-            return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -164,7 +199,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "Groups", new { id = post.GroupId });
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }
 
         private bool PostExists(int id)

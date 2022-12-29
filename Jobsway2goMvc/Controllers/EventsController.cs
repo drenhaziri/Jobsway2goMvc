@@ -16,13 +16,11 @@ namespace Jobsway2goMvc.Controllers
             _context = context;
         }
 
-        // GET: Events
         public async Task<IActionResult> Index()
         {
             return View(await _context.Events.ToListAsync());
         }
 
-        // GET: Events/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Events == null)
@@ -40,15 +38,11 @@ namespace Jobsway2goMvc.Controllers
             return View(@event);
         }
 
-        // GET: Events/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Events/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Event @event)
@@ -73,7 +67,6 @@ namespace Jobsway2goMvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Events/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Events == null)
@@ -89,9 +82,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@event);
         }
 
-        // POST: Events/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Event @event)
@@ -136,7 +126,6 @@ namespace Jobsway2goMvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Events/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Events == null)
@@ -154,7 +143,6 @@ namespace Jobsway2goMvc.Controllers
             return View(@event);
         }
 
-        // POST: Events/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

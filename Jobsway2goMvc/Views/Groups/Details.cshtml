@@ -1,16 +1,34 @@
-﻿@model IEnumerable<Jobsway2goMvc.Models.ApplicationUser>
+﻿@model GroupDetailsViewModel
+@using Jobsway2goMvc.Enums
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int groupId = ViewBag.Id;
-    @ViewBag.MemberExist
+    var currentUserId = Model.UserManager.GetUserId(User);
+    var currentUserMembership = Model.Context.GroupMemberships
+        .FirstOrDefault(m => m.UserId == currentUserId && m.GroupId == groupId);
 }
 
 <h1>User List, manage group members, moderators and admins</h1>
-<p class="text-danger"> @ViewBag.MemberExist </p>
-<p class="text-danger"> @ViewBag.ModeratorExist</p>
-<p class="text-danger"> @ViewBag.AdminExist</p>
+
+@if (currentUserMembership == null)
+{
+    <p class="text-danger">You are not a member of this group</p>
+}
+else if (currentUserMembership.Status == Approval.Pending)
+{
+    <p class="text-warning">Your membership request is pending</p>
+}
+else if (currentUserMembership.Status == Approval.Accepted)
+{
+    <p class="text-success">You are a member of this group</p>
+}
+else if (currentUserMembership.Status == Approval.Rejected)
+{
+    <p class="text-danger">Your membership request was rejected</p>
+}
+
 
 <table class="table table-hover table-bordered">
     <thead>
@@ -22,37 +40,53 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var user in Model)
+        @foreach (var user in Model.Users)
         {
             <tr>
                 <td>@user.FirstName</td>
                 <td>@user.LastName</td>
                 <td>@user.Email</td>
                 <td>
-                    <form asp-action="AddMember" asp-controller="Groups">
-                        <input asp-for="@user.Id" name="userId" hidden />
-                        <input asp-for="@groupId" name="groupId" hidden />
-                        <button class="btn btn-secondary">Add Member </button>
-                    </form>
-                    <form asp-action="AddModerator" asp-controller="Groups">
-                        <input asp-for="@user.Id" name="userId" hidden />
-                        <input asp-for="@groupId" name="groupId" hidden />
-                        <button class="btn btn-primary">Add Moderator </button>
-                    </form>
-                    <form asp-action="AddAdmin" asp-controller="Groups">
-                        <input asp-for="@user.Id" name="userId" hidden />
-                        <input asp-for="@groupId" name="groupId" hidden />
-                        <button class="btn btn-info">Add Admin </button>
-                    </form>
+                    @if (currentUserMembership != null && (currentUserMembership.IsAdmin || currentUserMembership.IsModerator))
+                    {
+                        <form asp-action="AddMember" asp-controller="Groups">
+                            <input asp-for="@user.Id" name="userId" hidden />
+                            <input asp-for="@groupId" name="groupId" hidden />
+                            <button class="btn btn-secondary">Add Member </button>
+                        </form>
+                        <form asp-action="AddModerator" asp-controller="Groups">
+                            <input asp-for="@user.Id" name="userId" hidden />
+                            <input asp-for="@groupId" name="groupId" hidden />
+                            <button class="btn btn-primary">Add Moderator </button>
+                        </form>
+                        <form asp-action="AddAdmin" asp-controller="Groups">
+                            <input asp-for="@user.Id" name="userId" hidden />
+                            <input asp-for="@groupId" name="groupId" hidden />
+                            <button class="btn btn-info">Add Admin </button>
+                        </form>
+                    }
                 </td>
             </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
   
-    <div>
-        <a asp-action="Index">Back to List</a>
-        <a asp-action="MemberList" asp-route-id="@groupId">View Member List</a>
-        <a asp-action="ModeratorList" asp-route-id="@groupId">View Moderator List</a>
-        <a asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
-    </div>
+<div>
+    <a asp-action="Index">Back to List</a>
+    <a asp-action="MemberList" asp-route-id="@groupId">View Member List</a>
+    <a asp-action="ModeratorList" asp-route-id="@groupId">View Moderator List</a>
+    <a asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
+    @if (currentUserMembership != null && (currentUserMembership.Status == Approval.Accepted 
+                                        || currentUserMembership.Status == Approval.Pending))
+    {
+        <a asp-action="Leave" asp-route-groupId="@groupId" class="btn btn-secondary">Leave Group</a>
+    }
+    @if (currentUserMembership == null || currentUserMembership.Status == Approval.Rejected)
+    {
+        <a asp-action="Join" asp-controller="Groups" asp-route-id="@groupId" class="btn btn-secondary">Join Group</a>
+    }
+    @if (currentUserMembership != null && (currentUserMembership.IsAdmin || currentUserMembership.IsModerator))
+    {
+        <a asp-action="Requests" asp-route-id="@groupId">View Membership Requests</a>
+    }
+</div>

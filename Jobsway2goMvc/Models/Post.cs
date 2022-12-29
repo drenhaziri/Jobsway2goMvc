@@ -10,6 +10,7 @@ namespace Jobsway2goMvc.Models
         public DateTime CreatedAtUTC { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public PostType Type { get; set; }
+        public Approval Status { get; set; }
         public int GroupId { get; set; }
         public Group Group { get; set; }
     }
