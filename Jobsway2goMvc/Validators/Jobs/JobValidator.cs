@@ -26,6 +26,9 @@ namespace Jobsway2goMvc.Validators.Jobs
             RuleFor(x => x.MaxSalary)
            .GreaterThanOrEqualTo(1)
            .WithMessage("Max. number of characters for citation must be greater than or equal to 1");
+            RuleFor(x => x.DateFrom)
+           .LessThanOrEqualTo(x => x.DateTo)
+           .WithMessage("DateFrom number of characters must be less than or equal to DateTo.");
         }
     }
 }
