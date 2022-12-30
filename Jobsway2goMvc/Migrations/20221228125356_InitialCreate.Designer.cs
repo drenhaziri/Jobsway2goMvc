@@ -4,6 +4,7 @@ using Jobsway2goMvc.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221228125356_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +23,6 @@ namespace Jobsway2goMvc.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("ApplicationUserJob", b =>
-                {
-                    b.Property<string>("ApplicantsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("JobsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ApplicantsId", "JobsId");
-
-                    b.HasIndex("JobsId");
-
-                    b.ToTable("JobApplicants", (string)null);
-                });
 
             modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>
                 {
@@ -167,30 +154,6 @@ namespace Jobsway2goMvc.Migrations
                     b.ToTable("Collections");
                 });
 
-            modelBuilder.Entity("Jobsway2goMvc.Models.Connection", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Connect1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Connect2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Connections");
-                });
-
             modelBuilder.Entity("Jobsway2goMvc.Models.Event", b =>
                 {
                     b.Property<int>("Id")
@@ -290,25 +253,6 @@ namespace Jobsway2goMvc.Migrations
                     b.ToTable("GroupMemberships");
                 });
 
-            modelBuilder.Entity("Jobsway2goMvc.Models.HubConnection", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ConnectionId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("HubConnections");
-                });
-
             modelBuilder.Entity("Jobsway2goMvc.Models.Job", b =>
                 {
                     b.Property<int>("Id")
@@ -379,31 +323,6 @@ namespace Jobsway2goMvc.Migrations
                     b.ToTable("JobCategories");
                 });
 
-            modelBuilder.Entity("Jobsway2goMvc.Models.Notifications", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MessageType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("NotificationDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notifications");
-                });
-
             modelBuilder.Entity("Jobsway2goMvc.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -423,9 +342,6 @@ namespace Jobsway2goMvc.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -575,21 +491,6 @@ namespace Jobsway2goMvc.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("ApplicationUserJob", b =>
-                {
-                    b.HasOne("Jobsway2goMvc.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicantsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Jobsway2goMvc.Models.Job", null)
-                        .WithMany()
-                        .HasForeignKey("JobsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>

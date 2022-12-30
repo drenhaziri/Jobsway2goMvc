@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using Group = Jobsway2goMvc.Models.Group;
 using System.Data;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Jobsway2goMvc.Enums;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -36,9 +37,9 @@ namespace Jobsway2goMvc.Controllers
             return View(await _context.Groups.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
@@ -50,9 +51,25 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
 
-            ViewBag.Id = group.Id;
-            var users = _userManager.Users.ToList();
-            return View(users);
+            var groupMemberships = await _context.GroupMemberships
+                .Include(m => m.User)
+                .Where(m => m.GroupId == id)
+                .ToListAsync();
+
+            var users = groupMemberships.Select(m => m.User).ToList();
+
+            var viewModel = new GroupDetailsViewModel
+            {
+                GroupId = id,
+                Users = users,
+                GroupMemberships = groupMemberships,
+                UserManager = _userManager,
+                Context = _context
+            };
+
+            ViewBag.Id = id;
+
+            return View(viewModel);
         }
 
         public async Task<IActionResult> DetailsPostsGroup(int? id)
@@ -324,12 +341,26 @@ namespace Jobsway2goMvc.Controllers
             ModelState.Remove("Posts");
             if (ModelState.IsValid)
             {
-                _context.Add(new Group
+                var newGroup = new Group
                 {
                     Name = @group.Name,
                     CreatedBy = owner.UserName,
-                });
+                };
+
+                _context.Add(newGroup);
                 await _context.SaveChangesAsync();
+
+                var membership = new GroupMembership
+                {
+                    GroupId = newGroup.Id,
+                    UserId = owner.Id,
+                    Status = Approval.Accepted,
+                    IsMember = true,
+                    IsAdmin = true
+                };
+                _context.Add(membership);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(@group);
@@ -464,6 +495,172 @@ namespace Jobsway2goMvc.Controllers
         private bool GroupExists(int id)
         {
             return _context.Groups.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> Join(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var group = await _context.Groups.FindAsync(id);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+             
+            var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == id && m.UserId == user.Id);
+
+            if (membership == null)
+            {
+                membership = new GroupMembership
+                {
+                    GroupId = id,
+                    UserId = user.Id,
+                    Status = Approval.Pending,
+                    IsMember = true
+                };
+                _context.Add(membership);
+            }
+            else
+            {
+                membership.Status = Approval.Pending;
+                _context.Update(membership);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id });
+        }
+
+        public async Task<IActionResult> Requests(int id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var group = await _context.Groups.FindAsync(id);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == id && m.UserId == user.Id && (m.IsAdmin || m.IsModerator));
+
+            if (membership == null)
+            {
+                return Forbid();
+            }
+
+            var requests = _context.GroupMemberships
+                .Where(m => m.GroupId == id && m.Status == Approval.Pending)
+                .Include(m => m.User)
+                .ToList();
+
+            var viewModel = new GroupDetailsViewModel
+            {
+                GroupMemberships = requests
+
+            };
+
+            ViewBag.GroupId = id;
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> Accept(int id, string userId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var group = await _context.Groups.FindAsync(id);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == id && m.UserId == user.Id && (m.IsAdmin || m.IsModerator));
+
+            if (membership == null)
+            {
+                return Forbid();
+            }
+
+            var request = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == id && m.UserId == userId);
+            request.Status = Approval.Accepted;
+            _context.Update(request);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Requests), new { id });
+        }
+
+        public async Task<IActionResult> Reject(int id, string userId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var group = await _context.Groups.FindAsync(id);
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == id && m.UserId == user.Id && (m.IsAdmin || m.IsModerator));
+
+            if (membership == null)
+            {
+                return Forbid();
+            }
+
+            var request = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == id && m.UserId == userId);
+
+            if (request != null)
+            {
+                request.Status = Approval.Rejected;
+                _context.Update(request);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                request = new GroupMembership
+                {
+                    GroupId = id,
+                    UserId = userId,
+                    Status = Approval.Pending
+                };
+                _context.Add(request);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Requests), new { id });
+        }
+
+        public async Task<IActionResult> Leave(int groupId)
+        {
+            var currentUserId = _userManager.GetUserId(User);
+            var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.UserId == currentUserId && m.GroupId == groupId);
+            if (membership == null || (membership.Status != Approval.Accepted && membership.Status != Approval.Pending))
+            {
+                return NotFound();
+            }
+
+            return View(membership);
+        }
+
+        [HttpPost, ActionName("Leave")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LeaveConfirmed(int groupId)
+        {
+            var currentUserId = _userManager.GetUserId(User);
+            var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.UserId == currentUserId && m.GroupId == groupId);
+            if (membership == null || (membership.Status != Approval.Accepted && membership.Status != Approval.Pending))
+            {
+                return NotFound();
+            }
+            _context.GroupMemberships.Remove(membership);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

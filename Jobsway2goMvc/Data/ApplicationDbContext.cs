@@ -40,8 +40,13 @@ namespace Jobsway2goMvc.Data
                 .HasOne(p => p.Group)
                 .WithMany(g => g.Posts)
                 .HasForeignKey(p => p.GroupId);
+            modelBuilder.Entity<ApplicationUser>()
+                 .HasMany(p => p.Jobs)
+                 .WithMany(p => p.Applicants)
+                 .UsingEntity(j => j.ToTable("JobApplicants"));
+           
             base.OnModelCreating(modelBuilder);
         }
-
+        
     }
 }
