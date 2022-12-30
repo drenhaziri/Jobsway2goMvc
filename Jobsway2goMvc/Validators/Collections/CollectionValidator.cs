@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
 using Jobsway2goMvc.Models;
-using System.Runtime.CompilerServices;
 
-namespace Jobsway2goMvc.Validations.Collections;
+namespace Jobsway2goMvc.Validators.Collections;
 
 public class CollectionValidator : AbstractValidator<Collection>
 {

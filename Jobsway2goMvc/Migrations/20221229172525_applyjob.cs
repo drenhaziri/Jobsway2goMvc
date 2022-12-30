@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Jobsway2goMvc.Migrations
 {
-    public partial class AddIsPublicColumn : Migration
+    public partial class applyjob : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,11 +48,8 @@ namespace Jobsway2goMvc.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221226132939_InitialCreate.cs
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-=======
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false)
->>>>>>> dev:Jobsway2goMvc/Migrations/20221226134003_AddIsPublicColumn.cs
                 },
                 constraints: table =>
                 {
@@ -328,6 +325,30 @@ namespace Jobsway2goMvc.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "JobApplicants",
+                columns: table => new
+                {
+                    ApplicantsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    JobsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobApplicants", x => new { x.ApplicantsId, x.JobsId });
+                    table.ForeignKey(
+                        name: "FK_JobApplicants_AspNetUsers_ApplicantsId",
+                        column: x => x.ApplicantsId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JobApplicants_Jobs_JobsId",
+                        column: x => x.JobsId,
+                        principalTable: "Jobs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -388,6 +409,11 @@ namespace Jobsway2goMvc.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_JobApplicants_JobsId",
+                table: "JobApplicants",
+                column: "JobsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Jobs_CategoryId",
                 table: "Jobs",
                 column: "CategoryId");
@@ -424,13 +450,10 @@ namespace Jobsway2goMvc.Migrations
                 name: "Collections");
 
             migrationBuilder.DropTable(
-<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221226132939_InitialCreate.cs
                 name: "GroupMemberships");
 
             migrationBuilder.DropTable(
-=======
->>>>>>> dev:Jobsway2goMvc/Migrations/20221226134003_AddIsPublicColumn.cs
-                name: "Jobs");
+                name: "JobApplicants");
 
             migrationBuilder.DropTable(
                 name: "Posts");
@@ -439,13 +462,16 @@ namespace Jobsway2goMvc.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "JobCategories");
+                name: "Jobs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "JobCategories");
 
             migrationBuilder.DropTable(
                 name: "Events");

@@ -22,6 +22,21 @@ namespace Jobsway2goMvc.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("ApplicationUserJob", b =>
+                {
+                    b.Property<string>("ApplicantsId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("JobsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ApplicantsId", "JobsId");
+
+                    b.HasIndex("JobsId");
+
+                    b.ToTable("JobApplicants", (string)null);
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -197,13 +212,11 @@ namespace Jobsway2goMvc.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-<<<<<<< HEAD
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
-=======
+
                     b.Property<bool>("IsPublic")
                         .HasColumnType("bit");
->>>>>>> dev
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -488,6 +501,21 @@ namespace Jobsway2goMvc.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("ApplicationUserJob", b =>
+                {
+                    b.HasOne("Jobsway2goMvc.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ApplicantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Jobsway2goMvc.Models.Job", null)
+                        .WithMany()
+                        .HasForeignKey("JobsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>

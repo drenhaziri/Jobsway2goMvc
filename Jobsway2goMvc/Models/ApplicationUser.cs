@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Build.Framework;
+using System.ComponentModel;
 
 namespace Jobsway2goMvc.Models
 {
@@ -11,11 +13,11 @@ namespace Jobsway2goMvc.Models
         public string? Address { get; set; }
         public string? ImagePath { get; set; }
         public string? Certificates { get; set; }
-        public List<Collection> Collections {get;set;} 
+        public List<Collection> Collections {get;set;}
         /*
          * public List<Language> Languages { get; set; }
         public List<Project> Projects { get; set; }*/
-
+        public virtual ICollection<Job> Jobs { get; set; }
         public string? Badges { get; set; }
         public string? Courses { get; set; }
         public string? References { get; set; }

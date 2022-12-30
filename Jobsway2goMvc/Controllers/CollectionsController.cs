@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
-using Jobsway2goMvc.Validations.Collections;
 using FluentValidation.Results;
+using Jobsway2goMvc.Validators.Collections;
 
 namespace Jobsway2goMvc.Controllers
 {

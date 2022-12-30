@@ -1,27 +1,79 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Jobsway2goMvc.Data;
+using Jobsway2goMvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Jobsway2goMvc.Data;
-using Jobsway2goMvc.Models;
+using System.Security.Claims;
 
 namespace Jobsway2goMvc.Controllers
 {
     public class JobsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public JobsController(ApplicationDbContext context)
+        public JobsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Jobs.Include(j => j.Category).ToListAsync());
+            var result = await _context.Jobs.Include(j => j.Category).ToListAsync();
+            return View(result);
+        }
+        private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
+        {
+            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            return user;
+        }
+        [HttpGet]
+        public async Task<IActionResult> ApplyJob(int? id)
+        {
+            if (id == null || _context.Jobs == null)
+            {
+                return NotFound();
+            }
+            var job = await _context.Jobs
+                 .Include(j => j.Category)
+                 .Include(j => j.Applicants)
+                 .FirstOrDefaultAsync(m => m.Id == id);                 
+            if (job == null)
+            {
+                return NotFound();
+            }
+
+            return View(job);
+        }
+
+        [HttpPost, ActionName("ApplyJob")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ApplyJobConfirmed(int id)
+        {
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            var job = await _context.Jobs
+                .Include(j => j.Category)
+                .Include(j => j.Applicants)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (job != null && user != null )
+            {
+                bool exists = job.Applicants.Any(x => x.Id == user.Id);
+                if (exists)
+                {
+                    ViewBag.JobApplicationExists = "Job Application Exists";
+                    return View(job);
+                }
+                job.Applicants.Add(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(job);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -29,9 +81,10 @@ namespace Jobsway2goMvc.Controllers
             if (id == null || _context.Jobs == null)
             {
                 return NotFound();
-            }
+            }        
             var job = await _context.Jobs
                 .Include(j => j.Category)
+                .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (job == null)
             {
@@ -53,6 +106,8 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
         {
             ModelState.Remove("Category");
+            ModelState.Remove("Applicants");
+           
             if (ModelState.IsValid)
             {
                 _context.Add(job);
@@ -92,6 +147,8 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
             ModelState.Remove("Category");
+            ModelState.Remove("Applicants");
+            
             if (ModelState.IsValid)
             {
                 try
