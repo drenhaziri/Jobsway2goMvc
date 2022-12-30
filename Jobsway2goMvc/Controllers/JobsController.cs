@@ -256,20 +256,20 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveToCollection(Job job, Collection collection)
         {
-            var collection1 = await _context.Collections
+            var collectionRef = await _context.Collections
                 .Include(a => a.Jobs)
                 .FirstOrDefaultAsync(a => a.Id == collection.Id);
-            var job1 = await _context.Jobs.FirstOrDefaultAsync(a => a.Id == job.Id);
+            var jobRef = await _context.Jobs.FirstOrDefaultAsync(a => a.Id == job.Id);
 
-            if (collection1 != null && job1 != null)
+            if (collectionRef != null && jobRef != null)
             {
-                bool exists = collection1.Jobs.Any(x => x.Id == job.Id);
+                bool exists = collectionRef.Jobs.Any(x => x.Id == job.Id);
                 if (exists)
                 {
                     ViewBag.JobExists = "Job Exists in Collection";
                     return View(job);
                 }
-                collection1.Jobs.Add(job1);
+                collectionRef.Jobs.Add(jobRef);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Collections");
             }
