@@ -23,7 +23,11 @@ namespace Jobsway2goMvc.Data
         public DbSet<JobCategory> JobCategories { get; set; }
         public DbSet<Event> Events { get; set; }
 
-        //public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Notifications> Notifications { get; set; }
+        public DbSet<HubConnection> HubConnections { get; set; }
+
+        public DbSet<Connection> Connections { get; set; }
+       
         //public DbSet<Section> Sections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
