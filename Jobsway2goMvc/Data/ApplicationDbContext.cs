@@ -44,13 +44,12 @@ namespace Jobsway2goMvc.Data
                  .HasMany(p => p.Jobs)
                  .WithMany(p => p.Applicants)
                  .UsingEntity(j => j.ToTable("JobApplicants"));
-           
-            base.OnModelCreating(modelBuilder);
             modelBuilder
                 .Entity<Collection>()
                 .HasMany(p => p.Jobs)
                 .WithMany(p => p.Collections)
                 .UsingEntity(j => j.ToTable("JobCollections"));
+            base.OnModelCreating(modelBuilder);
         }
         
     }
