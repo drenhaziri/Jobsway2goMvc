@@ -5,6 +5,12 @@ using Jobsway2goMvc.Validators.Jobs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Jobsway2goMvc.Data;
+using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Validators.Job_Category;
+using Jobsway2goMvc.Validators.Jobs;
+using FluentValidation.Results;
+using Jobsway2goMvc.Models.ViewModel;
 using System.Security.Claims;
 
 namespace Jobsway2goMvc.Controllers
@@ -220,6 +226,54 @@ namespace Jobsway2goMvc.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> SaveToCollection(int? id)
+        {
+            if (id == null || _context.Jobs == null)
+            {
+                return NotFound();
+            }
+
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
+
+            JobCollectionViewModel jobCollection = new JobCollectionViewModel();
+
+            jobCollection.Job = job;
+
+            var collections = _context.Collections
+                .Include(a => a.Jobs)
+                .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
+            ViewBag.Collections = new SelectList(collections, "Id", "Name");
+            return View(jobCollection);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveToCollection(Job job, Collection collection)
+        {
+            var collectionRef = await _context.Collections
+                .Include(a => a.Jobs)
+                .FirstOrDefaultAsync(a => a.Id == collection.Id);
+            var jobRef = await _context.Jobs.FirstOrDefaultAsync(a => a.Id == job.Id);
+
+            if (collectionRef != null && jobRef != null)
+            {
+                bool exists = collectionRef.Jobs.Any(x => x.Id == job.Id);
+                if (exists)
+                {
+                    ViewBag.JobExists = "Job Exists in Collection";
+                    return View(job);
+                }
+                collectionRef.Jobs.Add(jobRef);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Collections");
+            }
+            return RedirectToAction("Index", "Jobs");
         }
 
         private bool JobExists(int id)

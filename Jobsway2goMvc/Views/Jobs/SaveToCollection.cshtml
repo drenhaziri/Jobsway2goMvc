@@ -1,0 +1,63 @@
+﻿@model Jobsway2goMvc.Models.ViewModel.JobCollectionViewModel;
+@{
+    ViewData["Title"] = "SaveToCollection";
+    @ViewBag.JobExists;
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SaveToCollection">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Job.Id" />
+            <div class="form-group">
+                <label asp-for="Job.CompanyName" class="control-label"></label>
+                <input disabled asp-for="Job.CompanyName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.Location" class="control-label"></label>
+                <input disabled asp-for="Job.Location" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.Schedule" class="control-label"></label>
+                <input disabled asp-for="Job.Schedule" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.Description" class="control-label"></label>
+                <input disabled asp-for="Job.Description" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.OpenSpots" class="control-label"></label>
+                <input disabled asp-for="Job.OpenSpots" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.Requirements" class="control-label"></label>
+                <input disabled asp-for="Job.Requirements" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.DateFrom" class="control-label"></label>
+                <input disabled asp-for="Job.DateFrom" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.DateTo" class="control-label"></label>
+                <input disabled asp-for="Job.DateTo" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.MinSalary" class="control-label"></label>
+                <input disabled asp-for="Job.MinSalary" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.MaxSalary" class="control-label"></label>
+                <input disabled asp-for="Job.MaxSalary" class="form-control" />
+            </div>
+            <div class="pu-2 form-group">
+                <label class="control-label">Choose a collection to save the job</label>
+                @Html.DropDownListFor(model => model.Collection.Id, (IEnumerable<SelectListItem>)ViewBag.Collections, "-- Select a collection --", htmlAttributes: new { @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="SaveToCollection" class="btn btn-outline-secondary" />
+            </div>
+        </form>
+    </div>
+</div>

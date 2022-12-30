@@ -12,8 +12,7 @@ namespace Jobsway2goMvc.Models
         public int Id { get; set; }
         public ApplicationUser User { get; set; }
         public string Name { get; set; }
-        //public List<Job> Job { get; set; }
-        //public List<Post> Post { get; set; }
+        public virtual ICollection<Job> Jobs { get; set; } = new List<Job>();
     }
 }
 
