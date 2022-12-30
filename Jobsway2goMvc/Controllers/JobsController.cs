@@ -163,6 +163,8 @@ namespace Jobsway2goMvc.Controllers
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
+                var categories = _context.JobCategories.ToList();
+                ViewBag.Categories = new SelectList(categories, "Id", "Name");
                 return View(job);
             }
 
