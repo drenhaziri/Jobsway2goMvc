@@ -1,5 +1,7 @@
-﻿using Jobsway2goMvc.Data;
+﻿using FluentValidation.Results;
+using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Validators.Jobs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
