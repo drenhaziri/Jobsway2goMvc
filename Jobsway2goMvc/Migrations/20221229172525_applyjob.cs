@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Jobsway2goMvc.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class applyjob : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -328,14 +328,22 @@ namespace Jobsway2goMvc.Migrations
                 });
 
             migrationBuilder.CreateTable(
+<<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221228222821_InitialCreate.cs
                 name: "JobCollections",
                 columns: table => new
                 {
                     CollectionsId = table.Column<int>(type: "int", nullable: false),
+========
+                name: "JobApplicants",
+                columns: table => new
+                {
+                    ApplicantsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+>>>>>>>> dev:Jobsway2goMvc/Migrations/20221229172525_applyjob.cs
                     JobsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
+<<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221228222821_InitialCreate.cs
                     table.PrimaryKey("PK_JobCollections", x => new { x.CollectionsId, x.JobsId });
                     table.ForeignKey(
                         name: "FK_JobCollections_Collections_CollectionsId",
@@ -345,6 +353,17 @@ namespace Jobsway2goMvc.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_JobCollections_Jobs_JobsId",
+========
+                    table.PrimaryKey("PK_JobApplicants", x => new { x.ApplicantsId, x.JobsId });
+                    table.ForeignKey(
+                        name: "FK_JobApplicants_AspNetUsers_ApplicantsId",
+                        column: x => x.ApplicantsId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JobApplicants_Jobs_JobsId",
+>>>>>>>> dev:Jobsway2goMvc/Migrations/20221229172525_applyjob.cs
                         column: x => x.JobsId,
                         principalTable: "Jobs",
                         principalColumn: "Id",
@@ -411,8 +430,13 @@ namespace Jobsway2goMvc.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+<<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221228222821_InitialCreate.cs
                 name: "IX_JobCollections_JobsId",
                 table: "JobCollections",
+========
+                name: "IX_JobApplicants_JobsId",
+                table: "JobApplicants",
+>>>>>>>> dev:Jobsway2goMvc/Migrations/20221229172525_applyjob.cs
                 column: "JobsId");
 
             migrationBuilder.CreateIndex(
@@ -452,7 +476,11 @@ namespace Jobsway2goMvc.Migrations
                 name: "GroupMemberships");
 
             migrationBuilder.DropTable(
+<<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221228222821_InitialCreate.cs
                 name: "JobCollections");
+========
+                name: "JobApplicants");
+>>>>>>>> dev:Jobsway2goMvc/Migrations/20221229172525_applyjob.cs
 
             migrationBuilder.DropTable(
                 name: "Posts");
@@ -461,6 +489,7 @@ namespace Jobsway2goMvc.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+<<<<<<<< HEAD:Jobsway2goMvc/Migrations/20221228222821_InitialCreate.cs
                 name: "Collections");
 
             migrationBuilder.DropTable(
@@ -468,9 +497,15 @@ namespace Jobsway2goMvc.Migrations
 
             migrationBuilder.DropTable(
                 name: "Groups");
+========
+                name: "Jobs");
+>>>>>>>> dev:Jobsway2goMvc/Migrations/20221229172525_applyjob.cs
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "JobCategories");
 
             migrationBuilder.DropTable(
                 name: "JobCategories");

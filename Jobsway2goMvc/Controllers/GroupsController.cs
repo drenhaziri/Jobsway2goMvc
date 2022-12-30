@@ -45,8 +45,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             var group = await _context.Groups
-                .FirstOrDefaultAsync(g => g.Id == id);
-
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (group == null)
             {
                 return NotFound();

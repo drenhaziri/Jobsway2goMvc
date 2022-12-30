@@ -10,5 +10,6 @@
         public List<ApplicationUser> Speakers { get; set; }
         public string URL { get; set; }
         public string Location { get; set; }
+        public DateTime EventDate { get; set; }
     }
 }
