@@ -188,9 +188,11 @@ namespace Jobsway2goMvc.Controllers
 
             JobCollectionViewModel jobCollection = new JobCollectionViewModel();
 
-             jobCollection.Job = job;
+            jobCollection.Job = job;
 
-            var collections = _context.Collections.Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
+            var collections = _context.Collections
+                .Include(a => a.Jobs)
+                .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
             ViewBag.Collections = new SelectList(collections, "Id", "Name");
             return View(jobCollection);
         }
@@ -199,22 +201,21 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SaveToCollection(Job job, Collection collection)
         {
+            var collection1 = await _context.Collections.Include(a => a.Jobs).FirstOrDefaultAsync(a => a.Id == collection.Id);
+            var job1 = await _context.Jobs.FirstOrDefaultAsync(a => a.Id == job.Id);
 
-            if (job.Id != 0 || collection.Id != 0)
+            if (collection1 != null && job1 != null)
             {
-                if (collection != null && job != null)
+                bool exists = collection1.Jobs.Any(x => x.Id == collection.Id);
+                if (exists)
                 {
-                    if (!collection.Jobs.Contains(job))
-                    {
-                        collection.Jobs.Add(job);
-                        _context.Entry(collection).Collection(c => c.Jobs).IsModified = true;
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction("Index", "Collections");
-                    }
+                    return View(job);
                 }
-                return RedirectToAction("Index", "Jobs");
+                collection1.Jobs.Add(job1);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Collections");
             }
-            return NotFound();
+            return RedirectToAction("Index", "Jobs");
         }
 
         private bool JobExists(int id)
