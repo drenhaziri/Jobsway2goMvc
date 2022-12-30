@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Jobsway2goMvc.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -57,6 +57,20 @@ namespace Jobsway2goMvc.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "HubConnections",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConnectionId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HubConnections", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "JobCategories",
                 columns: table => new
                 {
@@ -67,6 +81,22 @@ namespace Jobsway2goMvc.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_JobCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MessageType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NotificationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -424,7 +454,13 @@ namespace Jobsway2goMvc.Migrations
                 name: "GroupMemberships");
 
             migrationBuilder.DropTable(
+                name: "HubConnections");
+
+            migrationBuilder.DropTable(
                 name: "Jobs");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "Posts");

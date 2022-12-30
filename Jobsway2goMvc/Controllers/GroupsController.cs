@@ -44,7 +44,6 @@ namespace Jobsway2goMvc.Controllers
             }
 
             var group = await _context.Groups
-                .Include(g => g.Posts)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (group == null)
             {
