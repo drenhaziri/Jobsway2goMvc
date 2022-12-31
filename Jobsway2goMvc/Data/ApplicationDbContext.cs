@@ -23,7 +23,11 @@ namespace Jobsway2goMvc.Data
         public DbSet<JobCategory> JobCategories { get; set; }
         public DbSet<Event> Events { get; set; }
 
-        //public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Notifications> Notifications { get; set; }
+        public DbSet<HubConnection> HubConnections { get; set; }
+
+        public DbSet<Connection> Connections { get; set; }
+       
         //public DbSet<Section> Sections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,8 +40,17 @@ namespace Jobsway2goMvc.Data
                 .HasOne(p => p.Group)
                 .WithMany(g => g.Posts)
                 .HasForeignKey(p => p.GroupId);
+            modelBuilder.Entity<ApplicationUser>()
+                 .HasMany(p => p.Jobs)
+                 .WithMany(p => p.Applicants)
+                 .UsingEntity(j => j.ToTable("JobApplicants"));
+            modelBuilder
+                .Entity<Collection>()
+                .HasMany(p => p.Jobs)
+                .WithMany(p => p.Collections)
+                .UsingEntity(j => j.ToTable("JobCollections"));
             base.OnModelCreating(modelBuilder);
         }
-
+        
     }
 }

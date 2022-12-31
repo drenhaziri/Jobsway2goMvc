@@ -1,8 +1,11 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Jobsway2goMvc.Data;
+using Jobsway2goMvc.Hubs;
+using Jobsway2goMvc.MiddlewareExtensions;
 using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Services;
+using Jobsway2goMvc.SubscribeTableDependencies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +17,13 @@ builder.Services.AddControllersWithViews()
             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()))
             .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false);
 
+var connectionString = builder.Configuration.GetConnectionString("JobPortalConString");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("JobPortalConString"));
-});
+    options.UseSqlServer(connectionString),
+    ServiceLifetime.Singleton
+);
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -26,6 +32,12 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 builder.Services.AddAutoMapper(typeof(UserProfileMapper).Assembly);
 builder.Services.AddRazorPages();
+
+//notification SignalR
+builder.Services.AddSignalR();
+
+builder.Services.AddSingleton<NotificationHub>();
+builder.Services.AddSingleton<SubscribeNotificationTableDependency>();
 
 var app = builder.Build();
 
@@ -40,6 +52,9 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<NotificationHub>("/notificationHub");
+app.UseSqlTableDependency<SubscribeNotificationTableDependency>(connectionString);
+
 app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",

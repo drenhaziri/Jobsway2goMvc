@@ -1,7 +1,11 @@
-﻿@model Jobsway2goMvc.Models.Group
+﻿@using Jobsway2goMvc.Enums;
+@model Jobsway2goMvc.Models.Group
+
+ 
 
 @{
     ViewData["Title"] = "Details";
+    @ViewBag.Rejected
 }
 
 <h1>Details</h1>
@@ -35,6 +39,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.Posts.First().Type)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Posts.First().Status)
+            </th>
+
         </tr>
     </thead>
     <tbody>
@@ -54,6 +62,21 @@
                     @Html.DisplayFor(model => post.Type)
                 </td>
                 <td>
+                    @Html.DisplayFor(model => post.Status)
+                </td>
+                <td>    
+                    @if (post.Status ==Approval.Pending)
+                    {
+                        <form asp-action="Accept" asp-route-id="@post.Id" asp-controller="Post">
+                            <button class="btn btn-primary">Accept</button>
+                        </form>
+
+                        <form asp-action="Reject" asp-route-id="@post.Id" asp-controller="Post">
+                            <button class="btn btn-danger">Reject</button>                            
+                        </form>
+                    }
+                </td>
+                <td>
                     <a asp-action="EditPost" asp-route-id="@post.Id">Edit</a> |
                     <a asp-action="DetailsPost" asp-route-id="@post.Id">Details</a> |
                     <a asp-action="DeletePost" asp-route-id="@post.Id">Delete</a>
@@ -62,6 +85,7 @@
         }
     </tbody>
 </table>
+
 <a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary">Create New Post</a>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
