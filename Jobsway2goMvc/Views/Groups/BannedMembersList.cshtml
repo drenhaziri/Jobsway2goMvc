@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<Jobsway2goMvc.Models.ApplicationUser>
 
 @{
-    ViewData["Title"] = "Moderator List";
+    ViewData["Title"] = "Member List";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int groupId = ViewBag.Id;
 }
 
-<h1>Moderators List</h1>
+<h1>Banned Member List</h1>
 
 <table class="table table-hover table-bordered">
     <thead>
@@ -31,7 +31,7 @@
         else
         {
             <tr>
-                <td>No Moderators at the moment</td>
+                <td>No Members banned at the moment</td>
             </tr>
         }
     </tbody>
