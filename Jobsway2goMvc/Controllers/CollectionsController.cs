@@ -207,7 +207,7 @@ namespace Jobsway2goMvc.Controllers
             
             if (collection != null)
             {
-                if (collection.Job.Count() > 0)
+                if (collection.Jobs.Count() > 0)
                 {
                     ViewBag.DeleteWarning = "The collection you’re about to delete is not empty.";
                     return View();
