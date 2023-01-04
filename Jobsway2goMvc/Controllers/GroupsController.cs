@@ -743,17 +743,6 @@ namespace Jobsway2goMvc.Controllers
                     return Forbid();
                 }
 
-                var userExist = _context.GroupMemberships
-               .Where(x => x.GroupId == groupId)
-               .ToList()
-               .Any(x => x.UserId == userId && x.IsBanned == true);
-
-                if (userExist)
-                {
-                    ViewBag.AdminExist = "User Already Banned";
-                    return RedirectToAction("Details", new { id = groupId });
-                }
-
                 if (ModelState.IsValid)
                 {
                     membership.IsBanned = false;
