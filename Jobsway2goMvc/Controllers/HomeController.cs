@@ -33,29 +33,24 @@ namespace Jobsway2goMvc.Controllers
                 switch (model)
                 {
                     case "User":
-                        var users = from m in _context.Users
-                                    select m;
-                        users = users.Where(s => s.FirstName.Contains(searchString) || s.LastName.Contains(searchString));
+                        var users = from u in _context.Users.Where(s => s.FirstName.Contains(searchString) || s.LastName.Contains(searchString))
+                                    select u;
                         return View("~/Views/UserProfile/ShowUser.cshtml", users.ToList());
                     case "Business":
-                        var business = from m in _context.Users
-                                       select m;
-                        business = business.Where(s => s.CompanyName.Contains(searchString));
+                        var business = from b in _context.Users.Where(s => s.CompanyName.Contains(searchString) || s.CompanyArea.Contains(searchString))
+                                       select b;
                         return View("~/Views/UserProfile/ShowUser.cshtml", business.ToList());
                     case "Job":
-                        var jobs = from m in _context.Jobs
-                                   select m;
-                        jobs = jobs.Where(s => s.Category.Name.Contains(searchString));
+                        var jobs = from j in _context.Jobs.Where(s => s.Category.Name.Contains(searchString))
+                                   select j;
                         return View("~/Views/Jobs/Index.cshtml", jobs.ToList());
                     case "Event":
-                        var events = from m in _context.Events
-                                     select m;
-                        events = events.Where(s => s.Title.Contains(searchString) || s.CompanyName.Contains(searchString));
+                        var events = from e in _context.Events.Where(s => s.Title.Contains(searchString) || s.CompanyName.Contains(searchString))
+                                     select e;
                         return View("~/Views/Events/Index.cshtml", events.ToList());
                     case "Group":
-                        var groups = from m in _context.Groups
-                                     select m;
-                        groups = groups.Where(s => s.Name.Contains(searchString));
+                        var groups = from g in _context.Groups.Where(s => s.Name.Contains(searchString))
+                                     select g;
                         return View("~/Views/Groups/Index.cshtml", groups.ToList());
                 }
             }
