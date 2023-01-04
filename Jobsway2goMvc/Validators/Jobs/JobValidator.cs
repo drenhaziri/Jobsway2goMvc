@@ -18,6 +18,17 @@ namespace Jobsway2goMvc.Validators.Jobs
             RuleFor(e => e.MinSalary).NotEmpty().WithMessage("Please enter  MinSalary");
             RuleFor(e => e.MaxSalary).NotEmpty().WithMessage("Please enter  MaxSalary");
             RuleFor(e => e.CategoryId).NotEmpty().WithMessage("Please specify a Category");
+            RuleFor(x => x.MinSalary)
+           .GreaterThanOrEqualTo(1)
+           .WithMessage("Min. number of characters for citation must be greater than or equal to 1")
+           .LessThanOrEqualTo(x => x.MaxSalary)
+           .WithMessage("Min. number of characters must be less than or equal to max. number of characters");
+            RuleFor(x => x.MaxSalary)
+           .GreaterThanOrEqualTo(1)
+           .WithMessage("Max. number of characters for citation must be greater than or equal to 1");
+            RuleFor(x => x.DateFrom)
+           .LessThanOrEqualTo(x => x.DateTo)
+           .WithMessage("DateFrom number of characters must be less than or equal to DateTo.");
         }
     }
 }

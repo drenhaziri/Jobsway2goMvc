@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221230121811_InitialCreate")]
+    [Migration("20230104084305_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,21 @@ namespace Jobsway2goMvc.Migrations
                     b.HasIndex("JobsId");
 
                     b.ToTable("JobApplicants", (string)null);
+                });
+
+            modelBuilder.Entity("CollectionJob", b =>
+                {
+                    b.Property<int>("CollectionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CollectionsId", "JobsId");
+
+                    b.HasIndex("JobsId");
+
+                    b.ToTable("JobCollections", (string)null);
                 });
 
             modelBuilder.Entity("Jobsway2goMvc.Models.ApplicationUser", b =>
@@ -587,6 +602,21 @@ namespace Jobsway2goMvc.Migrations
                     b.HasOne("Jobsway2goMvc.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("ApplicantsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Jobsway2goMvc.Models.Job", null)
+                        .WithMany()
+                        .HasForeignKey("JobsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CollectionJob", b =>
+                {
+                    b.HasOne("Jobsway2goMvc.Models.Collection", null)
+                        .WithMany()
+                        .HasForeignKey("CollectionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -16,6 +16,6 @@
         public int CategoryId { get; set; }
         public virtual ICollection<ApplicationUser> Applicants { get; set; } = new List<ApplicationUser>();
         public JobCategory Category { get; set; }
-
+        public List<Collection> Collections { get; set; } 
     }
 }
