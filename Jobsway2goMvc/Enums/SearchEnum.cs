@@ -6,6 +6,7 @@ namespace Jobsway2goMvc.Enums
     {
         [Display(Name = "Select Type")]
         SelectType,
+        Business,
         User,
         Job,
         Event,
