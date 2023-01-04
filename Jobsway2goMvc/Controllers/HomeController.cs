@@ -23,10 +23,10 @@ namespace Jobsway2goMvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(string searchString, SearchModel searchModel)
+        public async Task<IActionResult> Index(string searchString, SearchEnum searchEnum)
         {
 
-            string model = searchModel.ToString();
+            string model = searchEnum.ToString();
 
             var users = from m in _context.Users
                         select m;

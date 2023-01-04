@@ -6,7 +6,7 @@
 <div class="text-center">
     <form class="form-control" asp-action="Index">
         <div>
-            <select class="form-control" name="searchModel" asp-items="Html.GetEnumSelectList<SearchModel>()"></select>
+            <select class="form-control" name="searchModel" asp-items="Html.GetEnumSelectList<SearchEnum>()"></select>
             Search: <input type="text" name="SearchString" />
             <input type="submit" value="Search" />
         </div>

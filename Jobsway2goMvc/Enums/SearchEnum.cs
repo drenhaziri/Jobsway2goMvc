@@ -2,7 +2,7 @@
 
 namespace Jobsway2goMvc.Enums
 {
-    public enum SearchModel
+    public enum SearchEnum
     {
         [Display(Name = "Select Type")]
         SelectType,
