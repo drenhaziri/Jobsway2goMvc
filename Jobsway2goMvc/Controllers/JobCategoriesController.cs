@@ -157,7 +157,6 @@ namespace Jobsway2goMvc.Controllers
             }
 
             var jobs = _context.Jobs.Where(x => x.CategoryId == id);
-            var category = _context.JobCategories.Where(x => x.Id == id);
  
             if (jobs.Count() > 0)
             {
@@ -166,7 +165,8 @@ namespace Jobsway2goMvc.Controllers
             }
             else
             {
-                _context.JobCategories.Remove(category.SingleOrDefault());
+                var category = _context.JobCategories.Single(x => x.Id == id);
+                _context.JobCategories.Remove(category);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
