@@ -25,17 +25,7 @@ namespace Jobsway2goMvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(string searchString, SearchEnum searchEnum)
         {
-
             string model = searchEnum.ToString();
-
-            var users = from m in _context.Users
-                        select m;
-            var jobs = from m in _context.Jobs
-                       select m;
-            var events = from m in _context.Events
-                         select m;
-            var groups = from m in _context.Groups
-                         select m;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -43,15 +33,28 @@ namespace Jobsway2goMvc.Controllers
                 switch (model)
                 {
                     case "User":
+                        var users = from m in _context.Users
+                                    select m;
                         users = users.Where(s => s.FirstName.Contains(searchString) || s.LastName.Contains(searchString));
-                        return View("~/Views/UserProfile/Index.cshtml", users.ToList());
+                        return View("~/Views/UserProfile/ShowUser.cshtml", users.ToList());
+                    case "Business":
+                        var business = from m in _context.Users
+                                       select m;
+                        business = business.Where(s => s.CompanyName.Contains(searchString));
+                        return View("~/Views/UserProfile/ShowUser.cshtml", business.ToList());
                     case "Job":
+                        var jobs = from m in _context.Jobs
+                                   select m;
                         jobs = jobs.Where(s => s.Category.Name.Contains(searchString));
                         return View("~/Views/Jobs/Index.cshtml", jobs.ToList());
                     case "Event":
+                        var events = from m in _context.Events
+                                     select m;
                         events = events.Where(s => s.Title.Contains(searchString) || s.CompanyName.Contains(searchString));
                         return View("~/Views/Events/Index.cshtml", events.ToList());
                     case "Group":
+                        var groups = from m in _context.Groups
+                                     select m;
                         groups = groups.Where(s => s.Name.Contains(searchString));
                         return View("~/Views/Groups/Index.cshtml", groups.ToList());
                 }
