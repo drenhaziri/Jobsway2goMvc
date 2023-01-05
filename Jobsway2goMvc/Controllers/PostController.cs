@@ -144,6 +144,7 @@ namespace Jobsway2goMvc.Controllers
             }
             ModelState.Remove("CreatedBy");
             ModelState.Remove("Group");
+            ModelState.Remove("CreatedById");
             if (ModelState.IsValid)
             {
                 try

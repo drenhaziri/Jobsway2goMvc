@@ -21,7 +21,7 @@ var connectionString = builder.Configuration.GetConnectionString("JobPortalConSt
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString),
-    ServiceLifetime.Singleton
+    ServiceLifetime.Scoped
 );
 
 
@@ -36,8 +36,8 @@ builder.Services.AddRazorPages();
 //notification SignalR
 builder.Services.AddSignalR();
 
-builder.Services.AddSingleton<NotificationHub>();
-builder.Services.AddSingleton<SubscribeNotificationTableDependency>();
+builder.Services.AddScoped<NotificationHub>();
+builder.Services.AddScoped<ISubscribeTableDependency,SubscribeNotificationTableDependency>();
 
 var app = builder.Build();
 
