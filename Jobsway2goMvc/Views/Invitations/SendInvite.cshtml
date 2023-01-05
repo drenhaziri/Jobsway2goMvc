@@ -1,0 +1,27 @@
+﻿@model List<Invitation>
+
+@{
+    ViewData["Title"] = "Send Invite";
+}
+
+<h2>Send Invite</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var invitation in Model)
+        {
+            <tr>
+                <td>@invitation.User.FirstName</td>
+                <td>
+                    @Html.ActionLink("Invite", "SendInvite", new { eventId = invitation.EventId, userId = invitation.UserId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
