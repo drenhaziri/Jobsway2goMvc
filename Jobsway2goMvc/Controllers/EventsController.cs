@@ -2,6 +2,7 @@
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Validators.Events;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,12 @@ namespace Jobsway2goMvc.Controllers
     public class EventsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EventsController(ApplicationDbContext context)
+        public EventsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -61,6 +64,11 @@ namespace Jobsway2goMvc.Controllers
 
                 return View(@event);
             }
+
+            var userid = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser creator = _userManager.FindByIdAsync(userid).Result;
+
+            @event.CreatedBy = creator.Id;
 
             _context.Add(@event);
             await _context.SaveChangesAsync();
@@ -164,6 +172,10 @@ namespace Jobsway2goMvc.Controllers
         private bool EventExists(int id)
         {
             return _context.Events.Any(e => e.Id == id);
+        }
+        public IActionResult SelectUsers(int eventId)
+        {
+            return RedirectToAction("SelectUsers", "Invitations", new { eventId = eventId });
         }
     }
 }

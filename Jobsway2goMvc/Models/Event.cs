@@ -11,5 +11,6 @@
         public string URL { get; set; }
         public string Location { get; set; }
         public DateTime EventDate { get; set; }
+        public string? CreatedBy { get; set; }
     }
 }

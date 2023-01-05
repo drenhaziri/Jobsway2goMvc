@@ -22,7 +22,7 @@ namespace Jobsway2goMvc.Data
         public DbSet<Job> Jobs { get; set; }
         public DbSet<JobCategory> JobCategories { get; set; }
         public DbSet<Event> Events { get; set; }
-
+        public DbSet<Invitation> Invitations { get; set; }
         public DbSet<Notifications> Notifications { get; set; }
         public DbSet<HubConnection> HubConnections { get; set; }
 

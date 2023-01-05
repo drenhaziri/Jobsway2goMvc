@@ -1,0 +1,103 @@
+﻿@model InvitationEventViewModel
+@using Jobsway2goMvc.Enums;
+
+@{
+    ViewData["Title"] = "Select Users";
+
+    var currentUserId = Model.UserManager.GetUserId(ViewBag.HttpContextUser);
+
+    var eventCreatedById = ViewBag.EventCreatedBy;
+}
+
+<h1>Invite Users</h1>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr class="table-dark">
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            if (user.Id == eventCreatedById)
+            {
+                continue;
+            }
+            var invitation = Model.Invitations.FirstOrDefault(i => i.UserId == user.Id);
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+                @if (invitation == null || invitation.Status == EApproval.NotInvited)
+                {
+                    <td>Not invited</td>
+                }
+                else
+                {
+                    <td>@(invitation.Status.ToString())</td>
+                }
+                @if (currentUserId == eventCreatedById)
+                {
+                <td>
+                    @if (invitation == null || (invitation.Status == EApproval.NotInvited || invitation.Status == EApproval.Rejected))
+                    {
+                        if (currentUserId == eventCreatedById)
+                        {
+                            <form asp-action="SendInvite" asp-controller="Invitations" method="post">
+                                <input type="hidden" name="eventId" value="@Model.EventId" />
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button class="btn btn-success">Invite</button>
+                            </form>
+                        }
+                    }
+                    else
+                    {
+                        if (currentUserId == eventCreatedById && (invitation.Status == EApproval.Pending || invitation.Status == EApproval.Accepted))
+                        {
+                            <form asp-action="CancelInvite" asp-controller="Invitations" method="post">
+                                <input type="hidden" name="eventId" value="@Model.EventId" />
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button class="btn btn-danger">Cancel</button>
+                            </form>
+                        }
+                    }
+                </td>
+                }
+                else if (currentUserId != eventCreatedById && user.Id == currentUserId)
+                {
+                <td>
+                    @if (invitation != null && invitation.Status == EApproval.Pending)
+                    {
+                        <form asp-action="AcceptInvite" asp-controller="Invitations" method="post">
+                            <input type="hidden" name="eventId" value="@Model.EventId" />
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button class="btn btn-success">Accept</button>
+                        </form>
+                        <form asp-action="DeclineInvite" asp-controller="Invitations" method="post">
+                            <input type="hidden" name="eventId" value="@Model.EventId" />
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button class="btn btn-danger">Decline</button>
+                        </form>
+                    }
+                    else
+                    {
+                        if (invitation != null && (invitation.Status == EApproval.Pending || invitation.Status == EApproval.Accepted))
+                        {
+                            <form asp-action="DeclineInvite" asp-controller="Invitations" method="post">
+                                <input type="hidden" name="eventId" value="@Model.EventId" />
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button class="btn btn-danger">Decline</button>
+                            </form>
+                        }
+                    }
+                </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
