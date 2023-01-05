@@ -787,5 +787,41 @@ namespace Jobsway2goMvc.Controllers
             var result = users.ToList();
             return View(users);
         }
+
+        public async Task<IActionResult> PendingPosts(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var group = await _context.Groups
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Id = group.Id;
+            var query = from s in _userManager.Users
+                        join p in _context.Posts on s.Id equals p.CreatedById
+                        where p.GroupId ==id && p.Status == Approval.Pending
+                        select new { p.Id, p.Title,  p.Description, s.FirstName, s.LastName, p.Status  };
+
+
+            var result = query.ToList();
+            var postsList = result.Select(r => new PostListViewModel
+            {
+                Id = r.Id,
+                Title = r.Title,
+                Description= r.Description,
+                FirstName = r.FirstName,
+                LastName = r.LastName,
+                Status = r.Status
+            });
+
+            return View(postsList);
+        }
+
     }
 }

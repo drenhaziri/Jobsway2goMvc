@@ -1,11 +1,12 @@
 ﻿@using Jobsway2goMvc.Enums;
 @model Jobsway2goMvc.Models.Group
 
- 
+
 
 @{
     ViewData["Title"] = "Details";
     @ViewBag.Rejected
+
 }
 
 <h1>Details</h1>
@@ -22,6 +23,11 @@
         </dd>
     </dl>
 </div>
+
+<a type="button" class="btn btn-warning" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
+    Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p=>p.Status == Approval.Pending).Count()</span>
+</a>
+
 <h4>Posts</h4>
 <hr />
 <table class="table">
@@ -48,8 +54,10 @@
     <tbody>
         @foreach (var post in Model.Posts)
         {
-            <tr>
-                <td>
+            if (post.Status == Approval.Accepted)
+            {
+                <tr>
+                    <td>
                     @Html.DisplayFor(model => post.Title)
                 </td>
                 <td>
@@ -64,24 +72,13 @@
                 <td>
                     @Html.DisplayFor(model => post.Status)
                 </td>
-                <td>    
-                    @if (post.Status ==Approval.Pending)
-                    {
-                        <form asp-action="Accept" asp-route-id="@post.Id" asp-controller="Post">
-                            <button class="btn btn-primary">Accept</button>
-                        </form>
-
-                        <form asp-action="Reject" asp-route-id="@post.Id" asp-controller="Post">
-                            <button class="btn btn-danger">Reject</button>                            
-                        </form>
-                    }
-                </td>
                 <td>
                     <a asp-action="EditPost" asp-route-id="@post.Id">Edit</a> |
                     <a asp-action="DetailsPost" asp-route-id="@post.Id">Details</a> |
                     <a asp-action="DeletePost" asp-route-id="@post.Id">Delete</a>
                 </td>
             </tr>
+            }
         }
     </tbody>
 </table>
