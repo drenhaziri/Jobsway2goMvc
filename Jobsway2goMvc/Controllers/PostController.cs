@@ -30,6 +30,7 @@ namespace Jobsway2goMvc.Controllers
                 .Where(p => p.GroupId == groupId)
                 .ToListAsync();
 
+            ViewBag.GroupId = groupId;
             return View(posts);
         }
 
@@ -47,7 +48,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.GroupId = id;
             return View(post);
         }
 
@@ -73,6 +74,7 @@ namespace Jobsway2goMvc.Controllers
         {
             ModelState.Remove("CreatedBy");
             ModelState.Remove("Group");
+            ModelState.Remove("CreatedById");
             if (ModelState.IsValid)
             {
                 var userAccessor = _httpContextAccessor.HttpContext.User;
