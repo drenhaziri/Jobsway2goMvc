@@ -53,12 +53,14 @@ namespace Jobsway2goMvc.Controllers
             }
 
             var collection = await _context.Collections
+                .Include(g => g.Jobs)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (collection == null)
             {
                 return NotFound();
             }
-
+            ViewBag.CollectionId = id;
             return View(collection);
         }
 
@@ -217,6 +219,9 @@ namespace Jobsway2goMvc.Controllers
         {
           return _context.Collections.Any(e => e.Id == id);
         }
-
+        public IActionResult DetailsJob(int id)
+        {
+            return RedirectToAction("Details", "Jobs", new { id = id });
+        }
     }
 }
