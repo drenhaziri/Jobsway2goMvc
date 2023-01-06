@@ -109,7 +109,7 @@
                     @Html.DisplayFor(model => job.Category)
                 </td>
                 <td>
-                    <a asp-action="DetailsJob" asp-route-id="@job.Id">Details</a>
+                    <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id">Details</a>
                 </td>
             </tr>
         }

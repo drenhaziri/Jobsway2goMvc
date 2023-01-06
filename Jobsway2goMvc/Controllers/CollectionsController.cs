@@ -219,9 +219,5 @@ namespace Jobsway2goMvc.Controllers
         {
           return _context.Collections.Any(e => e.Id == id);
         }
-        public IActionResult DetailsJob(int id)
-        {
-            return RedirectToAction("Details", "Jobs", new { id = id });
-        }
     }
 }
