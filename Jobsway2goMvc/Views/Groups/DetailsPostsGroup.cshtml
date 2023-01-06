@@ -2,11 +2,9 @@
 @model Jobsway2goMvc.Models.Group
 
 
-
 @{
     ViewData["Title"] = "Details";
     @ViewBag.Rejected
-
 }
 
 <h1>Details</h1>
@@ -73,7 +71,7 @@
                     @Html.DisplayFor(model => post.Status)
                 </td>
                 <td>
-                    <a asp-action="EditPost" asp-route-id="@post.Id">Edit</a> |
+                    <a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">Edit</a> |
                     <a asp-action="DetailsPost" asp-route-id="@post.Id">Details</a> |
                     <a asp-action="DeletePost" asp-route-id="@post.Id">Delete</a>
                 </td>
