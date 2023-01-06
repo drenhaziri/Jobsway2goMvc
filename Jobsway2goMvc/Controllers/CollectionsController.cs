@@ -40,7 +40,7 @@ namespace Jobsway2goMvc.Controllers
             }
             else 
             {
-                return NotFound();
+                return NotFound("something went wrong, try to register");
             }
         }
 
