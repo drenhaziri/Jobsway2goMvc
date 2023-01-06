@@ -2,7 +2,7 @@
 
 namespace Jobsway2goMvc.Models
 {
-    public class Notifications
+    public class Notification
     {
         public int Id { get; set; }
         public string? UserName { get; set; }
