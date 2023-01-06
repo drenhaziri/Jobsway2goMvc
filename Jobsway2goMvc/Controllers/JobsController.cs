@@ -162,7 +162,7 @@ namespace Jobsway2goMvc.Controllers
             
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
-
+            ModelState.Remove("Collections");
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
