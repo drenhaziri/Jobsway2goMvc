@@ -6,7 +6,7 @@ namespace Jobsway2goMvc.SubscribeTableDependencies
 {
     public class SubscribeNotificationTableDependency : ISubscribeTableDependency
     {
-        SqlTableDependency<Notifications> tableDependency;
+        SqlTableDependency<Notification> tableDependency;
         NotificationHub _notificationHub;
 
         public SubscribeNotificationTableDependency(NotificationHub notificationHub)
@@ -16,7 +16,7 @@ namespace Jobsway2goMvc.SubscribeTableDependencies
 
         public void SubscribeTableDependency(string connectionString)
         {
-             tableDependency = new SqlTableDependency<Notifications>(connectionString);
+             tableDependency = new SqlTableDependency<Notification>(connectionString);
             tableDependency.OnChanged += TableDependency_OnChanged;
             tableDependency.OnError += TableDependency_OnError;
             tableDependency.Start();
@@ -24,9 +24,9 @@ namespace Jobsway2goMvc.SubscribeTableDependencies
         }
         private void TableDependency_OnError(object sender, TableDependency.SqlClient.Base.EventArgs.ErrorEventArgs e)
         {
-            Console.WriteLine($"{nameof(Notifications)} SqlTableDependency error: {e.Error.Message}");
+            Console.WriteLine($"{nameof(Notification)} SqlTableDependency error: {e.Error.Message}");
         }
-        private async void TableDependency_OnChanged (object sender, TableDependency.SqlClient.Base.EventArgs.RecordChangedEventArgs<Notifications> e)
+        private async void TableDependency_OnChanged (object sender, TableDependency.SqlClient.Base.EventArgs.RecordChangedEventArgs<Notification> e)
         {
             if (e.ChangeType != TableDependency.SqlClient.Base.Enums.ChangeType.None)
             {

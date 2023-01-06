@@ -8,9 +8,11 @@ namespace Jobsway2goMvc.Hubs
     public class NotificationHub : Hub
     {
         private readonly ApplicationDbContext _context;
-        public NotificationHub (ApplicationDbContext ctx)
+        private readonly IHubContext<NotificationHub> _hubContext;
+        public NotificationHub (ApplicationDbContext ctx, IHubContext<NotificationHub> hubContext)
         {
-            _context = ctx; 
+            _context = ctx;
+            _hubContext = hubContext;
         }
 
         public async Task SendNotificationToAll(string message)
@@ -22,7 +24,7 @@ namespace Jobsway2goMvc.Hubs
             var hubConnections = _context.HubConnections.Where(con => con.UserName == username).ToList();
             foreach (var hubConnection in hubConnections)
             {
-                await Clients.Client(hubConnection.ConnectionId).SendAsync("ReceivedPersonalNotification", message, username);
+                await _hubContext.Clients.Client(hubConnection.ConnectionId).SendAsync("ReceivedPersonalNotification", message, username);
             }
         }
         public override Task OnConnectedAsync()

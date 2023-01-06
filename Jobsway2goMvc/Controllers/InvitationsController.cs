@@ -1,10 +1,12 @@
 ﻿using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Enums;
+using Jobsway2goMvc.Hubs;
 using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Models.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -12,11 +14,13 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly NotificationHub _notificationHub;
 
-        public InvitationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public InvitationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationHub notificationHub)
         {
             _context = context;
             _userManager = userManager;
+            _notificationHub = notificationHub;
         }
 
         public async Task<IActionResult> SelectUsers(int eventId)
@@ -72,6 +76,8 @@ namespace Jobsway2goMvc.Controllers
             _context.Invitations.Add(invitation);
             await _context.SaveChangesAsync();
 
+            await CreateInvitationNotification(eventId, userId);
+
             return RedirectToAction(nameof(SelectUsers), new { eventId });
         }
 
@@ -100,8 +106,20 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
 
+            var notification = new Notification
+            {
+                UserName = user.UserName,
+                Message = $"Your invitation to the '{@event.Title}' event has been canceled.",
+                MessageType = "Personal",
+                NotificationDateTime = DateTime.Now
+            };
+
+            _context.Notifications.Add(notification);
             _context.Invitations.Remove(invitation);
             await _context.SaveChangesAsync();
+
+            string notificationJson = JsonConvert.SerializeObject(notification);
+            await _notificationHub.SendNotificationToClient(notificationJson, user.UserName);
 
             return RedirectToAction(nameof(SelectUsers), new { eventId });
         }
@@ -109,33 +127,100 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> AcceptInvite(int eventId, string userId)
         {
             var invitation = await _context.Invitations.Where(i => i.EventId == eventId && i.UserId == userId).FirstOrDefaultAsync();
+            var @event = await _context.Events.FindAsync(eventId);
+            var user = await _context.Users.FindAsync(userId);
 
-            if (invitation == null)
+            if (invitation == null || @event == null || user == null)
             {
                 return NotFound();
             }
 
             invitation.Status = EApproval.Accepted;
             _context.Invitations.Update(invitation);
+
+            string creatorId = @event.CreatedBy;
+            var creator = await _userManager.FindByIdAsync(creatorId);
+            string creatorUsername = creator.UserName;
+            string message = $"{user.UserName} has accepted your invitation to the '{@event.Title}' event.";
+            await _notificationHub.SendNotificationToClient(message, creatorUsername);
+
+            var notification = new Notification
+            {
+                UserName = user.UserName,
+                Message = $"You have accepted the invitation to the '{@event.Title}' event.",
+                MessageType = "Personal",
+                NotificationDateTime = DateTime.Now
+            };
+
+            _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
+
+            string notificationJson = JsonConvert.SerializeObject(notification);
+            await _notificationHub.SendNotificationToClient(notificationJson, user.UserName);
 
             return RedirectToAction(nameof(SelectUsers), new { eventId });
         }
+
 
         public async Task<IActionResult> DeclineInvite(int eventId, string userId)
         {
             var invitation = await _context.Invitations.Where(i => i.EventId == eventId && i.UserId == userId).FirstOrDefaultAsync();
+            var @event = await _context.Events.FindAsync(eventId);
+            var user = await _context.Users.FindAsync(userId);
 
-            if (invitation == null)
+            if (invitation == null || @event == null || user == null)
             {
                 return NotFound();
             }
 
-            invitation.Status = EApproval.Rejected;
-            _context.Invitations.Update(invitation);
+            _context.Invitations.Remove(invitation);
+
+            string creatorId = @event.CreatedBy;
+            var creator = await _userManager.FindByIdAsync(creatorId);
+            string creatorUsername = creator.UserName;
+            string message = $"{user.UserName} has declined your invitation to the '{@event.Title}' event.";
+            await _notificationHub.SendNotificationToClient(message, creatorUsername);
+
+            var notification = new Notification
+            {
+                UserName = user.UserName,
+                Message = $"You have declined the invitation to the '{@event.Title}' event.",
+                MessageType = "Personal",
+                NotificationDateTime = DateTime.Now
+            };
+
+            _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
+
+            string notificationJson = JsonConvert.SerializeObject(notification);
+            await _notificationHub.SendNotificationToClient(notificationJson, user.UserName);
 
             return RedirectToAction(nameof(SelectUsers), new { eventId });
         }
+
+        public async Task CreateInvitationNotification(int eventId, string userId)
+        {
+            var @event = await _context.Events.FindAsync(eventId);
+            var user = await _context.Users.FindAsync(userId);
+
+            if (@event == null || user == null)
+            {
+                return;
+            }
+
+            var notification = new Notification
+            {
+                UserName = user.UserName,
+                Message = $"You have been invited to the '{@event.Title}' event!",
+                MessageType = "Personal",
+                NotificationDateTime = DateTime.Now
+            };
+
+            _context.Notifications.Add(notification);
+            await _context.SaveChangesAsync();
+
+            await _notificationHub.SendNotificationToClient(notification.Message, notification.UserName);
+        }
+
     }
 }
