@@ -126,7 +126,7 @@ namespace Jobsway2goMvc.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("UserRoles");
         }
 
         [HttpGet]
