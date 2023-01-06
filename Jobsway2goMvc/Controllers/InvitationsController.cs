@@ -173,8 +173,7 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
 
-            invitation.Status = EApproval.Rejected;
-            _context.Invitations.Update(invitation);
+            _context.Invitations.Remove(invitation);
 
             string creatorId = @event.CreatedBy;
             var creator = await _userManager.FindByIdAsync(creatorId);
