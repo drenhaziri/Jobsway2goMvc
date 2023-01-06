@@ -131,7 +131,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
+            return View(post);
         }
 
         [HttpPost]
