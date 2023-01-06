@@ -3,10 +3,12 @@ using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Models.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Security.Claims;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -14,10 +16,14 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
 
@@ -51,10 +57,84 @@ namespace Jobsway2goMvc.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ManageUserRoles(string userId)
+        {
+            ViewBag.userId = userId;
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
+                return NotFound("Could not find user");
+            }
+            ViewBag.UserName = user.UserName;
+            var model = new List<ManageUserRolesViewModel>();
+            foreach (var role in _roleManager.Roles.ToList())
+            {
+                var userRolesViewModel = new ManageUserRolesViewModel
+                {
+                    Id = role.Id,
+                    Name = role.Name
+                };
+                if (await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    userRolesViewModel.Selected = true;
+                }
+                else
+                {
+                    userRolesViewModel.Selected = false;
+                }
+                model.Add(userRolesViewModel);
+            }
+            return View(model);
+        }
+
+        private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
+        {
+            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            return user;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeRole(List<ManageUserRolesViewModel> model)
+        {
+
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+
+            if (user == null)
+            {
+                return View();
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var result = await _userManager.RemoveFromRolesAsync(user, roles);
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot remove user existing roles");
+                return View(model);
+            }
+
+            result = await _userManager.AddToRolesAsync(user, model.Where(x => x.Selected).Select(y => y.Name));
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot add selected roles to user");
+                return View(model);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
+
             var role = await _roleManager.Roles
-                .FirstOrDefaultAsync(r => r.Id == id);
+               .FirstOrDefaultAsync(r => r.Id == id);
 
             if (role == null)
             {
@@ -86,6 +166,8 @@ namespace Jobsway2goMvc.Controllers
         {
             if (roleName != null)
             {
+                //var role = new IdentityRole(roleName);
+                //var result = await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
                 await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
             }
             return RedirectToAction("Index");

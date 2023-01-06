@@ -27,7 +27,6 @@ namespace Jobsway2goMvc.Controllers
         private readonly IMapper _mapper;
         public GroupsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper)
         {
-            _context = context;
             _userManager = userManager;
             _mapper = mapper;
         }
