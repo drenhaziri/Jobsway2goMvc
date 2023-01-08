@@ -156,13 +156,13 @@ namespace Jobsway2goMvc.Controllers
                 reportView.Job = job;
                 return View(reportView);
             }
-            if (report.PostId != null)
+            else if (report.PostId != null)
             {
                 var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == report.PostId);
                 reportView.Post = post;
                 return View(reportView);
             }
-            if (report.GroupId != null)
+            else if (report.GroupId != null)
             {
                 var group = await _context.Groups.FirstOrDefaultAsync(p => p.Id == report.GroupId);
                 reportView.Group = group;
@@ -188,12 +188,12 @@ namespace Jobsway2goMvc.Controllers
                     var job = await _context.Jobs.FindAsync(report.JobId);
                     _context.Jobs.Remove(job);
                 }
-                if (report.PostId != null)
+                else if (report.PostId != null)
                 {
                     var post = await _context.Posts.FindAsync(report.PostId);
                     _context.Posts.Remove(post);
                 }
-                if (report.GroupId != null)
+                else if (report.GroupId != null)
                 {
                     var group = await _context.Groups.FindAsync(report.GroupId);
                     _context.Groups.Remove(group);
@@ -206,7 +206,7 @@ namespace Jobsway2goMvc.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            if (!string.IsNullOrEmpty(deny))
+            else if (!string.IsNullOrEmpty(deny))
             {
                 if (_context.Reports == null)
                 {
