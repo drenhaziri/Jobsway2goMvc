@@ -94,5 +94,43 @@ namespace Jobsway2goMvc.Controllers
             return RedirectToAction("Index", "Home");
 
         }
+
+        public async Task<IActionResult> ReportGroup(int? id)
+        {
+            if (id == null || _context.Groups == null)
+            {
+                return NotFound();
+            }
+
+            var group = await _context.Groups.FindAsync(id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            return View(group);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ReportGroup(Report report, Group group, ReportEnum reportEnum)
+        {
+            var groupRef = await _context.Groups.FirstOrDefaultAsync(s => s.Id == group.Id);
+            string model = reportEnum.ToString();
+            ModelState.Remove("JobId");
+            ModelState.Remove("PostId");
+            ModelState.Remove("reportType");
+            ModelState.Remove("GroupId");
+
+            report.Id = 0;
+            report.JobId = null;
+            report.PostId = null;
+            report.GroupId = groupRef.Id;
+            report.reportType = reportEnum;
+            _context.Add(report);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
+
+        }
     }
 }
