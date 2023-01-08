@@ -1,6 +1,7 @@
 ﻿using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Enums;
 using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -130,7 +131,97 @@ namespace Jobsway2goMvc.Controllers
             _context.Add(report);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
+        }
 
+        public async Task<IActionResult> Details(int? id)
+        {
+            ReportViewModel reportView = new ReportViewModel();
+
+            if (id == null || _context.Reports == null)
+            {
+                return NotFound();
+            }
+
+            var report = await _context.Reports
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (report == null)
+            {
+                return NotFound();
+            }
+            reportView.Report = report;
+
+            if (report.JobId != null)
+            {
+                var job = await _context.Jobs.FirstOrDefaultAsync(j => j.Id == report.JobId);
+                reportView.Job = job;
+                return View(reportView);
+            }
+            if (report.PostId != null)
+            {
+                var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == report.PostId);
+                reportView.Post = post;
+                return View(reportView);
+            }
+            if (report.GroupId != null)
+            {
+                var group = await _context.Groups.FirstOrDefaultAsync(p => p.Id == report.GroupId);
+                reportView.Group = group;
+                return View(reportView);
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Details(int id, string accept, string deny)
+        {
+            var report = await _context.Reports.FindAsync(id);
+
+            if (!string.IsNullOrEmpty(accept))
+            {
+                if (_context.Reports == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Reports'  is null.");
+                }
+
+                if (report.JobId != null)
+                {
+                    var job = await _context.Jobs.FindAsync(report.JobId);
+                    _context.Jobs.Remove(job);
+                }
+                if (report.PostId != null)
+                {
+                    var post = await _context.Posts.FindAsync(report.PostId);
+                    _context.Posts.Remove(post);
+                }
+                if (report.GroupId != null)
+                {
+                    var group = await _context.Groups.FindAsync(report.GroupId);
+                    _context.Groups.Remove(group);
+                }
+                if (report != null)
+                {
+                    _context.Reports.Remove(report);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            if (!string.IsNullOrEmpty(deny))
+            {
+                if (_context.Reports == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Reports'  is null.");
+                }
+
+                if (report != null)
+                {
+                    _context.Reports.Remove(report);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }
