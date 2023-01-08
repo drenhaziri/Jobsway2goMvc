@@ -45,4 +45,5 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="DetailsPostsGroup" asp-controller="Groups" asp-route-id="@Model.GroupId">Back to Group</a>
+    <a asp-controller="Reports" asp-action="ReportPost" asp-route-id="@Model?.Id">Report</a>
 </div>

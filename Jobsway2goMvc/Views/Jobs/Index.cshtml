@@ -90,6 +90,7 @@
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 <a asp-action="SaveToCollection"asp-route-id="@item.Id">SaveToCollection</a>
                 <a asp-action="ApplyJob" asp-route-id="@item.Id">ApplyJob</a>
+                <a asp-controller="Reports" asp-action="ReportJob" asp-route-id="@item.Id">Report</a>
             </td>
         </tr>
 }
