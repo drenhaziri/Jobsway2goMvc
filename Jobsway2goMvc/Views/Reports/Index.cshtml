@@ -1,0 +1,49 @@
+﻿@model IEnumerable<Jobsway2goMvc.Models.Report>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Report Category
+            </th>
+            <th>
+                Report Type
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.JobId != null)
+                    {
+                        <p>Job</p>
+                    }
+                    else if (item.PostId != null)
+                    {
+                        <p>Post</p>
+                    }
+                    else
+                    {
+                        <p>Group</p>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.reportType)
+                </td>
+                <td>
+                    <a asp-action="Details" class="btn btn-outline-secondary" asp-route-id="@item.Id">Report Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
