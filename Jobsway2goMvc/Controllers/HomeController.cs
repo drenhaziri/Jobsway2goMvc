@@ -1,5 +1,6 @@
 ﻿using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Enums;
+using Jobsway2goMvc.Extensions;
 using Jobsway2goMvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -17,8 +18,11 @@ namespace Jobsway2goMvc.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int pageSize = 2, int page = 1)
         {
+            var result = _context.Jobs.Page(pageSize, page).ToList();
+            ViewBag.FeedJobs = result;
+
             return View();
         }
 
