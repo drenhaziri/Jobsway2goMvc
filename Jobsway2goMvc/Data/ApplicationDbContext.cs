@@ -25,6 +25,7 @@ namespace Jobsway2goMvc.Data
         public DbSet<Invitation> Invitations { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<HubConnection> HubConnections { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         public DbSet<Connection> Connections { get; set; }
        
