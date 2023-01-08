@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation.Results;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
-using FluentValidation.Results;
 using Jobsway2goMvc.Validators.Collections;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -40,7 +33,7 @@ namespace Jobsway2goMvc.Controllers
             }
             else 
             {
-                return NotFound();
+                return LocalRedirect("/Identity/Account/Login");
             }
         }
 
