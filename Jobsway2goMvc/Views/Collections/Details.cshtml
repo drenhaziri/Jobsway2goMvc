@@ -6,22 +6,118 @@
 }
 
 <p class="text-danger"> @ViewBag.NullUser</p>
-
 <h1>Details</h1>
-
 <div>
     <h4>Collection</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
 </div>
+<h4>Jobs</h4>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().Schedule)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().OpenSpots)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().Requirements)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().DateFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().DateTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().MinSalary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().MaxSalary)
+            </th>
+             <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().CategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().Applicants)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.First().Category)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var job in Model.Jobs)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => job.CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.Schedule)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.OpenSpots)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.Requirements)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.DateFrom)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.DateTo)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.MinSalary)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.MaxSalary)
+                </td>
+                 <td>
+                    @Html.DisplayFor(model => job.CategoryId)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.Applicants)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => job.Category)
+                </td>
+                <td>
+                    <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-controller="Job" asp-action="Create" asp-route-groupId="@ViewBag.CollectionId" class="btn btn-primary">Create New job</a>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Collections" asp-action="Index">Back to List</a>
 </div>

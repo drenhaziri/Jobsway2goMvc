@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Jobsway2goMvc.Models.ViewModel.PostListViewModel>
+
+@{
+    ViewData["Title"] = "Member List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int groupId = ViewBag.Id;
+}
+
+<h1>Pending Posts List</h1>
+<div class="card bg-warning text-white">
+    <div class="card-body"><h4>Pending Posts Number : @Model.Count()</h4></div>
+</div>
+
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr class="table-dark">
+            <th>Title</th>
+            <th>Description</th>
+            <th>Name</th>
+            <th>SurName</th>
+            <th>Status</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            @foreach (var post in Model)
+            {
+                <tr>
+                    <td>@post.Title</td>
+                    <td>@post.Description</td>
+                    <td>@post.FirstName</td>
+                    <td>@post.LastName</td>
+                    <td class="text-danger">@post.Status</td>
+                    <td>
+                        <form asp-action="Accept" asp-route-id="@post.Id" asp-controller="Post">
+                            <button class="btn btn-primary">Accept</button>
+                        </form>
+
+                        <form asp-action="Reject" asp-route-id="@post.Id" asp-controller="Post">
+                            <button class="btn btn-danger">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td>No Pending Posts at the moment</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="DetailsPostsGroup" asp-route-id="@groupId">Back to Group</a> |
+</div>

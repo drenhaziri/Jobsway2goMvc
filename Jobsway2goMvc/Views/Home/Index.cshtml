@@ -1,8 +1,22 @@
-﻿@{
+﻿@using Jobsway2goMvc.Enums;
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
+    <form class="form-control" asp-action="Index">
+        <div>
+            <select class="form-control" name="searchEnum" asp-items="Html.GetEnumSelectList<SearchEnum>()"></select>
+            Search: <input type="text" name="SearchString" />
+            <input type="submit" value="Search" />
+        </div>
+    </form>
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    @foreach (var item in @ViewBag.FeedJobs as ICollection<Job>)
+    {
+        <p>@item.CompanyName</p>
+    }
+
 </div>

@@ -74,7 +74,7 @@ namespace Jobsway2goMvc.Controllers
 
                 var result = _context.Connections.Add(connection);
 
-                var notification = new Notifications
+                var notification = new Notification
                 {
                     UserName = user2.Result.UserName,
                     MessageType = "Personal",

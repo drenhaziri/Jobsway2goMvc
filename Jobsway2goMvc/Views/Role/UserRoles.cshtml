@@ -16,6 +16,7 @@
             <th>Last Name</th>
             <th>Email</th>
             <th>Roles</th>
+            <th>User Role Settings</th>
         </tr>
     </thead>
     <tbody>
@@ -26,9 +27,13 @@
                 <td>@user.LastName</td>
                 <td>@user.Email</td>
                 <td>@string.Join(" , ", user.Roles.ToList())</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="Role" asp-action="ManageUserRoles" asp-route-userId="@user.UserId">Manage Roles</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
 <a class="btn btn-primary" asp-controller="Role" asp-action="Index">Role Manager</a>
+

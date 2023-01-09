@@ -18,6 +18,9 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
+    <dl class="row">
+        @ViewBag.Delete
+    </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />

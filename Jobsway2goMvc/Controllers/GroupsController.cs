@@ -109,7 +109,7 @@ namespace Jobsway2goMvc.Controllers
             var users = from u in _userManager.Users
                         join g in _context.GroupMemberships
                         on u.Id equals g.UserId
-                        where g.GroupId == id && g.IsMember == true
+                        where g.GroupId == id && g.IsMember == true && g.IsBanned == false
                         select u;
 
             var result = users.ToList();
@@ -200,7 +200,8 @@ namespace Jobsway2goMvc.Controllers
                     UserId = user.Id,
                     IsMember = true,
                     IsAdmin = false,
-                    IsModerator = false
+                    IsModerator = false,
+                    IsBanned = false
                 };
 
                 _context.GroupMemberships.Add(members);
@@ -249,7 +250,8 @@ namespace Jobsway2goMvc.Controllers
                         UserId = user.Id,
                         IsAdmin = false,
                         IsMember = true,
-                        IsModerator = true
+                        IsModerator = true,
+                        IsBanned = false
                     };
 
                     _context.GroupMemberships.Add(members);
@@ -303,7 +305,8 @@ namespace Jobsway2goMvc.Controllers
                         UserId = user.Id,
                         IsAdmin = true,
                         IsMember = true,
-                        IsModerator = false
+                        IsModerator = false,
+                        IsBanned = false
                     };
 
                     _context.GroupMemberships.Add(members);
@@ -506,7 +509,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-             
+
             var membership = await _context.GroupMemberships
                 .FirstOrDefaultAsync(m => m.GroupId == id && m.UserId == user.Id);
 
@@ -517,7 +520,8 @@ namespace Jobsway2goMvc.Controllers
                     GroupId = id,
                     UserId = user.Id,
                     Status = Approval.Pending,
-                    IsMember = true
+                    IsMember = true,
+                    IsBanned = false
                 };
                 _context.Add(membership);
             }
@@ -662,5 +666,162 @@ namespace Jobsway2goMvc.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> Ban(string userId, int groupId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
+                if (group == null)
+                {
+                    return NotFound();
+                }
+
+                var membership = await _context.GroupMemberships
+              .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id);
+
+                if (membership == null)
+                {
+                    return Forbid();
+                }
+
+                var userExist = _context.GroupMemberships
+               .Where(x => x.GroupId == groupId)
+               .ToList()
+               .Any(x => x.UserId == userId && x.IsBanned == true);
+
+                if (userExist)
+                {
+                    ViewBag.AdminExist = "User Already Banned";
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+
+                if (ModelState.IsValid)
+                {
+                    membership.IsBanned = true;
+                    _context.GroupMemberships.Update(membership);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        public async Task<IActionResult> UnBan(string userId, int groupId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
+                if (group == null)
+                {
+                    return NotFound();
+                }
+
+                var membership = await _context.GroupMemberships
+              .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id);
+
+                if (membership == null)
+                {
+                    return Forbid();
+                }
+
+                if (ModelState.IsValid)
+                {
+                    membership.IsBanned = false;
+                    _context.GroupMemberships.Update(membership);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+
+        public async Task<IActionResult> BannedMembersList(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var group = await _context.Groups
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Id = group.Id;
+            var users = from u in _userManager.Users
+                        join g in _context.GroupMemberships
+                        on u.Id equals g.UserId
+                        where g.GroupId == id && g.IsBanned == true
+                        select u;
+
+            var result = users.ToList();
+            return View(users);
+        }
+
+        public async Task<IActionResult> PendingPosts(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var group = await _context.Groups
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Id = group.Id;
+            var query = from s in _userManager.Users
+                        join p in _context.Posts on s.Id equals p.CreatedById
+                        where p.GroupId ==id && p.Status == Approval.Pending
+                        select new { p.Id, p.Title,  p.Description, s.FirstName, s.LastName, p.Status  };
+
+
+            var result = query.ToList();
+            var postsList = result.Select(r => new PostListViewModel
+            {
+                Id = r.Id,
+                Title = r.Title,
+                Description= r.Description,
+                FirstName = r.FirstName,
+                LastName = r.LastName,
+                Status = r.Status
+            });
+
+            return View(postsList);
+        }
+
     }
 }
