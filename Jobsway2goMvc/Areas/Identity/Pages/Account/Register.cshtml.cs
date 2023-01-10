@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.Build.Evaluation;
+using System.Text.RegularExpressions;
 
 namespace Jobsway2goMvc.Areas.Identity.Pages.Account
 {
@@ -75,11 +77,11 @@ namespace Jobsway2goMvc.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [Display(Name = "First Name")]
+            [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$", ErrorMessage = "FirstName can only contains letters or letters and numbers.")]
             public string FirstName { get; set; }
 
             [Required]
-            [Display(Name = "Last Name")]
+            [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+$", ErrorMessage = "LastName can only contains letters or letters and numbers.")]
             public string LastName { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
