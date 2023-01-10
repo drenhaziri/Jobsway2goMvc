@@ -9,7 +9,10 @@ namespace Jobsway2goMvc.Validators.Users
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty().WithMessage("This field is required.")
-                .Must(BeValidName).WithMessage("Name should contain only letters.");
+                .Must(BeValidName).WithMessage("FirstName should contain only letters.");
+            RuleFor(x => x.LastName)
+                .NotEmpty().WithMessage("This field is required.")
+                .Must(BeValidName).WithMessage("LastName should contain only letters.");
         }
         private bool BeValidName(string name)
         {
