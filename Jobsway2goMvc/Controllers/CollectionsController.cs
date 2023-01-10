@@ -198,9 +198,18 @@ namespace Jobsway2goMvc.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Collections'  is null.");
             }
-            var collection = await _context.Collections.FindAsync(id);
+            var collection = await _context.Collections
+                .Include(g => g.Jobs)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (collection != null)
             {
+                if (collection.Jobs.Count() > 0)
+                {
+                    ViewBag.DeleteWarning = "The collection you’re about to delete is not empty.";
+                    return View();
+                }
+
                 _context.Collections.Remove(collection);
             }
             
