@@ -1,4 +1,5 @@
 ﻿using Jobsway2goMvc.Hubs;
+using Jobsway2goMvc.Interfaces;
 using Jobsway2goMvc.Models;
 using TableDependency.SqlClient;
 
