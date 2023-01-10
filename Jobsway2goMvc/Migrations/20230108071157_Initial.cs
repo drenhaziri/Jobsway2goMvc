@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Jobsway2goMvc.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,7 +50,8 @@ namespace Jobsway2goMvc.Migrations
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     URL = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -344,6 +345,33 @@ namespace Jobsway2goMvc.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Invitations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invitations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invitations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invitations_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
@@ -352,7 +380,7 @@ namespace Jobsway2goMvc.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAtUTC = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     GroupId = table.Column<int>(type: "int", nullable: false)
@@ -364,7 +392,8 @@ namespace Jobsway2goMvc.Migrations
                         name: "FK_Posts_AspNetUsers_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Posts_Groups_GroupId",
                         column: x => x.GroupId,
@@ -481,6 +510,16 @@ namespace Jobsway2goMvc.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Invitations_EventId",
+                table: "Invitations",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invitations_UserId",
+                table: "Invitations",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_JobApplicants_JobsId",
                 table: "JobApplicants",
                 column: "JobsId");
@@ -531,6 +570,9 @@ namespace Jobsway2goMvc.Migrations
 
             migrationBuilder.DropTable(
                 name: "HubConnections");
+
+            migrationBuilder.DropTable(
+                name: "Invitations");
 
             migrationBuilder.DropTable(
                 name: "JobApplicants");

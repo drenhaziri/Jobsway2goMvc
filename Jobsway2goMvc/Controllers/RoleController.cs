@@ -108,10 +108,15 @@ namespace Jobsway2goMvc.Controllers
             {
                 return View();
             }
+            
+            if (!model.Any(x => x.Selected))
+            {
+                return NotFound("you have to choose a role");
+            }
 
             var roles = await _userManager.GetRolesAsync(user);
             var result = await _userManager.RemoveFromRolesAsync(user, roles);
-
+           
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot remove user existing roles");

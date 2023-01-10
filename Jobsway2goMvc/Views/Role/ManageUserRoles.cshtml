@@ -27,8 +27,8 @@
         <div class="card-footer">
             <input asp-controller="Role" asp-action="ChangeRole" asp-route-id="@ViewBag.UserId" type="submit" value="Update" class="btn btn-primary"
                    style="width:auto"/>
-            <a asp-action="ChangeRole" asp-route-id="@ViewBag.UserId"
-               class="btn btn-primary" style="width:auto">Cancel</a>
+            <input asp-controller="Role" asp-action="ChangeRole" asp-route-id="@ViewBag.UserId"
+                   class="btn btn-primary" type="submit" value="Cancel" style="width:auto" />
         </div>
     </div>
 </form>

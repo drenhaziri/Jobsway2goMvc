@@ -48,10 +48,10 @@ namespace Jobsway2goMvc.Hubs
         public override Task OnDisconnectedAsync(Exception? exception)
         {
             var hubConnection = _context.HubConnections.FirstOrDefault(con => con.ConnectionId == Context.ConnectionId);
-            if(hubConnection != null)
+            if (hubConnection != null)
             {
                 _context.HubConnections.Remove(hubConnection);
-                 _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
             }
             return base.OnDisconnectedAsync(exception);
         }
