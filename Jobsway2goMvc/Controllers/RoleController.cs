@@ -103,12 +103,11 @@ namespace Jobsway2goMvc.Controllers
 
             var userAccessor = _httpContextAccessor.HttpContext.User;
             var user = GetApplicationUser(userAccessor);
-
             if (user == null)
             {
-                return View();
+                return NotFound("you have to register");
             }
-            
+
             if (!model.Any(x => x.Selected))
             {
                 return NotFound("you have to choose a role");
@@ -116,7 +115,7 @@ namespace Jobsway2goMvc.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
             var result = await _userManager.RemoveFromRolesAsync(user, roles);
-           
+
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot remove user existing roles");
