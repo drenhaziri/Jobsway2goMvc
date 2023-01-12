@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Jobsway2goMvc.Enums;
 using Jobsway2goMvc.Data;
 using Microsoft.EntityFrameworkCore;
+using Jobsway2goMvc.Hubs;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -13,12 +14,14 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly NotificationHub _notificationHub;
         private readonly IMapper _mapper;
-        public UserConnectionController(UserManager<ApplicationUser> userManager, IMapper mapper, ApplicationDbContext ctx)
+        public UserConnectionController(UserManager<ApplicationUser> userManager, IMapper mapper, ApplicationDbContext ctx, NotificationHub notificationHub)
         {
             _context = ctx;
             _userManager = userManager;
             _mapper = mapper;
+            _notificationHub = notificationHub;
         }
 
         public async Task<IActionResult> Index()
@@ -26,7 +29,7 @@ namespace Jobsway2goMvc.Controllers
             return View(await _userManager.Users.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(string Id)
+        public IActionResult Details(string Id)
         {
             var user = _userManager.FindByIdAsync(Id).Result;
             ViewBag.Id = user.Id;
@@ -45,9 +48,9 @@ namespace Jobsway2goMvc.Controllers
                 return RedirectToAction("Index", "Privacy");
             }
 
-            var user1 = _userManager.FindByIdAsync(connect1);
+            var user1 = await _userManager.FindByIdAsync(connect1);
 
-            var user2 = _userManager.FindByIdAsync(Id);
+            var user2 = await _userManager.FindByIdAsync(Id);
 
 
             if (user1 == null || user2 == null)
@@ -55,10 +58,9 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
 
-            var existingConnection = _context.Connections.FirstOrDefault(c => (c.Connect1 == connect1 && c.Connect2 == Id) ||
-            (c.Connect1 == Id && c.Connect2 == connect1));
 
-            if (existingConnection != null)
+            if (_context.Connections.Any(c => (c.Connect1 == connect1 && c.Connect2 == Id) ||
+                        (c.Connect1 == Id && c.Connect2 == connect1)))
             {
                 return BadRequest("A connection already exists between these users.");
             }
@@ -67,29 +69,30 @@ namespace Jobsway2goMvc.Controllers
             {
                 var connection = new Connection
                 {
-                    Connect1 = user1.Result.Id,
-                    Connect2 = user2.Result.Id,
+                    Connect1 = user1.Id,
+                    Connect2 = user2.Id,
                     Status = ConnectionStatus.Pending
                 };
 
-                var result = _context.Connections.Add(connection);
+                _context.Connections.Add(connection);
 
                 var notification = new Notification
                 {
-                    UserName = user2.Result.UserName,
+                    UserName = user2.UserName,
                     MessageType = "Personal",
-                    Message = user1.Result.UserName + " sent you a connection request",
+                    Message = user1.UserName + " sent you a connection request",
                     NotificationDateTime = DateTime.Now,
                 };
                 _context.Notifications.Add(notification);
                 await _context.SaveChangesAsync();
+                await _notificationHub.SendNotificationToClient(notification.Message, notification.UserName);
 
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Privacy", "Home");
         }
 
-        public async Task<IActionResult> ConnectionList()
+        public IActionResult ConnectionList()
         {
             var connect2 = _userManager.GetUserId(HttpContext.User);
             if (connect2 == null)
