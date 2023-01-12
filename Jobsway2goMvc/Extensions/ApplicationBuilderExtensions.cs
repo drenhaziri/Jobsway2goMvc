@@ -1,4 +1,4 @@
-﻿using Jobsway2goMvc.SubscribeTableDependencies;
+﻿using Jobsway2goMvc.Interfaces;
 
 namespace Jobsway2goMvc.Extensions;
 

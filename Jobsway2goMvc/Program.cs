@@ -1,8 +1,9 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Jobsway2goMvc.Data;
-using Jobsway2goMvc.Hubs;
 using Jobsway2goMvc.Extensions;
+using Jobsway2goMvc.Hubs;
+using Jobsway2goMvc.Interfaces;
 using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Services;
 using Jobsway2goMvc.SubscribeTableDependencies;
