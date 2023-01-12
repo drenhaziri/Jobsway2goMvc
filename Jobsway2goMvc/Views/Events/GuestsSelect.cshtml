@@ -1,0 +1,39 @@
+﻿@model IEnumerable<EventGuest>
+@using Jobsway2goMvc.Enums
+
+<table>
+    <tr>
+        <th>Event Title</th>
+        <th>Guest Name</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var guest in Model)
+    {
+        <tr>
+            <td>@guest.Event.Title</td>
+            <td>@guest.ApplicationUser.UserName</td>
+            <td>@guest.Status</td>
+            <td>
+                @if (guest.Status == EApproval.Pending && User.Identity.Name == guest.ApplicationUser.UserName)
+                {
+                    <a asp-action="AcceptEvent" asp-route-eventId="@guest.EventId" asp-route-userId="@guest.GuestId">Accept</a>
+                    <a asp-action="DeclineEvent" asp-route-eventId="@guest.EventId" asp-route-userId="@guest.GuestId">Decline</a>
+                }
+                else if (guest.Status == EApproval.Accepted && User.Identity.Name == guest.ApplicationUser.UserName)
+                {
+                    <a asp-action="DeclineEvent" asp-route-eventId="@guest.EventId" asp-route-userId="@guest.GuestId">Decline</a>
+                }
+                else if (User.Identity.Name != guest.ApplicationUser.UserName)
+                {
+                    <p>Invitation not intended for you</p>
+                }
+                else
+                {
+                    <p>Invitation has already been @guest.Status</p>
+                }
+            </td>
+        </tr>
+    }
+</table>
