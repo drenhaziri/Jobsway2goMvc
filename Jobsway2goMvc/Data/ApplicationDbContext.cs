@@ -27,7 +27,7 @@ namespace Jobsway2goMvc.Data
         public DbSet<HubConnection> HubConnections { get; set; }
 
         public DbSet<Connection> Connections { get; set; }
-       
+        public DbSet<Experience> Experiences { get; set; }
         //public DbSet<Section> Sections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,6 +49,10 @@ namespace Jobsway2goMvc.Data
                 .HasMany(p => p.Jobs)
                 .WithMany(p => p.Collections)
                 .UsingEntity(j => j.ToTable("JobCollections"));
+            modelBuilder.Entity<Experience>()
+                .HasOne(p => p.User)
+                .WithMany(g => g.Experiences)
+                .HasForeignKey(p => p.UserId);
             base.OnModelCreating(modelBuilder);
         }
         

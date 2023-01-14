@@ -51,11 +51,58 @@
         <div class="profile-description">
             <h2>Experience</h2>
             <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the i
-                ndustry's standard dummy text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has survived not only five centu
-                ries, but also the leap into electronic
+                <a asp-action="AddExperience">Create New</a>
             </p>
+            <hr />
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Experiences.First().Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Experiences.First().Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Experiences.First().DateFrom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Experiences.First().DateTo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Experiences.First().Location)
+                        </th>
+            
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var experience in Model.Experiences)
+                    {
+                        <tr>
+                                <td>
+                                @Html.DisplayFor(model => experience.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => experience.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => experience.DateFrom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => experience.DateTo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => experience.Location)
+                            </td>
+                            <td>
+                                <a asp-controller="UserProfile" asp-action="EditExperience" asp-route-id="@experience.Id">Edit</a> |
+                                @*<a asp-action="DetailsPost" asp-route-id="@post.Id">Details</a> |*@
+                                <a asp-action="DeleteExperience" asp-route-id="@experience.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
 
         <div class="profile-sidebar">
