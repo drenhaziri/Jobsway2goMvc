@@ -18,6 +18,11 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
+    <dl class="row">
+        <div class="col">
+            @ViewBag.DeleteWarning 
+        </div>
+    </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
