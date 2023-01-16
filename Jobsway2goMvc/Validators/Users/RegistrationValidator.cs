@@ -17,6 +17,10 @@ namespace Jobsway2goMvc.Validators.Users
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("This field is required.")
                 .Must(ValidateEmail).WithMessage("The email format is not valid");
+            RuleFor(p => p.Password).Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.");
+            RuleFor(p => p.Password).Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.");
+            RuleFor(p => p.Password).Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.");
+            RuleFor(x => x.Password).Matches(@"[\!\?\*\.]*$").WithMessage("Your password must contain at least non alphanumeric character.");
         }
         private bool BeValidName(string name)
         {
@@ -29,5 +33,6 @@ namespace Jobsway2goMvc.Validators.Users
             bool result = Regex.IsMatch(email, regex, RegexOptions.IgnoreCase);
             return result;
         }
+
     }
 }
