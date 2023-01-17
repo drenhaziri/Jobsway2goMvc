@@ -1,4 +1,7 @@
-﻿namespace Jobsway2goMvc.Models
+﻿using Jobsway2goMvc.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Jobsway2goMvc.Models
 {
     public class Event
     {
@@ -7,7 +10,10 @@
         public string Description { get; set; }
         public string CompanyName { get; set; }
         public string ImagePath { get; set; }
-        public List<ApplicationUser> Speakers { get; set; }
+        [NotMapped]
+        public List<string> GuestsIds { get; set; }
+        public virtual ICollection<EventGuest> EventGuests { get; set; }
+        public EApproval Status { get; set; }
         public string URL { get; set; }
         public string Location { get; set; }
         public DateTime EventDate { get; set; }
