@@ -16,14 +16,12 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ApplicationDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+
+        public RoleController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
-            _context = context;
-            _httpContextAccessor = httpContextAccessor;
+
         }
 
 
@@ -64,11 +62,11 @@ namespace Jobsway2goMvc.Controllers
             if (user == null)
             {
                 ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
-                return NotFound("Could not find user");
+                return RedirectToAction("ManageUserRoles");
             }
             ViewBag.UserName = user.UserName;
             var model = new List<ManageUserRolesViewModel>();
-            foreach (var role in _roleManager.Roles.ToList())
+            foreach (var role in _roleManager.Roles)
             {
                 var userRolesViewModel = new ManageUserRolesViewModel
                 {
@@ -88,25 +86,21 @@ namespace Jobsway2goMvc.Controllers
             return View(model);
         }
 
-        private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
-        {
-            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-
-            return user;
-        }
-
         [HttpPost]
-        public async Task<IActionResult> ChangeRole(List<ManageUserRolesViewModel> model)
+        public async Task<IActionResult> ManageUserRoles(List<ManageUserRolesViewModel> model, string userId)
         {
-
-            var userAccessor = _httpContextAccessor.HttpContext.User;
-            var user = GetApplicationUser(userAccessor);
-
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return View();
+                return View(model);
+            }
+
+            if (!model.Any(x => x.Selected))
+            {
+                ViewBag.RoleNull = "you have to choose a role";
+                ViewBag.userId = userId;
+                ViewBag.UserName = user?.UserName;
+                return View(model);
             }
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -128,7 +122,6 @@ namespace Jobsway2goMvc.Controllers
 
             return RedirectToAction("UserRoles");
         }
-
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
