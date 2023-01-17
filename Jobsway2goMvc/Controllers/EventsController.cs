@@ -166,7 +166,7 @@ namespace Jobsway2goMvc.Controllers
                 currentGuests.Remove(guest);
             }
 
-            var newGuests = _userManager.Users.AsEnumerable().Where(user => guestsIds.Contains(user.Id) && !currentGuests.Any(guest => guest.ApplicationUser.Id == user.Id)).ToList();
+            var newGuests = _userManager.Users.AsEnumerable().Where(user => guestsIds.Contains(user.Id) && !currentGuests.Any(guest => guest.GuestId == user.Id)).ToList();
             foreach (var guest in newGuests)
             {
                 var guestEvent = new EventGuest();
