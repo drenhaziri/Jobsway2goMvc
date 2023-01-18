@@ -1,0 +1,35 @@
+﻿@model Jobsway2goMvc.Models.Experience
+
+
+@{
+    ViewData["Title"] = "Add Experience";
+}
+
+<h2>Add Experience</h2>
+
+<form method="post" asp-controller="UserProfile" asp-action="AddExperience">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <input asp-for="Description" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="Location" class="control-label"></label>
+        <input asp-for="Location" class="form-control"/>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DateFrom" class="control-label"></label>
+        <input asp-for="DateFrom" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <label asp-for="DateTo" class="control-label"></label>
+        <input asp-for="DateTo" class="form-control"/>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Add" class="btn btn-primary"/>
+    </div>
+</form>

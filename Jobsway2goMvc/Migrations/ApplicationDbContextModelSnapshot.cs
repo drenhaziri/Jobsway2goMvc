@@ -265,6 +265,43 @@ namespace Jobsway2goMvc.Migrations
                     b.ToTable("EventGuests");
                 });
 
+            modelBuilder.Entity("Jobsway2goMvc.Models.Experience", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DateFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Experiences");
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.Group", b =>
                 {
                     b.Property<int>("Id")
@@ -700,6 +737,17 @@ namespace Jobsway2goMvc.Migrations
                     b.Navigation("Event");
                 });
 
+            modelBuilder.Entity("Jobsway2goMvc.Models.Experience", b =>
+                {
+                    b.HasOne("Jobsway2goMvc.Models.ApplicationUser", "User")
+                        .WithMany("Experiences")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.GroupMembership", b =>
                 {
                     b.HasOne("Jobsway2goMvc.Models.Group", "Group")
@@ -824,6 +872,8 @@ namespace Jobsway2goMvc.Migrations
                     b.Navigation("Collections");
 
                     b.Navigation("EventGuests");
+
+                    b.Navigation("Experiences");
                 });
 
             modelBuilder.Entity("Jobsway2goMvc.Models.Event", b =>
