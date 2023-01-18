@@ -29,6 +29,11 @@ namespace Jobsway2goMvc.Data
 
         public DbSet<Connection> Connections { get; set; }
         public DbSet<Experience> Experiences { get; set; }
+        public DbSet<Education> Educations { get; set; }
+
+        public DbSet<Certification> Certifications { get; set; }
+
+        public DbSet<Award> Awards { get; set; }
         //public DbSet<Section> Sections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,6 +61,15 @@ namespace Jobsway2goMvc.Data
             modelBuilder.Entity<Experience>()
                 .HasOne(p => p.User)
                 .WithMany(g => g.Experiences)
+                .HasForeignKey(p => p.UserId);
+            modelBuilder.Entity<Education>()
+                .HasOne(p => p.User)
+                .WithMany(g => g.Educations)
+                .HasForeignKey(p => p.UserId);
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Certification>()
+                .HasOne(p => p.User)
+                .WithMany(g => g.Certifications)
                 .HasForeignKey(p => p.UserId);
 
             modelBuilder.Entity<EventGuest>()

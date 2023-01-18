@@ -25,6 +25,9 @@ namespace Jobsway2goMvc.Models
         public Boolean? IsPremium { get; set; }
         public Boolean? IsActive { get; set; }
         public List<Experience> Experiences { get; set; }
+        public List<Education> Educations { get; set; }
+        public List<Certification> Certifications { get; set; }
+        public List<Award> Awards { get; set; }
 
     }
 }
