@@ -79,7 +79,8 @@ namespace Jobsway2goMvc.Controllers
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
                 var selectList = new List<SelectListItem>();
-                foreach (var user in _userManager.Users)
+                var currentUserId = _userManager.GetUserId(HttpContext.User);
+                foreach (var user in _userManager.Users.Where(u => u.Id != currentUserId))
                 {
                     selectList.Add(new SelectListItem
                     {
