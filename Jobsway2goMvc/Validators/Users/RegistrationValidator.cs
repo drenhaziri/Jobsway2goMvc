@@ -36,11 +36,20 @@ namespace Jobsway2goMvc.Validators.Users
         }
         private bool BeValidName(string name)
         {
+            if (string.IsNullOrEmpty(name))
+            {
+                return false;
+            }
             var regex = new Regex(@"^[a-zA-Z]+$");
             return regex.IsMatch(name);
         }
         private bool ValidateEmail(string email)
+
         {
+            if (string.IsNullOrEmpty(email))
+            {
+                return false;
+            }
             var regex = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
             bool result = Regex.IsMatch(email, regex, RegexOptions.IgnoreCase);
             return result;
