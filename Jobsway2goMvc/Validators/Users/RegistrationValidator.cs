@@ -1,5 +1,8 @@
 ﻿using FluentValidation;
 using Jobsway2goMvc.Areas.Identity.Pages.Account;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace Jobsway2goMvc.Validators.Users
@@ -19,7 +22,17 @@ namespace Jobsway2goMvc.Validators.Users
                 .Must(ValidateEmail).WithMessage("The email format is not valid");
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("This field is required.")
+                .MinimumLength(6).WithMessage("The password must be at least 6 characters long.")
                 .Must(IsValidPassword).WithMessage("The password should must contain at least one uppercase and lowercase letter at least one number and at least non alphanumeric character");
+            RuleFor(x => x.ConfirmPassword)
+                .NotEmpty().WithMessage("This field is required.")
+                .Custom((confirmPassword, context) => {
+                                                         var password = context.InstanceToValidate.Password;
+                                                        if (confirmPassword != password)
+                                                        {
+                                                            context.AddFailure("The password and confirmation password do not match.");
+                                                        }
+                                                             });
         }
         private bool BeValidName(string name)
         {
@@ -34,8 +47,13 @@ namespace Jobsway2goMvc.Validators.Users
         }
         public bool IsValidPassword(string password)
         {
+            if (string.IsNullOrEmpty(password))
+            {
+                return false;
+            }
             string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$";
             return Regex.IsMatch(password, pattern);
+
         }
     }
 }
