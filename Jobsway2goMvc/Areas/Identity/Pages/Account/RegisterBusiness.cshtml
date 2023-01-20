@@ -20,40 +20,37 @@
             <span class="title">Registration as a Business </span>
             <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <dl class="row">
+                    <span style="color: red;">@Html.ValidationSummary()</span>
+                </dl>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="input-field">
-                    <input asp-for="Input.FirstName" type="text" placeholder="Enter your name" required>
-                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    <input asp-for="Input.FirstName" type="text" placeholder="Enter your name">
                     <i class="uil uil-user"></i>
                 </div>
                 <div class="input-field">
-                    <input asp-for="Input.LastName" type="text" placeholder="Enter your lastname" required>
-                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    <input asp-for="Input.LastName" type="text" placeholder="Enter your lastname">
                     <i class="uil uil-user"></i>
                 </div>
                 <div class="input-field">
-                    <input asp-for="Input.CompanyName" type="text" placeholder="Enter your Company Name" required>
-                    <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
+                    <input asp-for="Input.CompanyName" type="text" placeholder="Enter your Company Name">
                     <i class="uil uil-user"></i>
                 </div>
                 <div class="input-field">
-                    <input asp-for="Input.CompanyArea" type="text" placeholder="Enter your Company Area" required>
-                    <span asp-validation-for="Input.CompanyArea" class="text-danger"></span>
+                    <input asp-for="Input.CompanyArea" type="text" placeholder="Enter your Company Area">
                     <i class="uil uil-user"></i>
                 </div>
                 <div class="input-field">
-                    <input asp-for="Input.Email" type="text" placeholder="Enter your email" required>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    <input asp-for="Input.Email" type="text" placeholder="Enter your email">
                     <i class="uil uil-envelope icon"></i>
                 </div>
                 <div class="input-field">
-                    <input asp-for="Input.Password" type="password" class="password" placeholder="Create a password" required>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    <input asp-for="Input.Password" type="password" class="password" placeholder="Create a password">
                     <i class="uil uil-lock icon"></i>
                     <i class="uil uil-eye-slash showHidePw"></i>
                 </div>
                 <div class="input-field">
-                    <input asp-for="Input.ConfirmPassword" type="password" class="password" placeholder="Confirm a password" required>
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    <input asp-for="Input.ConfirmPassword" type="password" class="password" placeholder="Confirm a password">
                     <i class="uil uil-lock icon"></i>
                     <i class="uil uil-eye-slash showHidePw"></i>
                 </div>
