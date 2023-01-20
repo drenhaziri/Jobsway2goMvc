@@ -1,4 +1,6 @@
-﻿namespace Jobsway2goMvc.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Jobsway2goMvc.Models
 {
     public class Job
     {
@@ -14,6 +16,9 @@
         public decimal MinSalary { get; set; }
         public decimal MaxSalary { get; set; }
         public int CategoryId { get; set; }
+
+        [FileExtensions(Extensions = "jpg,jpeg,png,gif")]
+        public string? ImagePath { get; set; }
         public virtual ICollection<ApplicationUser> Applicants { get; set; } = new List<ApplicationUser>();
         public JobCategory Category { get; set; }
         public List<Collection> Collections { get; set; } 

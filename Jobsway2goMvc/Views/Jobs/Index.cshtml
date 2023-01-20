@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.CompanyName)
             </th>
             <th>
@@ -51,6 +54,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                 <img src="@Url.Content(item.ImagePath)" class="img-fluid" alt="image">
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CompanyName)
             </td>
