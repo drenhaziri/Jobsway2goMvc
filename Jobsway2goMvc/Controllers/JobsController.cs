@@ -12,6 +12,8 @@ using Jobsway2goMvc.Validators.Jobs;
 using FluentValidation.Results;
 using Jobsway2goMvc.Models.ViewModel;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -19,11 +21,13 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public JobsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        public JobsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -111,9 +115,11 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId,ImagePath")] Job job)
         {
             var validator = new JobValidator();
+            var userid = _userManager.GetUserId(HttpContext.User);
+            var user= await _userManager.FindByIdAsync(userid);
             ValidationResult result = validator.Validate(job);
             
             if (!result.IsValid)
@@ -128,8 +134,23 @@ namespace Jobsway2goMvc.Controllers
 
                 return View(job);
             }
+            var newJob = new Job
+            {
+                CompanyName = job.CompanyName,
+                Location = job.Location,
+                Schedule = job.Schedule,
+                Description = job.Description,
+                OpenSpots = job.OpenSpots,
+                Requirements = job.Requirements,
+                DateFrom = job.DateFrom,
+                DateTo = job.DateTo,
+                MinSalary = job.MinSalary,
+                MaxSalary = job.MaxSalary,
+                CategoryId = job.CategoryId,
+                ImagePath = user.ImagePath
 
-            _context.Add(job);
+            };
+            _context.Add(newJob);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
