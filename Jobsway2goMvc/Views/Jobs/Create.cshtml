@@ -22,7 +22,6 @@
                     <div class="form-group">
                         <label for="jobCategory" class="form-label">Job Category</label>
                         @Html.DropDownListFor(model => model.CategoryId, (IEnumerable<SelectListItem>)ViewBag.Categories, "-- Select a category --", htmlAttributes: new { @class = "form-control", @id = "jobCategory" })
-                        @Html.ValidationMessageFor(model => model.CategoryId, "Please Select a Category", new { @class = "text-danger" })
                     </div>
                 </div>
                 

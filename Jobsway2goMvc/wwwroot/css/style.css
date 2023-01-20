@@ -141,6 +141,7 @@ profile-sidebar{
     border-radius: 10px;
     padding: 10px 45px;
     font-weight: 500;
+    background: #001935;
 }
 
 .job-post-from .back-btn {
