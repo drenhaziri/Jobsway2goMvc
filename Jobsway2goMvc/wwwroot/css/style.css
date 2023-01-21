@@ -6,7 +6,7 @@
 }
 
 body {
-    background: #f0f2f5;
+    background: #ffffff;
     color: #5f5f5f;
 }
 a {
@@ -79,4 +79,31 @@ profile-sidebar{
     color:#333;
     margin:10px 0 20px;
     font-weight:600;
+}
+.details-text {
+    color: #001935;
+    font-family: Times, serif;
+    font-size: 15px;
+}
+.details-title {
+    color: #fd1616;
+    font-family: Times, serif;
+    font-size: 15px;
+}
+.details-form .post-btn {
+    display: inline-block;
+    background-color: #001935;
+    padding: 10px;
+    width: 300px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.details-form .back-btn {
+    display: inline-block;
+    background-color: #fd1616;
+    padding: 10px;
+    width: 300px;
+    color: #ffffff;
+    text-align: center;
 }
