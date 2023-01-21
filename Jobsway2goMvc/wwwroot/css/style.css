@@ -5,7 +5,7 @@
     box-sizing: border-box;
 }
 
-body {
+.body {
     background: #f0f2f5;
     color: #5f5f5f;
 }
@@ -82,7 +82,7 @@ profile-sidebar {
         font-weight: 600;
     }
 
-@media only screen and (min-width: 769px) {
+@media screen and (min-width: 80rem) {
     .containerR {
         max-width: 400px;
         margin: auto;
