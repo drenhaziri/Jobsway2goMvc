@@ -14,7 +14,7 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  background-color:aliceblue;
 }
 
 .row{
@@ -217,3 +217,226 @@ navbar-nav .signup-btn:hover {
 }
 
 /* Navbar CSS End */
+
+/* Find Section CSS Start */
+.find-form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    z-index: 1;
+    position: relative;
+    -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+}
+
+.find-form .form-group {
+    margin-bottom: 0;
+    line-height: 1;
+    text-align: left;
+    position: relative;
+}
+
+.find-form .form-group label {
+    font-size: 15px;
+    color: #5c5a5a;
+    font-weight: 600;
+    padding-left: 20px;
+}
+
+.find-form .form-group .form-control {
+    height: 60px;
+    border-radius: 10px;
+    padding: 5px 20px 10px;
+}
+
+.find-form .form-group ::-webkit-input-placeholder {
+    font-size: 14px;
+    font-weight: 500;
+    color: #8e8d8d;
+}
+
+.find-form .form-group :-ms-input-placeholder {
+    font-size: 14px;
+    font-weight: 500;
+    color: #8e8d8d;
+}
+
+.find-form .form-group ::placeholder {
+    font-size: 14px;
+    font-weight: 500;
+    color: #8e8d8d;
+}
+
+.find-form .form-group i {
+    position: absolute;
+    top: 18px;
+    right: 15px;
+    font-size: 22px;
+    color: #9b9b9b;
+}
+
+.find-form .nice-select {
+    height: 60px;
+    border-radius: 10px;
+    padding: 5px 20px 10px;
+    border: 1px solid #ced4da;
+    width: 100%;
+}
+
+.find-form .nice-select::after {
+    right: 20px;
+    top: 46%;
+    width: 9px;
+    height: 9px;
+}
+
+.find-form .nice-select .current {
+    font-size: 14px;
+    top: 3px;
+    position: relative;
+    font-weight: 500;
+}
+
+.find-form .nice-select .list {
+    width: 100%;
+}
+
+.find-form .find-btn {
+    background: #fd1616;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    width: 100%;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 16px 20px;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+}
+
+.find-form .find-btn:hover {
+    background: #001935;
+}
+
+.find-form .find-btn i {
+    left: 10px;
+    top: 2px;
+    position: relative;
+}
+
+/* Find Section CSS End */
+
+/* Job Section CSS Start */
+.job-style-two {
+    position: relative;
+    z-index: 1;
+}
+
+.job-style-two::before {
+    position: absolute;
+    content: '';
+    background-image: url(../img/shape/job.png);
+    background-position: center center;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: .02;
+    z-index: -1;
+}
+
+.job-card-two {
+    background: #ffffff;
+    margin-bottom: 30px;
+    padding: 40px 30px;
+}
+
+.job-card-two .company-logo {
+    background: #fddcd4;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    border-radius: 100px;
+    border: 1px dashed #fd1616;
+    position: relative;
+    top: -8px;
+}
+
+.job-card-two .job-info {
+    padding-left: 25px;
+}
+
+.job-card-two .job-info h3 {
+    margin-bottom: 10px;
+}
+
+.job-card-two .job-info h3 a {
+    color: #001935;
+}
+
+.job-card-two .job-info h3 a:hover {
+    color: #fd1616;
+}
+
+.job-card-two .job-info ul {
+    padding-left: 0;
+}
+
+.job-card-two .job-info ul li {
+    display: inline-block;
+    font-size: 15px;
+    padding-right: 10px;
+}
+
+.job-card-two .job-info ul li a {
+    color: #fd1616;
+    font-weight: 500;
+}
+
+.job-card-two .job-info ul li i {
+    top: 2px;
+    position: relative;
+    font-size: 18px;
+}
+
+.job-card-two .job-info span {
+    background: #fdd6cc;
+    display: inline-block;
+    padding: 5px 10px;
+    color: #fd1616;
+    margin-bottom: 10px;
+    border: 1px dashed #fd1616;
+    font-size: 14px;
+}
+
+.job-card-two .theme-btn .default-btn {
+    margin-right: 0;
+}
+
+/* Job Section CSS End */
+
+/* Footer CSS Start */
+
+.copyright-text {
+    background: #03143b;
+    padding: 20px 0;
+}
+
+    .copyright-text p {
+        margin-bottom: 0;
+        color: #ffffff;
+        line-height: 1;
+    }
+
+        .copyright-text p a {
+            color: #ffffff;
+        }
+
+            .copyright-text p a:hover {
+                color: #fd1616;
+            }
+
+/* Footer CSS End */
