@@ -483,3 +483,25 @@ navbar-nav .signup-btn:hover {
             }
 
 /* Footer CSS End */
+
+.notification-container {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    top: 15px;
+    left: 15px;
+}
+.icon {
+    color: #fff;
+}
+
+.notification-counter {
+    position: absolute;
+    top: -7px;
+    left: 12px;
+    background-color: rgba(212, 19, 13, 1);
+    color: #fff;
+    border-radius: 3px;
+    padding: 3px 4px;
+    font: 8px Verdana;
+}
