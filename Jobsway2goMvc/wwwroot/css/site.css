@@ -21,3 +21,199 @@ body {
     margin-top:5px;
     margin-bottom:5px;
 }
+
+
+/* Default CSS Start */
+
+a {
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:focus {
+    text-decoration: none;
+}
+
+p {
+    font-size: 17px;
+    color: #707070;
+    line-height: 1.8;
+}
+
+button {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+}
+
+button:focus {
+    outline: 0;
+}
+
+.form-control:focus {
+    -webkit-box-shadow: 0 0 0 0;
+    box-shadow: 0 0 0 0;
+}
+
+.d-table {
+    width: 100%;
+    height: 100%;
+}
+
+.d-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.pt-100 {
+    padding-top: 100px;
+}
+
+.pb-70 {
+    padding-bottom: 70px;
+}
+
+.ptb-100 {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.pb-100 {
+    padding-bottom: 100px;
+}
+
+.section-title {
+    margin-bottom: 60px;
+}
+
+.section-title h2 {
+    font-size: 38px;
+    font-weight: 600;
+    max-width: 550px;
+    margin: 0 auto 10px;
+    line-height: 1;
+    text-transform: capitalize;
+}
+
+.section-title p {
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.theme-btn .default-btn {
+    font-size: 18px;
+    font-weight: 500;
+    font-family: "Catamaran", sans-serif;
+    background: #fd1616;
+    color: #ffffff;
+    margin-right: 15px;
+    border: 1px solid transparent;
+    padding: 10px 25px;
+    display: inline-block;
+}
+
+.theme-btn .default-btn:hover {
+    background: #001935;
+    border: 1px solid #ffffff;
+}
+
+/* Default CSS End */
+/*---------- Home Page One CSS Start ----------*/
+/* Navbar CSS Start */
+.navbar-area .main-nav {
+    background: #010c29;
+    padding: 20px 0;
+    position: relative;
+}
+
+.navbar-area .main-nav .navbar {
+    padding: 0;
+}
+
+.navbar-area .main-nav .navbar .navbar-brand {
+    padding: 0;
+}
+
+.navbar-area .main-nav .navbar .navbar-nav .nav-item {
+    padding: 10px 0;
+}
+
+.navbar-area .main-nav .navbar .navbar-nav .nav-item .nav-link {
+    text-transform: capitalize;
+    font-family: "Catamaran", sans-serif;
+    font-size: 17px;
+}
+
+.navbar-area .main-nav .navbar .navbar-nav .nav-item .nav-link.active {
+    color: #fd1616;
+}
+
+
+.navbar-area .main-nav .navbar .navbar-nav .nav-item  {
+    padding: 0;
+}
+
+.navbar-area .main-nav .navbar-nav .nav-item .nav-link{
+    color: #ffffff;
+}
+
+.navbar-nav .signin-btn{
+    color: #ffffff;
+    font-family: "Catamaran", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 5px 20px;
+    background: #fd1616;
+    border-radius: 5px;
+}
+
+.navbar-nav .signup-btn:hover {
+    color: #fd1616;
+    background: none;
+}
+
+.navbar-nav .signup-btn {
+    background: none;
+    padding: 0;
+    margin-right: 10px;
+}
+
+.navbar-nav .signin-btn:hover {
+    background: #ffffff;
+    color: #001935;
+}
+
+navbar-nav .signup-btn {
+    background: none;
+    padding: 0;
+    margin-right: 10px;
+}
+
+navbar-nav .signup-btn:hover {
+    color: #fd1616;
+    background: none;
+}
+
+.is-sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 999;
+    -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    -webkit-animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
+    animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+    width: 100% !important;
+}
+
+/* Navbar CSS End */
