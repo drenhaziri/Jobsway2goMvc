@@ -39,7 +39,7 @@
                     <div class="job-card-two">
                         <div class="row align-items-center">
                             <div class="col-md-1">
-                                <div class="company-logo">
+                                <div class="user-logo">
                                     <a href="job-details.html">
                                         <img width="50" height="50" src="~/Images/logo.png" alt="logo">
                                     </a>
@@ -79,5 +79,40 @@
         </div>
     </section>
     <!-- Job Section End -->
+    <!-- User Section Start -->
+    <section class="user-section pt-100 pb-70">
+        <div class="container">
+            <div class="section-title text-center">
+                <h2>Top Employees</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.</p>
+            </div>
+
+            <div class="row">
+                 @foreach (var item in @ViewBag.Users as ICollection<ApplicationUser>)
+                {
+                <div class="col-lg-3 col-sm-6">
+                    <div class="user-card">
+                        <div class="user-logo">
+                            <a href="job-list.html">
+                                <img width="50" height="50" src="@item.ImagePath" alt="user logo">
+                            </a>
+                        </div>
+                        <div class="user-text">
+                            <h3>@item.FirstName @item.LastName</h3>
+                            <p>
+                                <i class='fa fa-email'></i>
+                                @item.Email
+                            </p>
+                            <a href="job-list.html" class="user-btn">
+                                View Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+    <!-- User Section End -->
 
 </div>
