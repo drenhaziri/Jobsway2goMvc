@@ -18,12 +18,15 @@
 <body>
     <header>
         <div class="navbar-area">
-            <!-- Menu For Desktop Device -->
             <div class="main-nav">
                 <div class="container">
-                    <nav class="navbar navbar-expand-lg navbar-light">
+                    <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light">
                         <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">Jobsway2goMvc</a>
-                        <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria- controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse d-sm-inline-flex mean-menu">
                             <ul class="navbar-nav flex-grow-1">
                                 <li class="nav-item">
                                     <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
