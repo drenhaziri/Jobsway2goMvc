@@ -82,7 +82,7 @@ profile-sidebar {
         font-weight: 600;
     }
 
-@media screen and (min-width: 80rem) {
+@media screen and (min-width: 30em) {
     .containerR {
         max-width: 400px;
         margin: auto;
