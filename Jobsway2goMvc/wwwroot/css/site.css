@@ -1,23 +1,95 @@
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
-.row{
-    margin-top:5px;
-    margin-bottom:5px;
+.row {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+a{
+    text-decoration:none;
+}
+
+
+/ /*Jobs List cards  responsive*/
+.col-md-4 {
+    width: 25%;
+    margin-bottom: 7px;
+    margin-right: 7px;
+}
+@media (max-width: 976px) {
+    .col-md-4 {
+        width: 40%;
+        margin: 0 auto;
+        padding: 0px 20px;
+        text-align: center;
+    }
+
+    .btn {
+        width: 25px;
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+     h3 {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .col-md-4 {
+        width: 50%;
+        margin: 0 auto;
+        padding: 0px 20px;
+        text-align: center;
+    }
+    .btn {
+        width: 25px;
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+    h3 {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .col-md-4 {
+        width: 100%;
+        text-align: center;
+        margin: 0 auto;
+    }
+    .card {
+        width: 90%;
+        height: auto;
+        margin: 10px 5%;
+        padding: 10px;
+    }
+    .btn {
+        width: 25px;
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+    .card span {
+        display: none;
+    }
+    h3{
+        text-align:center;
+    }
 }
