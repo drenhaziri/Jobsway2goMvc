@@ -184,3 +184,7 @@ profile-sidebar{
 }
 
 /*---------- Post Jobs Page CSS End ----------*/
+
+.create-button-size {
+    font-size: 26px;
+}
