@@ -4,19 +4,115 @@
 }
 
 <div class="text-center">
-    <form class="form-control" asp-action="Index">
-        <div>
-            <select class="form-control" name="searchEnum" asp-items="Html.GetEnumSelectList<SearchEnum>()"></select>
-            Search: <input type="text" name="SearchString" />
-            <input type="submit" value="Search" />
-        </div>
-    </form>
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="find-section pb-100">
+        <div class="container">
+            <form class="find-form" asp-action="Index">
+                <div class="row">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <input type="text" name="SearchString" class="form-control" id="exampleInputEmail1" placeholder="Search...">
+                                <i class="fa fa-search"></i>
+                            </div>
+                        </div>
 
-    @foreach (var item in @ViewBag.FeedJobs as ICollection<Job>)
-    {
-        <p>@item.CompanyName</p>
-    }
+                        <div class="col-lg-4">
+                            <select class="nice-select" name="searchEnum" asp-items="Html.GetEnumSelectList<SearchEnum>()"></select>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <button type="submit" class="find-btn">
+                                Search
+                                <i class='fa fa-search'></i>
+                            </button>
+                        </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Job Section End -->
+    <section class="job-style-two  pb-70">
+        <div class="container">
+            <div class="row">
+                @foreach (var item in @ViewBag.FeedJobs as ICollection<Job>)
+                {
+                <div class="col-lg-12">
+                    <div class="job-card-two">
+                        <div class="row align-items-center">
+                            <div class="col-md-1">
+                                <div class="user-logo">
+                                    <a href="job-details.html">
+                                        <img width="50" height="50" src="~/Images/logo.png" alt="logo">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="job-info">
+                                    <h3>
+                                        <a href="job-details.html">@item.CompanyName</a>
+                                    </h3>
+                                    <ul>
+                                        <li>
+                                            <i class='fa fa-briefcase'></i>
+                                               @item.MinSalary € - @item.MaxSalary €
+                                        </li>
+                                        <li>
+                                            <i class='fa fa-maps-marker'></i>
+                                            @item.Location
+                                        </li>
+                                    </ul>
+
+                                    <span>@item.Schedule</span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="theme-btn text-end">
+                                    <a href="job-details.html" class="default-btn">
+                                        Browse Job
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+    <!-- Job Section End -->
+    <!-- User Section Start -->
+    <section class="user-section pt-100 pb-70">
+        <div class="container">
+            <div class="section-title text-center">
+                <h2>Top Employees</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.</p>
+            </div>
+
+            <div class="row">
+                 @foreach (var item in @ViewBag.Users as ICollection<ApplicationUser>)
+                {
+                <div class="col-lg-3 col-sm-6">
+                    <div class="user-card">
+                        <div class="user-logo">
+                            <a href="job-list.html">
+                                <img width="50" height="50" src="@item.ImagePath" alt="user logo">
+                            </a>
+                        </div>
+                        <div class="user-text">
+                            <h3>@item.FirstName @item.LastName</h3>
+                            <p>
+                                <i class='fa fa-email'></i>
+                                @item.Email
+                            </p>
+                            <a href="job-list.html" class="user-btn">
+                                View Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+    <!-- User Section End -->
 
 </div>
