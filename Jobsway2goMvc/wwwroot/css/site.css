@@ -15,7 +15,7 @@ html {
 }
 
 body {
-  background-color:aliceblue;
+  background-color:white;
 }
 
 .row{
@@ -332,6 +332,7 @@ navbar-nav .signup-btn:hover {
 .job-style-two {
     position: relative;
     z-index: 1;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
 }
 
 .job-style-two::before {
@@ -428,6 +429,7 @@ navbar-nav .signup-btn:hover {
     -webkit-transition: 0.5s;
     transition: 0.5s;
     background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
 }
 
     .user-card .user-logo {
