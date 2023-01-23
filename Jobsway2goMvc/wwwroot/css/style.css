@@ -6,6 +6,11 @@
 }
 
 body {
+    background: #ffffff;
+    color: #5f5f5f;
+}
+a {
+    text-decoration: none;
     color: #5f5f5f;
 }
 
@@ -75,7 +80,33 @@ profile-sidebar{
     margin:10px 0 20px;
     font-weight:600;
 }
+.details-text {
+    color: #001935;
+    font-family: Times, serif;
+    font-size: 15px;
+}
+.details-title {
+    color: #fd1616;
+    font-family: Times, serif;
+    font-size: 15px;
+}
+.details-form .post-btn {
+    display: inline-block;
+    background-color: #001935;
+    padding: 10px;
+    width: 300px;
+    color: #ffffff;
+    text-align: center;
+}
 
+.details-form .back-btn {
+    display: inline-block;
+    background-color: #fd1616;
+    padding: 10px;
+    width: 300px;
+    color: #ffffff;
+    text-align: center;
+}
 /*---------- Post Jobs Page CSS Start ----------*/
 
 .job-post-from {

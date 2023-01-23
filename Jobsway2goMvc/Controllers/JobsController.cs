@@ -94,6 +94,16 @@ namespace Jobsway2goMvc.Controllers
                 .Include(j => j.Category)
                 .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            if (job.Applicants == null || !job.Applicants.Any())
+            {
+                ViewBag.JobApplication = "There are no applicants for this job";
+                return View(job);
+            }
+            else
+            {
+                return View(job);
+            }
+
             if (job == null)
             {
                 return NotFound();

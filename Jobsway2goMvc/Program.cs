@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Jobsway2goMvc.Areas.Identity.Pages.Account;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Extensions;
 using Jobsway2goMvc.Hubs;
@@ -7,16 +8,13 @@ using Jobsway2goMvc.Interfaces;
 using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Services;
 using Jobsway2goMvc.SubscribeTableDependencies;
+using Jobsway2goMvc.Validators.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllersWithViews()
-            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()))
-            .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false);
 
 var connectionString = builder.Configuration.GetConnectionString("JobPortalConString");
 
@@ -25,6 +23,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     ServiceLifetime.Scoped
 );
 
+builder.Services.AddScoped<IValidator<RegisterModel.InputModel>, RegistrationValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<RegistrationValidator>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

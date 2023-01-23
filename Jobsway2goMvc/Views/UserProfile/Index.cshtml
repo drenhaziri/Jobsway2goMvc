@@ -7,66 +7,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Profile"] - Jobsway2goMvc</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Jobsway2goMvc.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/Jobsway2goMvc.styles.css" asp-append-version="true"/>
 </head>
-<body>       
-        <div class="container">
-            <div class="profile-main">
-                <div class="profile-container">
-                    <div class="profile-container-inner">
-                        <img src=@Model.ImagePath class="profile-pic mt-2"/>
-                        <h1> @Model.FirstName @Model.LastName</h1>
-                        <b>@Model.Email</b>
-                        <p>@Model.CompanyName</p>
-                        <p>@Model.CompanyArea</p>
-                        <div class="profile-btn">
-                        <a class="btn btn-primary">Connect</a>
-                        <a class="btn btn-primary" asp-action = "EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
-                        </div>
-                    </div>
-                </div>
+<body>
+<div class="container">
+<div class="profile-main">
+    <div class="profile-container">
+        <div class="profile-container-inner">
+            <img src=@Model.ImagePath class="profile-pic mt-2"/>
+            <h1> @Model.FirstName @Model.LastName</h1>
+            <b>@Model.Email</b>
+            <p>@Model.CompanyName</p>
+            <p>@Model.CompanyArea</p>
+            <div class="profile-btn">
+                <a class="btn btn-primary">Connect</a>
+                <a class="btn btn-primary" asp-action="EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="profile-description">
-                <h2>About</h2>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the i
-                ndustry's standard dummy text ever since the 1500s, when an unknown printer took a galley 
-                of type and scrambled it to make a type specimen book. It has survived not only five centu
-                ries, but also the leap into electronic</p>
-            </div>
-        <div class="profile-description">
-            <h2>Education</h2>
-            <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the i
-                ndustry's standard dummy text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has survived not only five centu
-                ries, but also the leap into electronic
-            </p>
-        </div>
-        <div class="profile-description">
-            <h2>Experience</h2>
-            <p>
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the i
-                ndustry's standard dummy text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book. It has survived not only five centu
-                ries, but also the leap into electronic
-            </p>
-        </div>
+<div class="profile-description">
+    <h2>About</h2>
+    <p>
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the i
+        ndustry's standard dummy text ever since the 1500s, when an unknown printer took a galley
+        of type and scrambled it to make a type specimen book. It has survived not only five centu
+        ries, but also the leap into electronic
+    </p>
+</div>
 
-        <div class="profile-sidebar">
-        </div>
-        <div>
-           <a class="nav-link text-dark" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
-        </div>
-        </div>
+<div class="profile-description">
+    <h2>Award</h2>
+    <p>
+        <a asp-action="AddAward">Create New</a>
+    </p>
+    <hr/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Awards.First().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Awards.First().InstitutionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Awards.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Awards.First().DateFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Awards.First().DateTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Awards.First().Location)
+            </th>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var award in Model.Awards)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => award.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => award.InstitutionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => award.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => award.DateFrom)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => award.DateTo)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => award.Location)
+                </td>
+                <td>
+                    <a asp-controller="UserProfile" asp-action="EditAward" asp-route-id="@award.Id">Edit</a> |
+                    <a asp-action="DeleteAwards" asp-route-id="@award.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="profile-description">
+    <h2>Certification</h2>
+    <p>
+        <a asp-action="AddCertification">Create New</a>
+    </p>
+    <hr/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Certifications.First().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Certifications.First().InstitutionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Certifications.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Certifications.First().DateFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Certifications.First().DateTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Certifications.First().Location)
+            </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var certification in Model.Certifications)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => certification.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => certification.InstitutionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => certification.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => certification.DateFrom)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => certification.DateTo)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => certification.Location)
+                </td>
+                <td>
+                    <a asp-controller="UserProfile" asp-action="EditCertification" asp-route-id="@certification.Id">Edit</a> |
+                    <a asp-action="DeleteCertifications" asp-route-id="@certification.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="profile-description">
+    <h2>Education</h2>
+    <p>
+        <a asp-action="AddEducation">Create New</a>
+    </p>
+    <hr/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Educations.First().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Educations.First().InstitutionName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Educations.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Educations.First().DateFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Educations.First().DateTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Educations.First().Location)
+            </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var education in Model.Educations)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => education.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => education.InstitutionName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => education.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => education.DateFrom)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => education.DateTo)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => education.Location)
+                </td>
+                <td>
+                    <a asp-controller="UserProfile" asp-action="EditEducation" asp-route-id="@education.Id">Edit</a> |
+                    <a asp-action="DeleteEducation" asp-route-id="@education.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="profile-description">
+    <h2>Experience</h2>
+    <p>
+        <a asp-action="AddExperience">Create New</a>
+    </p>
+    <hr/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Experiences.First().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Experiences.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Experiences.First().DateFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Experiences.First().DateTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Experiences.First().Location)
+            </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var experience in Model.Experiences)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => experience.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => experience.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => experience.DateFrom)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => experience.DateTo)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => experience.Location)
+                </td>
+                <td>
+                    <a asp-controller="UserProfile" asp-action="EditExperience" asp-route-id="@experience.Id">Edit</a> |
+                    <a asp-action="DeleteExperience" asp-route-id="@experience.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<div class="profile-sidebar">
+</div>
+<div>
+    <a class="nav-link text-dark" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
+</div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>
