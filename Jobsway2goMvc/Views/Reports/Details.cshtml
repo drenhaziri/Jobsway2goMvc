@@ -1,0 +1,123 @@
+﻿@using Jobsway2goMvc.Enums;
+@model Jobsway2goMvc.Models.ViewModel.ReportViewModel;
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@if (Model.Report.JobId != null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Details">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Job.Id" />
+                <div class="form-group">
+                    <label asp-for="Job.CompanyName" class="control-label"></label>
+                    <input disabled asp-for="Job.CompanyName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job.Location" class="control-label"></label>
+                    <input disabled asp-for="Job.Location" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job.Schedule" class="control-label"></label>
+                    <input disabled asp-for="Job.Schedule" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job.Description" class="control-label"></label>
+                    <input disabled asp-for="Job.Description" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job.OpenSpots" class="control-label"></label>
+                    <input disabled asp-for="Job.OpenSpots" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job.Requirements" class="control-label"></label>
+                    <input disabled asp-for="Job.Requirements" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job.DateFrom" class="control-label"></label>
+                    <input disabled asp-for="Job.DateFrom" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job.DateTo" class="control-label"></label>
+                    <input disabled asp-for="Job.DateTo" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job.MinSalary" class="control-label"></label>
+                    <input disabled asp-for="Job.MinSalary" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Job.MaxSalary" class="control-label"></label>
+                    <input disabled asp-for="Job.MaxSalary" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Report Type</label>
+                    <input disabled asp-for="Report.reportType" class="form-control" />
+                </div>
+                <div class="form-group pt-2">
+                    <input type="submit" name="accept" value="Accept Report" class="btn btn-outline-success" />
+                    <input type="submit" name="deny" value="Deny Report" class="btn btn-outline-danger" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else if (Model.Report.PostId != null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Details">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Post.Id" />
+                <div class="form-group">
+                    <label asp-for="Post.Title" class="control-label"></label>
+                    <input asp-for="Post.Title" disabled class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Post.Description" class="control-label"></label>
+                    <input asp-for="Post.Description" disabled class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Post.CreatedAtUTC" class="control-label"></label>
+                    <input asp-for="Post.CreatedAtUTC" disabled class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Post.Type" class="control-label"></label>
+                    <select asp-for="Post.Type" disabled class="form-control" asp-items="Html.GetEnumSelectList<PostType>()"></select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Report Type</label>
+                    <input disabled asp-for="Report.reportType" class="form-control" />
+                </div>
+                <div class="form-group pt-2">
+                    <input type="submit" name="accept" value="Accept Report" class="btn btn-outline-success" />
+                    <input type="submit" name="deny" value="Deny Report" class="btn btn-outline-danger" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Details">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Group.Name" class="control-label"></label>
+                    <input disabled asp-for="Group.Name" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Report Type</label>
+                    <input disabled asp-for="Report.reportType" class="form-control" />
+                </div>
+                <div class="form-group pt-2">
+                    <input type="submit" name="accept" value="Accept Report" class="btn btn-outline-success" />
+                    <input type="submit" name="deny" value="Deny Report" class="btn btn-outline-danger" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
