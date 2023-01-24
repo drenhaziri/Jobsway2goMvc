@@ -338,8 +338,8 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Group @group)
         {
-            var userid = _userManager.GetUserId(HttpContext.User);
-            ApplicationUser owner = _userManager.FindByIdAsync(userid).Result;
+            var userid =  _userManager.GetUserId(HttpContext.User);
+            ApplicationUser owner = await _userManager.FindByIdAsync(userid);
 
             ModelState.Remove("Posts");
             if (ModelState.IsValid)
@@ -348,6 +348,7 @@ namespace Jobsway2goMvc.Controllers
                 {
                     Name = @group.Name,
                     CreatedBy = owner.UserName,
+                    IsPublic = @group.IsPublic
                 };
 
                 _context.Add(newGroup);
@@ -387,7 +388,7 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedBy")] Group @group)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedBy,IsPublic")] Group @group)
         {
             if (id != @group.Id)
             {

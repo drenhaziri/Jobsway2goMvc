@@ -23,6 +23,9 @@ namespace Jobsway2goMvc.Controllers
             var result = _context.Jobs.Page(pageSize, page).ToList();
             ViewBag.FeedJobs = result;
 
+            var users = _context.Users.ToList();
+            ViewBag.Users = users;
+
             return View();
         }
 

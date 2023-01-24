@@ -1,0 +1,24 @@
+﻿@model Jobsway2goMvc.Models.Job
+
+<div class="col-md-4 col-sm-6 col-12" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;width:26rem;">
+    <div class="card-body">
+        <a asp-action="Details" asp-controller="Jobs" asp-route-id="@Model?.Id">
+            <img src="~/Images/starlabs.png" class="img-rounded card-img-top p-2" alt="Card 1" style="width: 70px;height:70px;">
+        </a>
+        <br />
+        <div>
+            <p style="font-weight: bold;color:black;">@Model?.CompanyName</p>
+            <p style=" overflow: hidden;text-overflow: ellipsis;display:-webkit-box;-webkit-line-clamp: 3;line-clamp: 3;-webkit-box-orient: vertical;" class="card-text">@Model?.Description.</p>
+            <div>
+                <span class="btn-sm mx-2" style="color: #20B2AA;background:#E0FFFF; " disabled>@Model?.Schedule</span>
+                <span class="btn-sm mx-2" style="color: #20B2AA;background:#E0FFFF; " disabled>@Model?.Location</span>
+                <span class="btn-sm mx-2" style="color: #20B2AA;background:#E0FFFF; " disabled>@Model?.OpenSpots open spots</span>
+            </div>
+            <br />
+            <div>
+                <a class="btn btn-primary btn-lg mx-1" style="width:160px;" asp-action="ApplyJob" asp-controller="Jobs" asp-route-id="@Model?.Id">Apply</a>
+                <a class="btn btn-lg mx-2" style="width:160px;background:#D3D3D3; color:#808080" asp-action="Details" asp-controller="Jobs" asp-route-id="@Model?.Id">Details</a>
+            </div>
+        </div>
+    </div>
+</div>

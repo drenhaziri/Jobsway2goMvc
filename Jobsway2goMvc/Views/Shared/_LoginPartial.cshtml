@@ -4,30 +4,50 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
+<div class="dropdown">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-        <li class="nav-item">
-            <form id="logoutForm" class="form-inline" asp-controller="UserProfile" asp-action="Index">
-                <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Profile</button>
-            </form>
-        </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
+
+        <a class="btn btn-danger dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+            Hello @UserManager.GetUserName(User)!
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li class="nav-item">
+                <a id="manage" class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account Settings</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="dropdown-item">
+                    <form id="logoutForm" class="form-inline" asp-controller="UserProfile" asp-action="Index">
+                        <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Profile</button>
+                    </form>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="dropdown-item">
+                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                    </form>
+                </a>
+            </li>
+        </ul>
+        <button class="notification-container">
+            <i class="icon fa fa-bell text-light fa-1x"></i>
+            <span class="notification-counter">3</span>
+        </button>
+
+
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="signup-btn text-white" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="signin-btn" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    </ul>
 }
-</ul>
+</div>
