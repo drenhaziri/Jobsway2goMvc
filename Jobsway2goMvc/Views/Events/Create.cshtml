@@ -4,54 +4,72 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<!-- Post Event  Section Start -->
+<div class="event-post ptb-100">
+    <div class="container">
+        <form class="event-post-from" asp-action="Create">
+            <h2>Create an event</h2>
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="title" class="form-label">Title</label>
+                        <input asp-for="Title" type="text" class="form-control" id="title" placeholder="Title">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="companyName" class="form-label">Company Name</label>
+                        <input asp-for="CompanyName" type="text" class="form-control" id="companyName" placeholder="Company Name">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="URL" class="form-label">URL</label>
+                        <input asp-for="URL" class="form-control" id="URL" placeholder="URL">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                     <div class="form-group">
+                         <label for="location" class="form-label">Location</label>
+                         <input asp-for="Location" type="text" class="form-control" id="location" placeholder="e.g. London">
+                     </div>
+             </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="ImagePath" class="form-label">Image Path</label>
+                        <input asp-for="ImagePath" class="form-control"/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="eventDate" class="form-label">Event Date</label>
+                        <input asp-for="EventDate" type="date" class="form-control" id="eventDate" placeholder="">
+                    </div>
+                </div>
 
-<h4>Event</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyName" class="control-label"></label>
-                <input asp-for="CompanyName" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="ImagePath" class="control-label"></label>
-                <input asp-for="ImagePath" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="GuestsIds"></label>
-                <select asp-for="GuestsIds" asp-items="ViewBag.Users" class="form-control" multiple="multiple"></select>
-                <span asp-validation-for="GuestsIds" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="URL" class="control-label"></label>
-                <input asp-for="URL" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="EventDate" class="control-label"></label>
-                <input asp-for="EventDate" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="GuestsIds" class="form-label">GuestsIds</label>
+                        <select asp-for="GuestsIds" asp-items="ViewBag.Users" class="form-control guest-multi-select" multiple="multiple"></select>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea asp-for="Description" class="form-control description-area" id="description" rows="6" placeholder="Job Description"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary post-btn">
+                        Create
+                    </button>
+                    <a class="btn back-btn" asp-action="Index">Back to List</a>
+                </div>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<!-- Post Event Section End -->
