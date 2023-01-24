@@ -1,0 +1,26 @@
+﻿@using Jobsway2goMvc.Enums;
+@model Jobsway2goMvc.Models.Group;
+@{
+    ViewData["Title"] = "ReportGroup";
+}
+
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ReportGroup">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input disabled asp-for="Name" class="form-control" />
+            </div>
+                        <div class="pu-2 form-group">
+                <label class="control-label">Why do you want to report this job ?</label>
+                <select class="form-control" name="ReportEnum" asp-items="Html.GetEnumSelectList<ReportEnum>()"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Report" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
