@@ -118,7 +118,7 @@ profile-sidebar{
     text-transform: capitalize;
 }
 
-.guest-multi-select {
+.event-post-from .form-group .form-control.guest-multi-select {
     height: 100px;
 }
 
