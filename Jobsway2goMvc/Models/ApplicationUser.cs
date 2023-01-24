@@ -14,6 +14,7 @@ namespace Jobsway2goMvc.Models
         public string? ImagePath { get; set; }
         public string? Certificates { get; set; }
         public List<Collection> Collections {get;set;}
+        public virtual ICollection<EventGuest> EventGuests { get; set; }
         /*
          * public List<Language> Languages { get; set; }
         public List<Project> Projects { get; set; }*/
@@ -23,6 +24,10 @@ namespace Jobsway2goMvc.Models
         public string? References { get; set; }
         public Boolean? IsPremium { get; set; }
         public Boolean? IsActive { get; set; }
+        public List<Experience> Experiences { get; set; }
+        public List<Education> Educations { get; set; }
+        public List<Certification> Certifications { get; set; }
+        public List<Award> Awards { get; set; }
 
     }
 }
