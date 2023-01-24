@@ -6,7 +6,10 @@
 <div class="container">
     <div class="container">
         <h1 class="text-center mb-5" data-wow-delay="0.1s">Job Listing</h1>
-        <h3 class="font-weight-bold">Showing @Model.Count() Jobs </h3>
+        <div class="d-flex align-items-center">
+            <h3 class="font-weight-bold">Showing @Model.Count() Jobs </h3>
+            <a asp-controller="Jobs" asp-action="Create" class="mx-3"><i class="fa fa-plus create-button-size" title="Create a Job"></i></a>
+        </div>
         <div class="row d-flex flex-wrap">
             @foreach (var item in Model)
             {
