@@ -40,7 +40,7 @@ function updateNotifications() {
             if (data && data.length > 0) {
                 $("#notificationsContainer").empty();
                 $.each(data, function (i, notification) {
-                    var readButton = "<button class='btn btn-default' onclick='markAsRead(" + notification.id + ")'>Mark as Read</button>";
+                    var readButton = "<button class='btn btn-outline-secondary btn-sm' onclick='markAsRead(" + notification.id + ")'>Mark as Read</button>";
                     $("#notificationsContainer").append(readButton + "<a class='dropdown-item'>" + notification.message + "</a>");
                 });
             } else {

@@ -69,14 +69,15 @@
                                             <span class="notification-counter" id="notificationCount"></span>
                                         </a>
                                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                <li class="nav-item" id="notificationsContainer">
-                                                    
+                                            <a class="nav-link" asp-controller="UserConnection" asp-action="ConnectionList">View Connection Requests</a>
+                                            <li class="nav-item" id="notificationsContainer">
+                                                  
                                             </li>
                                             <li><hr class="dropdown-divider" /></li>
                                             <p>Marked as read </p>
-                                             <li class="nav-item" id="notificationsMarkedAsRead">
-
-                                             </li>
+                                             <a asp-controller="UserConnection" asp-action="ConnectionList" class="nav-item" id="notificationsMarkedAsRead">
+                                                  
+                                             </a>
                                         </ul>
                                     </div>
                                }
