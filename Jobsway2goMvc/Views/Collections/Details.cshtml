@@ -4,22 +4,26 @@
     ViewData["Title"] = "Details";
     @ViewBag.NullUser
 }
-
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Jobsway2goMvc.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
+</head>
 <p class="text-danger"> @ViewBag.NullUser</p>
-<h1>Details</h1>
+
 <div>
-    <h4>Collection</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+    <dl class ="details-text">
+        <h1> @Html.DisplayFor(model => model.Name) </h1>
     </dl>
 </div>
-<h4>Jobs</h4>
+<hr />
+<div class="details-text">
+    <h4>Jobs</h4>
+</div>
 <hr />
 <table class="table">
     <thead>
@@ -39,7 +43,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Jobs.First().OpenSpots)
             </th>
-             <th>
+            <th>
                 @Html.DisplayNameFor(model => model.Jobs.First().Requirements)
             </th>
             <th>
@@ -54,7 +58,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Jobs.First().MaxSalary)
             </th>
-             <th>
+            <th>
                 @Html.DisplayNameFor(model => model.Jobs.First().CategoryId)
             </th>
             <th>
@@ -65,6 +69,7 @@
             </th>
         </tr>
     </thead>
+    @ViewBag.JobCollection
     <tbody>
         @foreach (var job in Model.Jobs)
         {
@@ -99,7 +104,7 @@
                 <td>
                     @Html.DisplayFor(model => job.MaxSalary)
                 </td>
-                 <td>
+                <td>
                     @Html.DisplayFor(model => job.CategoryId)
                 </td>
                 <td>
@@ -110,14 +115,17 @@
                 </td>
                 <td>
                     <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id">Details</a>
+                    <form asp-action="RemoveJob">
+                        <input type="hidden" name="jobId" value="@Model.JobId" />
+                        <input type="hidden" name="collectionId" value="@Model.CollectionId" />
+                        <input type="submit" value="Remove from Collection" class="btn btn-danger" />
+                    </form>
+
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<a asp-controller="Job" asp-action="Create" asp-route-groupId="@ViewBag.CollectionId" class="btn btn-primary">Create New job</a>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-controller="Collections" asp-action="Index">Back to List</a>
 </div>

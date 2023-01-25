@@ -48,7 +48,15 @@ namespace Jobsway2goMvc.Controllers
             var collection = await _context.Collections
                 .Include(g => g.Jobs)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
+            if (collection.Jobs == null || !collection.Jobs.Any())
+            {
+                ViewBag.JobCollection = "There are no jobs saved";
+                return View(collection);
+            }
+            else
+            {
+                return View(collection);
+            }
             if (collection == null)
             {
                 return NotFound();
@@ -213,6 +221,23 @@ namespace Jobsway2goMvc.Controllers
                 _context.Collections.Remove(collection);
             }
             
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost, ActionName("RemoveJob")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveJob(int jobId, int collectionId)
+        {
+            var jobCollection = await _context.JobCollections
+                .FirstOrDefaultAsync(jc => jc.JobId == jobId && jc.CollectionId == collectionId);
+
+            if (jobCollection == null)
+            {
+                return NotFound();
+            }
+
+            _context.JobCollections.Remove(jobCollection);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
