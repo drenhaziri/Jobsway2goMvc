@@ -1,8 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Jobsway2goMvc.Models
-
+@inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,6 +59,28 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" asp-area="" asp-controller="JobCategories" asp-action="Index">Job Categories</a>
+                                </li>
+                                <li>
+                                @if(SignInManager.IsSignedIn(User)){
+                            
+                                        <div class="dropdown">
+                                            <a class="btn dropdown-toggle dropdown-toggle-split" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="icon fa fa-bell text-light fa-1x"></i>
+                                            <span class="notification-counter" id="notificationCount"></span>
+                                        </a>
+                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <a class="nav-link" asp-controller="UserConnection" asp-action="ConnectionList">View Connection Requests</a>
+                                            <li class="nav-item" id="notificationsContainer">
+                                                  
+                                            </li>
+                                            <li><hr class="dropdown-divider" /></li>
+                                            <p>Marked as read </p>
+                                             <a asp-controller="UserConnection" asp-action="ConnectionList" class="nav-item" id="notificationsMarkedAsRead">
+                                                  
+                                             </a>
+                                        </ul>
+                                    </div>
+                               }
                                 </li>
                             </ul>
                             <partial name="_LoginPartial" />
