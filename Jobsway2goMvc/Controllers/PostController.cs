@@ -100,7 +100,7 @@ namespace Jobsway2goMvc.Controllers
             _context.Update(post);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
+            return RedirectToAction("PendingPosts", "Groups", new { id = post.GroupId });
         }
 
         public async Task<IActionResult> Reject(int id)
@@ -116,7 +116,7 @@ namespace Jobsway2goMvc.Controllers
             _context.Remove(post);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
+            return RedirectToAction("PendingPosts", "Groups", new { id = post.GroupId });
         }
 
         public async Task<IActionResult> Edit(int? id)

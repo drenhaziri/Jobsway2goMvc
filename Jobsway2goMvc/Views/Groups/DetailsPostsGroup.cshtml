@@ -1,5 +1,5 @@
 ﻿@using Jobsway2goMvc.Enums;
-@model Jobsway2goMvc.Models.Group
+@model Jobsway2goMvc.Models.ViewModel.GroupDetailsPostsViewModel
 
 
 @{
@@ -7,25 +7,17 @@
     @ViewBag.Rejected
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>Group</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
+    <h1>@Model.Name</h1>
 </div>
 
-<a type="button" class="btn btn-warning" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
-    Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p=>p.Status == Approval.Pending).Count()</span>
-</a>
-
+@if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
+{
+    <a type="button" class="btn btn-warning" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
+        Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p=>p.Status == Approval.Pending).Count()</span>
+    </a>
+}
 <h4>Posts</h4>
 <hr />
 <table class="table">
@@ -80,8 +72,10 @@
         }
     </tbody>
 </table>
-
-<a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary">Create New Post</a>
+@if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsMember==true)
+{
+    <a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary">Create New Post</a>
+}
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
