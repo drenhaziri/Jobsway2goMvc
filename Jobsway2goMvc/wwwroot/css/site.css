@@ -22,7 +22,17 @@ body {
     margin-top:5px;
     margin-bottom:5px;
 }
+/*posts group*/
+@media (min-width: 992px) {
+    .gedf-main {
+        
+    }
 
+    .gedf-card {
+        margin-bottom: 2.77rem;
+        justify-content:center;
+    }
+}
 
 /* Default CSS Start */
 

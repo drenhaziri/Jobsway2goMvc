@@ -675,7 +675,7 @@ namespace Jobsway2goMvc.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(DetailsPostsGroup), new { id });
         }
 
         public async Task<IActionResult> Requests(int id)

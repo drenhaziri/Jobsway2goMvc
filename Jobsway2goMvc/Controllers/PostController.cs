@@ -10,18 +10,19 @@ using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Enums;
 using System.Security.Claims;
 using System.Timers;
+using Microsoft.AspNetCore.Identity;
 
 namespace Jobsway2goMvc.Controllers
 {
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PostController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        public PostController(ApplicationDbContext context,UserManager<ApplicationUser> userManager)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index(int groupId)
@@ -52,16 +53,6 @@ namespace Jobsway2goMvc.Controllers
             return View(post);
         }
 
-
-        private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
-        {
-            var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-
-            return user;
-        }
-
         public IActionResult Create(int groupId)
         {
             var post = new Post { GroupId = groupId };
@@ -70,15 +61,20 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,CreatedAtUTC,Type,GroupId")] Post post)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,CreatedAtUTC,Type,FirstName,LastName,UserName,ImagePath,CreatedById,GroupId,Status")] Post post)
         {
-            ModelState.Remove("CreatedBy");
+            var userid = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser user = await _userManager.FindByIdAsync(userid);
             ModelState.Remove("Group");
             ModelState.Remove("CreatedById");
             if (ModelState.IsValid)
             {
-                var userAccessor = _httpContextAccessor.HttpContext.User;
-                post.CreatedBy = GetApplicationUser(userAccessor);
+                post.FirstName = user.FirstName;
+                post.LastName = user.LastName;
+                post.UserName = user.UserName;
+                post.ImagePath = user.ImagePath;
+                post.CreatedAtUTC = DateTime.Now;
+                post.CreatedById = user.Id;
                 post.Status = Approval.Pending;
                 _context.Add(post);
                 await _context.SaveChangesAsync();
@@ -136,36 +132,31 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,CreatedAtUTC,Type,GroupId")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,CreatedAtUTC,Type,FirstName,LastName,UserName,ImagePath,CreatedById,GroupId,Status")] Post post)
         {
             if (id != post.Id)
             {
                 return NotFound();
             }
-            ModelState.Remove("CreatedBy");
+            var findPost = await _context.Posts.AsNoTracking().FirstOrDefaultAsync(p=> p.Id == id);
+            if(findPost == null)
+            {
+                return NotFound();
+            }
             ModelState.Remove("Group");
-            ModelState.Remove("CreatedById");
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var userAccessor = _httpContextAccessor.HttpContext.User;
-                    post.CreatedBy = GetApplicationUser(userAccessor);
+                    post.Status = findPost.Status;
+                    post.ImagePath  = findPost.ImagePath;
+                    post.UserName = findPost.UserName;
+                    post.LastName = findPost.LastName;
+                    post.FirstName = findPost.FirstName;
+                    post.CreatedById = findPost.CreatedById;
+                    post.CreatedAtUTC = findPost.CreatedAtUTC;
+                    post.GroupId = findPost.GroupId;
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PostExists(post.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
             }
             return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }

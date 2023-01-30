@@ -85,19 +85,8 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
         <a asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
         <a asp-action="BannedMembersList" asp-route-id="@groupId">View Banned Member List</a>
         <a asp-action="Requests" asp-route-id="@groupId">View Membership Requests</a>
+        <a class="btn btn-outline-primary" asp-action="DetailsPostsGroup" asp-route-id="@groupId">Go to Group Details</a>
     }
-    @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
-    {
-        <a asp-action="Leave" asp-route-groupId="@groupId" class="btn btn-secondary">Leave Group</a>
-    }
-    @if (Model.CurrentMembershipList == null || Model.CurrentMembershipList.Status == Approval.Rejected)
-    {
-        <a asp-action="Join" asp-controller="Groups" asp-route-id="@groupId" class="btn btn-secondary">Join Group</a>
-    }
-    else if (Model.CurrentMembershipList.Status == Approval.Pending)
-    {
-        <a class="btn btn-secondary">Pending</a>
-    }
-
+    
 
 </div>
