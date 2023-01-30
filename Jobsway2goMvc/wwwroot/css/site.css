@@ -165,11 +165,7 @@ button:focus {
 }
 
 .navbar-nav .signin-btn{
-    color: #ffffff;
-    font-family: "Catamaran", sans-serif;
-    font-size: 16px;
     font-weight: 600;
-    padding: 5px 20px;
     background: #fd1616;
     border-radius: 5px;
 }
@@ -185,9 +181,9 @@ button:focus {
     margin-right: 10px;
 }
 
-.navbar-nav .signin-btn:hover {
+.navbar-nav .nav-link.signin-btn:hover {
     background: #ffffff;
-    color: #001935;
+    color: #001935 !important;
 }
 
 navbar-nav .signup-btn {
@@ -199,6 +195,10 @@ navbar-nav .signup-btn {
 navbar-nav .signup-btn:hover {
     color: #fd1616;
     background: none;
+}
+
+.navbar-area .main-nav .nav.navbar-nav .nav-item .nav-link.welcome-btn-text {
+    font-size: 14px;
 }
 
 .is-sticky {
@@ -470,17 +470,14 @@ navbar-nav .signup-btn:hover {
     background: #03143b;
     padding: 20px 0;
 }
-
     .copyright-text p {
         margin-bottom: 0;
         color: #ffffff;
         line-height: 1;
     }
-
         .copyright-text p a {
             color: #ffffff;
         }
-
             .copyright-text p a:hover {
                 color: #fd1616;
             }
@@ -491,7 +488,7 @@ navbar-nav .signup-btn:hover {
     position: relative;
     width: 16px;
     height: 16px;
-    top: 15px;
+    top: 10px;
     left: 15px;
 }
 .icon {
@@ -542,6 +539,11 @@ a{
      h3 {
         text-align: center;
     }
+
+    .navbar-nav .nav-link.signin-btn {
+         background: unset;
+         font-weight: unset;
+     }
 }
 
 @media (max-width: 768px) {
@@ -594,3 +596,4 @@ a{
     position: absolute;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
 }
+/*Notification dropdown costum*/

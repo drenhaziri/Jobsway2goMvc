@@ -15,8 +15,8 @@
                 <span class="btn-sm mx-2" style="color: #20B2AA;background:#E0FFFF; " disabled>@Model?.OpenSpots open spots</span>
             </div>
             <br />
-            <div>
-                <a class="btn btn-primary btn-lg mx-1" style="width:160px;" asp-action="ApplyJob" asp-controller="Jobs" asp-route-id="@Model?.Id">Apply</a>
+            <div class="theme-btn text-center">
+                <a class="default-btn btn-lg mx-1" style="width:160px;" asp-action="ApplyJob" asp-controller="Jobs" asp-route-id="@Model?.Id">Apply</a>
                 <a class="btn btn-lg mx-2" style="width:160px;background:#D3D3D3; color:#808080" asp-action="Details" asp-controller="Jobs" asp-route-id="@Model?.Id">Details</a>
             </div>
         </div>

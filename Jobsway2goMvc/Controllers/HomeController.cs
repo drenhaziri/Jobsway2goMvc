@@ -3,6 +3,7 @@ using Jobsway2goMvc.Enums;
 using Jobsway2goMvc.Extensions;
 using Jobsway2goMvc.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Jobsway2goMvc.Controllers
@@ -73,6 +74,12 @@ namespace Jobsway2goMvc.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult GetNotifications()
+        {
+            var notifications = _context.Notifications.ToList();
+            return View(notifications);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace Jobsway2goMvc.Models
         public string? UserName { get; set; }
         public string? Message { get; set; }
         public string? MessageType { get; set; }
+        public bool? IsRead { get; set; }
         public DateTime NotificationDateTime { get; set; }
 
     }

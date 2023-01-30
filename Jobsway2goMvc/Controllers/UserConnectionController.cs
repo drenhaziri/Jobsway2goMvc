@@ -80,6 +80,7 @@ namespace Jobsway2goMvc.Controllers
                 {
                     UserName = user2.UserName,
                     MessageType = "Personal",
+                    IsRead = false,
                     Message = user1.UserName + " sent you a connection request",
                     NotificationDateTime = DateTime.Now,
                 };

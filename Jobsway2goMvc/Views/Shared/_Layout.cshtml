@@ -1,8 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Jobsway2goMvc.Models
-
+@inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,19 +23,19 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
         <div class="navbar-area">
             <div class="main-nav">
                 <div class="container">
-                    <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-light">
+                    <nav class="navbar navbar-expand-xl navbar-toggleable-sm navbar-dark">
                         <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">Jobsway2goMvc</a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria- controls="navbarSupportedContent"
                                 aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse d-sm-inline-flex mean-menu">
-                            <ul class="navbar-nav flex-grow-1">
+                        <div class="collapse navbar-collapse">
+                            <ul class="navbar-nav  flex-grow-1">
                                 <li class="nav-item">
                                     <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                                 </li>
@@ -61,6 +60,28 @@
                                 <li class="nav-item">
                                     <a class="nav-link" asp-area="" asp-controller="JobCategories" asp-action="Index">Job Categories</a>
                                 </li>
+                                <li>
+                                @if(SignInManager.IsSignedIn(User)){
+                            
+                                        <div class="dropdown">
+                                            <a class="btn dropdown-toggle dropdown-toggle-split" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="icon fa fa-bell text-light fa-1x"></i>
+                                            <span class="notification-counter" id="notificationCount"></span>
+                                        </a>
+                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <a class="nav-link" asp-controller="UserConnection" asp-action="ConnectionList">View Connection Requests</a>
+                                            <li class="nav-item" id="notificationsContainer">
+                                                  
+                                            </li>
+                                            <li><hr class="dropdown-divider" /></li>
+                                            <p>Marked as read </p>
+                                             <a asp-controller="UserConnection" asp-action="ConnectionList" class="nav-item" id="notificationsMarkedAsRead">
+                                                  
+                                             </a>
+                                        </ul>
+                                    </div>
+                               }
+                                </li>
                             </ul>
                             <partial name="_LoginPartial" />
                         </div>
@@ -76,7 +97,7 @@
         </main>
     </div>
 
-    <footer>
+    <footer class="mt-auto">
         <div class="copyright-text text-center">
             <p>&#169;2023. All Rights Reserved By StarLab</p>
         </div>
