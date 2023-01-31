@@ -46,6 +46,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 <div>
     <hr />
     <h1>@Model.Name</h1>
+    <p>@Model.Description</p>
 </div>
 
 <div>
@@ -76,7 +77,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                 Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p=>p.Status == Approval.Pending).Count()</span>
             </a>
 
-            <a class="btn btn-dark" asp-action="Details" asp-route-id="@ViewBag.GroupId">Manage Group</a>
+            <a class="text btn btn-light" style="text-decoration: none;" asp-action="Details" asp-route-id="@ViewBag.GroupId"> <i class="fas fa-long-arrow-alt-right me-2"></i> Manage Group</a>
 
         }
 
@@ -101,20 +102,25 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                     <div class="mr-2">
                                         @if (item.ImagePath == null)
                                         {
-                                            <img style=" border-radius: 50%;" width="45" src="~/Images/user.jpg" alt="">
+                                            <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
+                                            <img style=" border-radius: 50%;" width="45" height="45" src="~/Images/user.jpg" alt="">
+                                            </a>
                                         }
                                         else
                                         {
-                                            <img style=" border-radius: 50%;" width="45" src="@item.ImagePath" alt="">
+                                            <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
+                                            <img style="border-radius: 50%;" width="45" height="45" src="@item.ImagePath" alt="">
+                                            </a>
                                         }
                                     </div>
+                                    <br/>
                                     <div class="ml-4">
                                         <div class="h5 m-0">@item.FirstName @item.LastName</div>
                                         <div class="h7 text-muted">@item.UserName</div>
                                     </div>
                                 </div>
                                 <div>
-                                    @if (Model.CurrentMembershipList.UserId == item.CreatedById)
+                                    @if (Model.CurrentMembershipList.UserId == item.CreatedById || Model.CurrentMembershipList.IsAdmin)
                                     {
                                         <div class="dropdown">
                                             <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -161,5 +167,5 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 </div>
 
 <div>
-    <a class="btn btn-outline-light" asp-action="Index">Back to List</a>
+    <a class="btn btn-outline-light" style="color:black;" asp-action="Index">Back to List</a>
 </div>

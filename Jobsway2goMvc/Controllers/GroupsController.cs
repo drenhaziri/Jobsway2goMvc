@@ -116,6 +116,7 @@ namespace Jobsway2goMvc.Controllers
                 CreatedBy = group.CreatedBy,
                 IsPublic = group.IsPublic,
                 Name = group.Name,
+                Description= group.Description,
                 CurrentMembershipList = (GroupMembership)membership.Model
             };
 
@@ -487,7 +488,8 @@ namespace Jobsway2goMvc.Controllers
                 {
                     Name = @group.Name,
                     CreatedBy = owner.UserName,
-                    IsPublic = @group.IsPublic
+                    IsPublic = @group.IsPublic,
+                    Description = @group.Description
                 };
 
                 _context.Add(newGroup);
@@ -529,7 +531,7 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedBy,IsPublic")] Group @group)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedBy,IsPublic,Description")] Group @group)
         {
             if (id != @group.Id)
             {

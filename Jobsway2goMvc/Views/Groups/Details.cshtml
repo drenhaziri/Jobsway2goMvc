@@ -26,6 +26,21 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
     <p class="text-danger">Your membership request was rejected</p>
 }
 
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <a class="btn btn-outline-secondary" asp-action="Index">Back to group list</a>
+    @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
+    {
+        <a class="btn btn-outline-primary" asp-action="MemberList" asp-route-id="@groupId">View Member List</a>
+        <a class="btn btn-outline-primary" asp-action="ModeratorList" asp-route-id="@groupId">View Moderator List</a>
+        <a class="btn btn-outline-info" asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
+        <a class="btn btn-outline-danger" asp-action="BannedMembersList" asp-route-id="@groupId">View Banned Member List</a>
+        <a class="btn btn-outline-primary" asp-action="Requests" asp-route-id="@groupId">View Membership Requests</a>
+        <a class="text btn btn-light" style="text-decoration: none;" asp-action="DetailsPostsGroup" asp-route-id="@groupId"><i class="fas fa-long-arrow-alt-right me-2"></i> Go to Group Details</a>
+    }
+
+
+</div>
+<br />
 
 <table class="table table-hover table-bordered">
     <thead>
@@ -75,18 +90,3 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
         }
     </tbody>
 </table>
-
-<div>
-    <a asp-action="Index">Back to group list</a>
-    @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
-    {
-        <a asp-action="MemberList" asp-route-id="@groupId">View Member List</a>
-        <a asp-action="ModeratorList" asp-route-id="@groupId">View Moderator List</a>
-        <a asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
-        <a asp-action="BannedMembersList" asp-route-id="@groupId">View Banned Member List</a>
-        <a asp-action="Requests" asp-route-id="@groupId">View Membership Requests</a>
-        <a class="btn btn-outline-primary" asp-action="DetailsPostsGroup" asp-route-id="@groupId">Go to Group Details</a>
-    }
-    
-
-</div>
