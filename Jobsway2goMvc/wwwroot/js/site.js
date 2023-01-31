@@ -102,7 +102,7 @@ $(document).ready(function () {
     setInterval(updateNotifications, 5000);
     setInterval(markedAsRead, 5000);
 });
-=======
+
 const container = document.querySelector(".container"),
     pwShowHide = document.querySelectorAll(".showHidePw"),
     pwFields = document.querySelectorAll(".password"),
