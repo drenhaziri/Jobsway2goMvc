@@ -103,7 +103,7 @@
                                 <i class='fa fa-email'></i>
                                 @item.Email
                             </p>
-                            <a href="job-list.html" class="user-btn">
+                                <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.Id" class="user-btn">
                                 View Profile
                             </a>
                         </div>

@@ -1,5 +1,5 @@
 ﻿@using Jobsway2goMvc.Enums;
-@model Jobsway2goMvc.Models.Group
+@model Jobsway2goMvc.Models.ViewModel.GroupDetailsPostsViewModel
 
 
 @{
@@ -7,82 +7,159 @@
     @ViewBag.Rejected
 }
 
-<h1>Details</h1>
+<style>
+    body {
+        background-color: #eeeeee;
+    }
+
+    .h7 {
+        font-size: 0.8rem;
+    }
+
+    .gedf-wrapper {
+        margin-top: 0.97rem;
+    }
+
+    /**Reset Bootstrap*/
+    .dropdown-toggle::after {
+        content: none;
+        display: none;
+    }
+</style>
+@if (Model.CurrentMembershipList == null)
+{
+    <p class="text-danger">You are not a member of this group</p>
+}
+else if (Model.CurrentMembershipList.Status == Approval.Pending)
+{
+    <p class="text-warning">Your membership request is pending</p>
+}
+else if (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true)
+{
+    <p class="text-success">You are a member of this group</p>
+}
+else if (Model.CurrentMembershipList.Status == Approval.Rejected)
+{
+    <p class="text-danger">You are not a member of this group</p>
+}
 
 <div>
-    <h4>Group</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
+    <h1>@Model.Name</h1>
 </div>
 
-<a type="button" class="btn btn-warning" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
-    Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p=>p.Status == Approval.Pending).Count()</span>
-</a>
-
-<h4>Posts</h4>
-<hr />
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().CreatedAtUTC)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Status)
-            </th>
-
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var post in Model.Posts)
-        {
-            if (post.Status == Approval.Accepted)
-            {
-                <tr>
-                    <td>
-                    @Html.DisplayFor(model => post.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => post.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => post.CreatedAtUTC)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => post.Type)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => post.Status)
-                </td>
-                <td>
-                    <a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">Edit</a> |
-                    <a asp-action="DetailsPost" asp-route-id="@post.Id">Details</a> |
-                    <a asp-action="DeletePost" asp-route-id="@post.Id">Delete</a>
-                </td>
-            </tr>
-            }
-        }
-    </tbody>
-</table>
-
-<a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary">Create New Post</a>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="d-flex justify-content-start">
+        @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
+        {
+            <a asp-action="Leave" asp-route-groupId="@ViewBag.GroupId" class="btn btn-secondary">Leave Group</a>
+        }
+        @if (Model.CurrentMembershipList == null || Model.CurrentMembershipList.Status == Approval.Rejected)
+        {
+            <a asp-action="Join" asp-controller="Groups" asp-route-id="@ViewBag.GroupId" class="btn btn-secondary">Join Group</a>
+        }
+        else if (Model.CurrentMembershipList.Status == Approval.Pending)
+        {
+            <a class="btn btn-secondary">Pending</a>
+        }
+
+    </div>
+    <div class="d-flex justify-content-end">
+        @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsMember == true))
+        {
+            <a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary">Create New Post</a>
+        }
+        @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
+        {
+
+            <a type="button" class="btn btn-warning" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
+                Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p=>p.Status == Approval.Pending).Count()</span>
+            </a>
+
+            <a class="btn btn-dark" asp-action="Details" asp-route-id="@ViewBag.GroupId">Manage Group</a>
+
+        }
+
+
+    </div>
+</div>
+<hr />
+<!-- Create Post /////-->
+<div class="container-fluid gedf-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-md-6 gedf-main" style="width:1800px">
+
+            @foreach (var item in Model.Posts)
+            {
+                <!-- Post /////-->
+                @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true && item.Status == Approval.Accepted))
+                {
+                    <div class="card gedf-card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="mr-2">
+                                        @if (item.ImagePath == null)
+                                        {
+                                            <img style=" border-radius: 50%;" width="45" src="~/Images/user.jpg" alt="">
+                                        }
+                                        else
+                                        {
+                                            <img style=" border-radius: 50%;" width="45" src="@item.ImagePath" alt="">
+                                        }
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="h5 m-0">@item.FirstName @item.LastName</div>
+                                        <div class="h7 text-muted">@item.UserName</div>
+                                    </div>
+                                </div>
+                                <div>
+                                    @if (Model.CurrentMembershipList.UserId == item.CreatedById)
+                                    {
+                                        <div class="dropdown">
+                                            <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-h"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id">Edit post</a></li>
+                                                <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="Delete" asp-route-id="@item.Id">Delete post</a></li>
+                                            </ul>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-body">
+                            <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>@item.CreatedAtUTC</div>
+                            <a class="card-link" href="#">
+                                <h5 class="card-title">@item.Title</h5>
+                            </a>
+
+                            <p class="card-text">
+                                @item.Description
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
+                            <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
+                            <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
+                        </div>
+                        <div class="card-footer">
+                            <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
+                            <span class="input-group-btn p-l-10">
+                                <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
+                            </span>
+
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-outline-light" asp-action="Index">Back to List</a>
 </div>
