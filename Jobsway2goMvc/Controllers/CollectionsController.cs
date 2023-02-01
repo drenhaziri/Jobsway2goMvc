@@ -1,9 +1,11 @@
 ﻿using FluentValidation.Results;
 using Jobsway2goMvc.Data;
 using Jobsway2goMvc.Models;
+using Jobsway2goMvc.Models.ViewModel;
 using Jobsway2goMvc.Validators.Collections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -31,7 +33,7 @@ namespace Jobsway2goMvc.Controllers
                     .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
                     .ToListAsync());
             }
-            else 
+            else
             {
                 return LocalRedirect("/Identity/Account/Login");
             }
@@ -48,7 +50,15 @@ namespace Jobsway2goMvc.Controllers
             var collection = await _context.Collections
                 .Include(g => g.Jobs)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
+            if (collection.Jobs == null || !collection.Jobs.Any())
+            {
+                ViewBag.JobCollection = "There are no jobs saved";
+                return View(collection);
+            }
+            else
+            {
+                return View(collection);
+            }
             if (collection == null)
             {
                 return NotFound();
@@ -81,21 +91,21 @@ namespace Jobsway2goMvc.Controllers
             collection.User = user;
 
             CollectionValidator validator = new CollectionValidator();
-                ValidationResult result = validator.Validate(collection);
+            ValidationResult result = validator.Validate(collection);
 
-                if (!result.IsValid)
+            if (!result.IsValid)
+            {
+                foreach (ValidationFailure failure in result.Errors)
                 {
-                    foreach (ValidationFailure failure in result.Errors)
-                    {
-                        ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
-                    }
+                    ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
                 }
-                else
-                {
-                    _context.Add(collection);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
+            }
+            else
+            {
+                _context.Add(collection);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
             return View(collection);
         }
 
@@ -126,48 +136,48 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-         
-                try
+
+            try
+            {
+                var user = await GetCurrentUser();
+
+                if (user == null)
                 {
-                    var user = await GetCurrentUser();
+                    ViewBag.NullUser = "User is not logged in";
+                    return View();
+                }
 
-                    if (user == null)
-                    {
-                        ViewBag.NullUser = "User is not logged in";
-                        return View();  
-                    }
-                    
-                    collection.User = user;
+                collection.User = user;
 
-                    CollectionValidator validator = new CollectionValidator();
-                    ValidationResult result = validator.Validate(collection);
+                CollectionValidator validator = new CollectionValidator();
+                ValidationResult result = validator.Validate(collection);
 
-                    if (!result.IsValid)
+                if (!result.IsValid)
+                {
+                    foreach (ValidationFailure failure in result.Errors)
                     {
-                        foreach (ValidationFailure failure in result.Errors)
-                        {
-                            ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
-                        }
-                    }
-                    else
-                    {
-                        _context.Update(collection);
-                        await _context.SaveChangesAsync();
+                        ModelState.AddModelError(failure.PropertyName, failure.ErrorMessage);
                     }
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!CollectionExists(collection.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _context.Update(collection);
+                    await _context.SaveChangesAsync();
                 }
-                return RedirectToAction(nameof(Index));
-            
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CollectionExists(collection.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+
             return View(collection);
         }
 
@@ -201,7 +211,7 @@ namespace Jobsway2goMvc.Controllers
             var collection = await _context.Collections
                 .Include(g => g.Jobs)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            
+
             if (collection != null)
             {
                 if (collection.Jobs.Count() > 0)
@@ -212,14 +222,54 @@ namespace Jobsway2goMvc.Controllers
 
                 _context.Collections.Remove(collection);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> RemoveJob(int? id)
+        {
+            if (id == null || _context.Jobs == null)
+            {
+                return NotFound();
+            }
 
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
+
+            JobCollectionViewModel jobCollection = new JobCollectionViewModel();
+
+            jobCollection.Job = job;
+
+            var collections = _context.Collections
+                .Include(a => a.Jobs)
+                .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
+            ViewBag.Collections = new SelectList(collections, "Id", "Name");
+            return View(jobCollection);
+        }
+
+        [HttpPost, ActionName("RemoveJob")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveJob(Job job, Collection collection)
+        {
+            var collectionRef = await _context.Collections
+                .Include(a => a.Jobs)
+                .FirstOrDefaultAsync(a => a.Id == collection.Id);
+            var jobRef = await _context.Jobs.FirstOrDefaultAsync(a => a.Id == job.Id);
+
+            if (collectionRef != null && jobRef != null)
+            {
+                collectionRef.Jobs.Remove(jobRef);
+                await _context.SaveChangesAsync();
+            
+            }
+            return RedirectToAction(nameof(Index));
+        }
         private bool CollectionExists(int id)
         {
-          return _context.Collections.Any(e => e.Id == id);
+            return _context.Collections.Any(e => e.Id == id);
         }
     }
 }
