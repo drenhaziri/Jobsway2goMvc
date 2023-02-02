@@ -9,6 +9,8 @@ namespace Jobsway2goMvc.Services
         public UserProfileMapper()
         {
             CreateMap<ApplicationUser, UserProfileViewModel>();
+            CreateMap<Connection, UserProfileViewModel>().ForMember(dest => dest.CurrentConnectionList, opt => opt.MapFrom(src => src));
+
         }
     }
 }

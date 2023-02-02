@@ -7,6 +7,8 @@ using Jobsway2goMvc.Enums;
 using Jobsway2goMvc.Data;
 using Microsoft.EntityFrameworkCore;
 using Jobsway2goMvc.Hubs;
+using System.Runtime.Intrinsics.X86;
+using System.Linq;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -29,11 +31,24 @@ namespace Jobsway2goMvc.Controllers
             return View(await _userManager.Users.ToListAsync());
         }
 
-        public IActionResult Details(string Id)
+        public async Task<IActionResult> Details(string Id)
         {
-            var user = _userManager.FindByIdAsync(Id).Result;
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
             ViewBag.Id = user.Id;
+
+            var membershipList = currentMembershipList(Id);
+            var memberShip = membershipList as ViewResult;
+            if(memberShip == null)
+            {
+                return NotFound();
+            }
+
             var profile = _mapper.Map<UserProfileViewModel>(user);
+            profile.CurrentConnectionList = (Connection)memberShip.Model;
             return View(profile);
 
         }
@@ -88,7 +103,7 @@ namespace Jobsway2goMvc.Controllers
                 await _context.SaveChangesAsync();
                 await _notificationHub.SendNotificationToClient(notification.Message, notification.UserName);
 
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Details), new { Id });
             }
             return RedirectToAction("Privacy", "Home");
         }
@@ -104,7 +119,7 @@ namespace Jobsway2goMvc.Controllers
             var query = from a in _userManager.Users
                         join c in _context.Connections on a.Id equals c.Connect1
                         where c.Connect2 == connect2
-                        select new { a.FirstName, a.LastName, c.Status, c.Id };
+                        select new { a.FirstName, a.LastName, UserId =a.Id, c.Status, c.Id };
 
             var result = query.ToList();
             var connectionList = result.Select(r => new ConnectionListViewModel
@@ -112,7 +127,8 @@ namespace Jobsway2goMvc.Controllers
                 Id = r.Id,
                 FirstName = r.FirstName,
                 LastName = r.LastName,
-                Status = r.Status
+                Status = r.Status,
+                UserId = r.UserId
             });
             return View(connectionList);
         }
@@ -125,9 +141,22 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-            connection.Status = ConnectionStatus.Accepted;
+            var user2 = await _userManager.FindByIdAsync(connection.Connect1);
+            var user1 = await _userManager.FindByIdAsync(connection.Connect2);
 
+            connection.Status = ConnectionStatus.Accepted;
+           
+            var notification = new Notification
+            {
+                UserName = user2.UserName, 
+                MessageType = "Personal",
+                IsRead = false,
+                Message = user1.UserName + " Just accepted your connection Request!",
+                NotificationDateTime = DateTime.Now
+            };
+            _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
+            await _notificationHub.SendNotificationToClient(notification.Message, notification.UserName);
 
             return RedirectToAction("ConnectionList");
         }
@@ -135,15 +164,30 @@ namespace Jobsway2goMvc.Controllers
         [HttpPost]
         public async Task<IActionResult> RejectConnection(int Id)
         {
+
             var connection = await _context.Connections.FirstOrDefaultAsync(x => x.Id == Id);
             if (connection == null)
             {
                 return NotFound();
             }
-            connection.Status = ConnectionStatus.Rejected;
+            _context.Remove(connection);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("ConnectionList");
+        }
+
+        public IActionResult currentMembershipList(string? id)
+        {
+            if (id == null)
+            {
+                return Forbid();
+            }
+
+            var currentUserId = _userManager.GetUserId(HttpContext.User);
+            var membershipList = _context.Connections
+           .FirstOrDefault(c=> c.Connect1==currentUserId && c.Connect2==id || (c.Connect2==currentUserId && c.Connect1 == id));
+
+            return View(membershipList);
         }
     }
 }

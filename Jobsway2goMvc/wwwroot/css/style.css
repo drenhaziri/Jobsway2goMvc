@@ -4,6 +4,7 @@
     font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
 }
+
 .body {
     background: #f0f2f5;
     color: #5f5f5f;
@@ -199,16 +200,19 @@ profile-sidebar {
     color: #ffffff;
     text-align: center;
 }
+
 .details-text {
     color: #001935;
     font-family: Times, serif;
     font-size: 15px;
 }
+
 .details-title {
     color: #fd1616;
     font-family: Times, serif;
     font-size: 15px;
 }
+
 .details-form .post-btn {
     display: inline-block;
     background-color: #001935;
@@ -236,71 +240,71 @@ profile-sidebar {
     text-transform: capitalize;
 }
 
-.job-post-from h2 {
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 35px;
-    font-weight: 700;
-}
+    .job-post-from h2 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 35px;
+        font-weight: 700;
+    }
 
-.job-post-from .form-group {
-    margin-bottom: 20px;
-}
+    .job-post-from .form-group {
+        margin-bottom: 20px;
+    }
 
-.job-post-from .form-group label {
-    font-size: 16px;
-    font-weight: 500;
-    color: #001935;
-}
+        .job-post-from .form-group label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #001935;
+        }
 
-.job-post-from .form-group .form-control {
-    height: 50px;
-    padding: 10px 20px;
-    border: 1px solid #ddd;
-}
+        .job-post-from .form-group .form-control {
+            height: 50px;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+        }
 
-.job-post-from .form-group .nice-select {
-    width: 100%;
-    height: 50px;
-    font-size: 16px;
-    line-height: 50px;
-}
+        .job-post-from .form-group .nice-select {
+            width: 100%;
+            height: 50px;
+            font-size: 16px;
+            line-height: 50px;
+        }
 
-.job-post-from .form-group .nice-select::after {
-    height: 10px;
-    width: 10px;
-    right: 20px;
-}
+            .job-post-from .form-group .nice-select::after {
+                height: 10px;
+                width: 10px;
+                right: 20px;
+            }
 
-.job-post-from .form-group .nice-select .list {
-    width: 100%;
-}
+            .job-post-from .form-group .nice-select .list {
+                width: 100%;
+            }
 
-.job-post-from .form-group .requirements-area {
-    height: 100%;
-}
+        .job-post-from .form-group .requirements-area {
+            height: 100%;
+        }
 
-.job-post-from .form-group .description-area {
-    height: 100%;
-}
+        .job-post-from .form-group .description-area {
+            height: 100%;
+        }
 
-.job-post-from .post-btn {
-    -webkit-transition: 0.5s;
-    transition: 0.5s;
-    margin-top: 30px;
-    border-radius: 10px;
-    padding: 10px 45px;
-    font-weight: 500;
-    background: #001935;
-}
+    .job-post-from .post-btn {
+        -webkit-transition: 0.5s;
+        transition: 0.5s;
+        margin-top: 30px;
+        border-radius: 10px;
+        padding: 10px 45px;
+        font-weight: 500;
+        background: #001935;
+    }
 
-.job-post-from .back-btn {
-    border-radius: 10px;
-    padding: 10px 45px;
-    font-weight: 500;
-    margin-left: 14px;
-    margin-top: 30px;
-}
+    .job-post-from .back-btn {
+        border-radius: 10px;
+        padding: 10px 45px;
+        font-weight: 500;
+        margin-left: 14px;
+        margin-top: 30px;
+    }
 
 /*---------- Post Jobs Page CSS End ----------*/
 
@@ -318,68 +322,71 @@ profile-sidebar {
     text-transform: capitalize;
 }
 
-.event-post-from .form-group .form-control.guest-multi-select {
-    height: 100px;
-}
+    .event-post-from .form-group .form-control.guest-multi-select {
+        height: 100px;
+    }
 
-.event-post-from h2 {
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 35px;
-    font-weight: 700;
-}
+    .event-post-from h2 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 35px;
+        font-weight: 700;
+    }
 
-.event-post-from .form-group {
-    margin-bottom: 20px;
-}
-.event-post-from .form-group .nice-select {
-    width: 100%;
-    height: 50px;
-    font-size: 16px;
-    line-height: 50px;
-}
+    .event-post-from .form-group {
+        margin-bottom: 20px;
+    }
 
-.event-post-from .form-group .nice-select::after {
-    height: 10px;
-    width: 10px;
-    right: 20px;
-}
+        .event-post-from .form-group .nice-select {
+            width: 100%;
+            height: 50px;
+            font-size: 16px;
+            line-height: 50px;
+        }
 
-.event-post-from .form-group .nice-select .list {
-    width: 100%;
-}
-.event-post-from .form-group label {
-    font-size: 16px;
-    font-weight: 500;
-    color: #001935;
-}
+            .event-post-from .form-group .nice-select::after {
+                height: 10px;
+                width: 10px;
+                right: 20px;
+            }
 
-.event-post-from .form-group .form-control {
-    height: 50px;
-    padding: 10px 20px;
-    border: 1px solid #ddd;
-}
+            .event-post-from .form-group .nice-select .list {
+                width: 100%;
+            }
 
-.event-post-from .form-group .description-area {
-    height: 100%;
-}
+        .event-post-from .form-group label {
+            font-size: 16px;
+            font-weight: 500;
+            color: #001935;
+        }
 
-.event-post-from .post-btn {
-    -webkit-transition: 0.5s;
-    transition: 0.5s;
-    margin-top: 30px;
-    border-radius: 10px;
-    padding: 10px 45px;
-    font-weight: 500;
-    background: #001935;
-}
+        .event-post-from .form-group .form-control {
+            height: 50px;
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+        }
 
-.event-post-from .back-btn {
-    border-radius: 10px;
-    padding: 10px 45px;
-    font-weight: 500;
-    margin-left: 14px;
-    margin-top: 30px;
-}
+        .event-post-from .form-group .description-area {
+            height: 100%;
+        }
+
+    .event-post-from .post-btn {
+        -webkit-transition: 0.5s;
+        transition: 0.5s;
+        margin-top: 30px;
+        border-radius: 10px;
+        padding: 10px 45px;
+        font-weight: 500;
+        background: #001935;
+    }
+
+    .event-post-from .back-btn {
+        border-radius: 10px;
+        padding: 10px 45px;
+        font-weight: 500;
+        margin-left: 14px;
+        margin-top: 30px;
+    }
 
 /*---------- Post Events Page CSS End ----------*/
+
