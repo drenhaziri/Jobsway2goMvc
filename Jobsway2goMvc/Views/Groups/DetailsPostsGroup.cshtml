@@ -70,9 +70,22 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
             Is Public
         </div>
         <div class="group-access-switch mt-2">
-            <div class="form-check form-switch">
-                <input asp-for="IsPublic" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-            </div>
+            @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.UserId == @Model.CreatedBy))
+            {
+                <label class="switch switch-handle" data-id="@Model.Id">
+                    @Html.CheckBoxFor(model => model.IsPublic)
+                    <div class="slider round">
+                    </div>
+                </label>
+            }
+            else 
+            {
+                <label class="switch switch-handle">
+                    @Html.CheckBoxFor(model => model.IsPublic, htmlAttributes: new { @disabled = true })
+                    <div class="slider round">
+                    </div>
+                </label>
+            }
         </div>
     </div>
 
@@ -180,3 +193,10 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 <div>
     <a class="btn btn-outline-light" style="color:black;" asp-action="Index">Back to List</a>
 </div>
+
+
+@section Scripts
+{
+    <link rel="stylesheet" href="~/css/group.css" />
+    <script type="text/javascript" src="~/js/group.js"></script>
+}

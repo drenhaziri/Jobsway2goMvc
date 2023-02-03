@@ -112,6 +112,7 @@ namespace Jobsway2goMvc.Controllers
 
             var viewModel = new GroupDetailsPostsViewModel
             {
+                Id = group.Id,
                 Posts = group.Posts,
                 CreatedBy = group.CreatedBy,
                 IsPublic = group.IsPublic,
@@ -487,7 +488,7 @@ namespace Jobsway2goMvc.Controllers
                 var newGroup = new Group
                 {
                     Name = @group.Name,
-                    CreatedBy = owner.UserName,
+                    CreatedBy = owner.Id,
                     IsPublic = @group.IsPublic,
                     Description = @group.Description
                 };
