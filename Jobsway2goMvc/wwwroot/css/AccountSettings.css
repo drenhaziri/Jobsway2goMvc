@@ -1,0 +1,25 @@
+﻿body {
+}
+
+.links{
+    width: 18rem;
+}
+
+.lists:hover {
+    background-color: #0275d8;
+}
+
+a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+a{
+    color:black;
+    text-decoration: none;
+}
+
+/*.lista {
+    cursor:pointer;
+    color: #0275d8;
+}*/

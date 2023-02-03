@@ -74,6 +74,18 @@ namespace Jobsway2goMvc.Controllers
         {
             return View();
         }
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+        public IActionResult AccountSettings()
+        {
+            return View();
+        }
+        public IActionResult EditEmail()
+        {
+            return View();
+        }
         
         [HttpPost]
         public async Task<IActionResult> AddAward(Award award)
@@ -566,5 +578,7 @@ namespace Jobsway2goMvc.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
     }
 }

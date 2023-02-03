@@ -1,0 +1,41 @@
+﻿@model Jobsway2goMvc.Models.ViewModel.UserProfileViewModel
+
+
+<link rel="stylesheet" href="~/css/AccountSettings.css" asp-append-version="true" />
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="links card">
+                <div>
+                    <img src="" class="profile-pic mt-2"/>
+                    <h5>John</h5>
+                    <p className="text-secondary">Web Developer</p>
+                </div>
+                <ul class=" list-group list-group-flush">
+                    <li class="lists list-group-item">
+                        <a class="link" asp-action="EditEmail" asp-controller="UserProfile">Email</a>
+                    </li>
+                    <li role="button" class="lists list-group-item">
+                        <a class="link" asp-action="EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
+                    </li>
+                    <li class="lists list-group-item">
+                        <a class="link" asp-action="AddEducation">Add Education</a>
+                    </li>
+                    <li class="lists list-group-item">
+                        <a href ="#">Applied Job</a>
+                    </li>
+                    <li class="lists list-group-item">
+                        <a class="link"href="#">Saved Jobs</a>
+                    </li>
+                    <li class="lists list-group-item">
+                        <a class="link" asp-action="ResetPassword" asp-controller="UserProfile">Reset Password</a>
+                    </li>
+                    <li class="lists list-group-item">
+                        <a class="link">Delete Account</a>
+                    </li>                   
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
