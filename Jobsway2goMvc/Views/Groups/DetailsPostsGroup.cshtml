@@ -65,6 +65,17 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
         }
 
     </div>
+    <div class="d-flex flex-column mt-4">
+        <div class="group-access-label">
+            Is Public
+        </div>
+        <div class="group-access-switch mt-2">
+            <div class="form-check form-switch">
+                <input asp-for="IsPublic" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+            </div>
+        </div>
+    </div>
+
     <div class="d-flex justify-content-end">
         @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsMember == true))
         {
