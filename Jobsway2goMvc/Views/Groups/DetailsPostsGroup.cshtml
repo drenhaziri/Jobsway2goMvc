@@ -11,7 +11,7 @@
 
 <div>
     <h4>Group</h4>
-    <hr />
+    <hr/>
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
@@ -21,41 +21,51 @@
         </dd>
     </dl>
 </div>
+<dl class="row">
+    <dt class="col-sm-2">
+        Is Public
+    </dt>
+    <dd class="col-sm-10">
+        <div class="form-check form-switch">
+            <input asp-for="IsPublic" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+        </div>
 
+    </dd>
+</dl>
 <a type="button" class="btn btn-warning" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
-    Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p=>p.Status == Approval.Pending).Count()</span>
+    Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p => p.Status == Approval.Pending).Count()</span>
 </a>
 
 <h4>Posts</h4>
-<hr />
+<hr/>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().CreatedAtUTC)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Posts.First().Status)
-            </th>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Posts.First().Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Posts.First().Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Posts.First().CreatedAtUTC)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Posts.First().Type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Posts.First().Status)
+        </th>
 
-        </tr>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var post in Model.Posts)
+    @foreach (var post in Model.Posts)
+    {
+        if (post.Status == Approval.Accepted)
         {
-            if (post.Status == Approval.Accepted)
-            {
-                <tr>
-                    <td>
+            <tr>
+                <td>
                     @Html.DisplayFor(model => post.Title)
                 </td>
                 <td>
@@ -76,8 +86,8 @@
                     <a asp-action="DeletePost" asp-route-id="@post.Id">Delete</a>
                 </td>
             </tr>
-            }
         }
+    }
     </tbody>
 </table>
 
