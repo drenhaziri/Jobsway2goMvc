@@ -22,7 +22,17 @@ body {
     margin-top:5px;
     margin-bottom:5px;
 }
+/*posts group*/
+@media (min-width: 992px) {
+    .gedf-main {
+        
+    }
 
+    .gedf-card {
+        margin-bottom: 2.77rem;
+        justify-content:center;
+    }
+}
 
 /* Default CSS Start */
 
@@ -225,7 +235,7 @@ navbar-nav .signup-btn:hover {
     padding: 20px;
     border-radius: 10px;
     margin-top: 20px;
-    z-index: 1;
+    z-index: 2;
     position: relative;
     -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
@@ -336,7 +346,7 @@ navbar-nav .signup-btn:hover {
 }
 
 .job-style-two::before {
-    position: absolute;
+    /*position: absolute;*/
     content: '';
     background-image: url(../img/shape/job.png);
     background-position: center center;
@@ -588,4 +598,12 @@ a{
     }
 }
 
+.search-list li {
+    width:325px;
+    height: 50px;
+}
+.search-list {
+    position: absolute;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+}
 /*Notification dropdown costum*/

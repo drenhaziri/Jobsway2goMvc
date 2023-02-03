@@ -53,23 +53,43 @@ namespace Jobsway2goMvc.Controllers
 
             var groupMemberships = await _context.GroupMemberships
                 .Include(m => m.User)
-                .Where(m => m.GroupId == id)
+                .Where(m => m.GroupId == id && m.IsMember == true)
                 .ToListAsync();
 
             var users = groupMemberships.Select(m => m.User).ToList();
+            var membershipList = currentMembership(id);
+
+            var membership = membershipList as ViewResult;
+            if (membership == null)
+            {
+                return Forbid();
+            }
 
             var viewModel = new GroupDetailsViewModel
             {
                 GroupId = id,
                 Users = users,
                 GroupMemberships = groupMemberships,
-                UserManager = _userManager,
-                Context = _context
+                CurrentMembershipList = (GroupMembership)membership.Model
             };
 
             ViewBag.Id = id;
 
             return View(viewModel);
+        }
+
+        public IActionResult currentMembership(int? id)
+        {
+            if (id == null)
+            {
+                return Forbid();
+            }
+
+            var currentUserId = _userManager.GetUserId(HttpContext.User);
+            var membershipList = _context.GroupMemberships
+           .FirstOrDefault(m => m.UserId == currentUserId && m.GroupId == id);
+
+            return View(membershipList);
         }
 
         public async Task<IActionResult> DetailsPostsGroup(int? id)
@@ -87,8 +107,21 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
+            var membershipList = currentMembership(id);
+            var membership = membershipList as ViewResult;
+
+            var viewModel = new GroupDetailsPostsViewModel
+            {
+                Posts = group.Posts,
+                CreatedBy = group.CreatedBy,
+                IsPublic = group.IsPublic,
+                Name = group.Name,
+                Description= group.Description,
+                CurrentMembershipList = (GroupMembership)membership.Model
+            };
+
             ViewBag.GroupId = id;
-            return View(group);
+            return View(viewModel);
         }
 
         public async Task<IActionResult> MemberList(int? id)
@@ -231,6 +264,15 @@ namespace Jobsway2goMvc.Controllers
                 {
                     return NotFound();
                 }
+
+                var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id && m.IsMember == true);
+
+                if (membership == null)
+                {
+                    return Forbid();
+                }
+
                 var userExist = _context.GroupMemberships
                  .Where(x => x.GroupId == groupId)
                  .ToList()
@@ -244,17 +286,62 @@ namespace Jobsway2goMvc.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    var members = new GroupMembership
-                    {
-                        GroupId = group.Id,
-                        UserId = user.Id,
-                        IsAdmin = false,
-                        IsMember = true,
-                        IsModerator = true,
-                        IsBanned = false
-                    };
+                    membership.IsModerator = true;
+                    _context.GroupMemberships.Update(membership);
+                    await _context.SaveChangesAsync();
 
-                    _context.GroupMemberships.Add(members);
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> RemoveModerator(string userId, int groupId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
+                if (group == null)
+                {
+                    return NotFound();
+                }
+
+                var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id && m.IsMember == true);
+
+                if (membership == null)
+                {
+                    return Forbid();
+                }
+
+                var userExist = _context.GroupMemberships
+                 .Where(x => x.GroupId == groupId)
+                 .ToList()
+                 .Any(x => x.UserId == userId && x.IsModerator == false);
+
+                if (userExist)
+                {
+                    ViewBag.ModeratorExist = "Moderator does not exist";
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+
+                if (ModelState.IsValid)
+                {
+                    membership.IsModerator = false;
+                    _context.GroupMemberships.Update(membership);
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction("Details", new { id = groupId });
@@ -286,6 +373,14 @@ namespace Jobsway2goMvc.Controllers
                     return NotFound();
                 }
 
+                var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id && m.IsMember == true);
+
+                if (membership == null)
+                {
+                    return Forbid();
+                }
+
                 var userExist = _context.GroupMemberships
                .Where(x => x.GroupId == groupId)
                .ToList()
@@ -299,17 +394,8 @@ namespace Jobsway2goMvc.Controllers
 
                 if (ModelState.IsValid)
                 {
-                    var members = new GroupMembership
-                    {
-                        GroupId = group.Id,
-                        UserId = user.Id,
-                        IsAdmin = true,
-                        IsMember = true,
-                        IsModerator = false,
-                        IsBanned = false
-                    };
-
-                    _context.GroupMemberships.Add(members);
+                    membership.IsAdmin = true;
+                    _context.GroupMemberships.Update(membership);
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction("Details", new { id = groupId });
@@ -324,6 +410,60 @@ namespace Jobsway2goMvc.Controllers
                 return RedirectToAction("Index");
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> RemoveAdmin(string userId, int groupId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var group = _context.Groups.FirstOrDefault(m => m.Id == groupId);
+                if (group == null)
+                {
+                    return NotFound();
+                }
+
+                var membership = await _context.GroupMemberships
+                .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id && m.IsMember == true);
+
+                if (membership == null)
+                {
+                    return Forbid();
+                }
+
+                var userExist = _context.GroupMemberships
+               .Where(x => x.GroupId == groupId)
+               .ToList()
+               .Any(x => x.UserId == userId && x.IsAdmin == false);
+
+                if (userExist)
+                {
+                    ViewBag.AdminExist = "Admin does not Exists";
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+
+                if (ModelState.IsValid)
+                {
+                    membership.IsAdmin = false;
+                    _context.GroupMemberships.Update(membership);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
         public IActionResult DetailsPost(int id)
         {
             return RedirectToAction("Details", "Post", new { id = id });
@@ -338,7 +478,7 @@ namespace Jobsway2goMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Group @group)
         {
-            var userid =  _userManager.GetUserId(HttpContext.User);
+            var userid = _userManager.GetUserId(HttpContext.User);
             ApplicationUser owner = await _userManager.FindByIdAsync(userid);
 
             ModelState.Remove("Posts");
@@ -348,7 +488,8 @@ namespace Jobsway2goMvc.Controllers
                 {
                     Name = @group.Name,
                     CreatedBy = owner.UserName,
-                    IsPublic = @group.IsPublic
+                    IsPublic = @group.IsPublic,
+                    Description = @group.Description
                 };
 
                 _context.Add(newGroup);
@@ -359,8 +500,10 @@ namespace Jobsway2goMvc.Controllers
                     GroupId = newGroup.Id,
                     UserId = owner.Id,
                     Status = Approval.Accepted,
+                    IsModerator = true,
                     IsMember = true,
-                    IsAdmin = true
+                    IsAdmin = true,
+                    IsBanned = false
                 };
                 _context.Add(membership);
                 await _context.SaveChangesAsync();
@@ -388,7 +531,7 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedBy,IsPublic")] Group @group)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,CreatedBy,IsPublic,Description")] Group @group)
         {
             if (id != @group.Id)
             {
@@ -521,7 +664,7 @@ namespace Jobsway2goMvc.Controllers
                     GroupId = id,
                     UserId = user.Id,
                     Status = Approval.Pending,
-                    IsMember = true,
+                    IsMember = false,
                     IsBanned = false
                 };
                 _context.Add(membership);
@@ -534,7 +677,7 @@ namespace Jobsway2goMvc.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(DetailsPostsGroup), new { id });
         }
 
         public async Task<IActionResult> Requests(int id)
@@ -590,7 +733,9 @@ namespace Jobsway2goMvc.Controllers
 
             var request = await _context.GroupMemberships
                 .FirstOrDefaultAsync(m => m.GroupId == id && m.UserId == userId);
+
             request.Status = Approval.Accepted;
+            request.IsMember = true;
             _context.Update(request);
             await _context.SaveChangesAsync();
 
@@ -621,6 +766,7 @@ namespace Jobsway2goMvc.Controllers
             if (request != null)
             {
                 request.Status = Approval.Rejected;
+                request.IsMember = false;
                 _context.Update(request);
                 await _context.SaveChangesAsync();
             }
@@ -705,6 +851,10 @@ namespace Jobsway2goMvc.Controllers
                 if (ModelState.IsValid)
                 {
                     membership.IsBanned = true;
+                    membership.IsMember = false;
+                    membership.IsModerator = false;
+                    membership.IsAdmin = false;
+                    membership.Status = Approval.Rejected;
                     _context.GroupMemberships.Update(membership);
                     await _context.SaveChangesAsync();
 
@@ -747,6 +897,8 @@ namespace Jobsway2goMvc.Controllers
                 if (ModelState.IsValid)
                 {
                     membership.IsBanned = false;
+                    membership.IsMember = true;
+                    membership.Status = Approval.Accepted;
                     _context.GroupMemberships.Update(membership);
                     await _context.SaveChangesAsync();
 
@@ -806,8 +958,8 @@ namespace Jobsway2goMvc.Controllers
             ViewBag.Id = group.Id;
             var query = from s in _userManager.Users
                         join p in _context.Posts on s.Id equals p.CreatedById
-                        where p.GroupId ==id && p.Status == Approval.Pending
-                        select new { p.Id, p.Title,  p.Description, s.FirstName, s.LastName, p.Status  };
+                        where p.GroupId == id && p.Status == Approval.Pending
+                        select new { p.Id, p.Title, p.Description, s.FirstName, s.LastName, p.Status };
 
 
             var result = query.ToList();
@@ -815,7 +967,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 Id = r.Id,
                 Title = r.Title,
-                Description= r.Description,
+                Description = r.Description,
                 FirstName = r.FirstName,
                 LastName = r.LastName,
                 Status = r.Status

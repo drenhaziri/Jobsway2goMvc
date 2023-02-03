@@ -9,14 +9,17 @@
             <form class="find-form" asp-action="Index">
                 <div class="row">
                         <div class="col-lg-4">
-                            <div class="form-group">
-                                <input type="text" name="SearchString" class="form-control" id="exampleInputEmail1" placeholder="Search...">
+                            <div class="form-group dropdown search-list-div" id="dropdown">
+                            <input type="text" name="SearchString" class="form-control dropdown-toggle" id="exampleInputEmail1" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Search...">
                                 <i class="fa fa-search"></i>
+                            <ul class="dropdown-menu search-list" id="listView" aria-labelledby="exampleInputEmail1">
+                                    
+                            </ul>
                             </div>
                         </div>
 
                         <div class="col-lg-4">
-                            <select class="nice-select" name="searchEnum" asp-items="Html.GetEnumSelectList<SearchEnum>()"></select>
+                        <select class="nice-select" name="searchEnum" asp-items="Html.GetEnumSelectList<SearchEnum>()"></select>
                         </div>
 
                         <div class="col-lg-4">
@@ -103,7 +106,7 @@
                                 <i class='fa fa-email'></i>
                                 @item.Email
                             </p>
-                            <a href="job-list.html" class="user-btn">
+                                <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.Id" class="user-btn">
                                 View Profile
                             </a>
                         </div>

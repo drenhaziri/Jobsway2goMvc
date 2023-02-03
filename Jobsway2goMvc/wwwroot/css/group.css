@@ -1,11 +1,13 @@
-﻿.switch {
+﻿/*.switch {
     position: relative;
     display: inline-block;
     width: 60px;
     height: 34px;
 }
 
-.switch input {display:none;}
+    .switch input {
+        display: none;
+    }
 
 .slider {
     position: absolute;
@@ -18,40 +20,46 @@
     transition: .4s;
 }
 
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-}
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+    }
 
-/* include generated hidden field here */
+/* include generated hidden field here 
 input[type="checkbox"]:checked + input[type="hidden"] + .slider,
 input[type="checkbox"]:checked + .slider {
     background-color: #2196F3;
 }
 
-/* include generated hidden field here */
+/* include generated hidden field here 
 input[type="checkbox"]:focus + input[type="hidden"] + .slider,
 input[type="checkbox"]:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
 }
 
-/* include generated hidden field here */
+/* include generated hidden field here 
 input[type="checkbox"]:checked + input[type="hidden"] + .slider:before,
 input[type="checkbox"]:checked + .slider:before {
     transform: translateX(26px);
 }
 
-/* Rounded sliders */
+/* Rounded sliders 
 .slider.round {
     border-radius: 34px;
 }
 
-.slider.round:before {
-    border-radius: 50%;
-}
+    .slider.round:before {
+        border-radius: 50%;
+    }*/
+
+/*group cards*/
+
+@import url('https://fonts.googleapis.com/css?family=Oswald:300,400,500,700');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
+
