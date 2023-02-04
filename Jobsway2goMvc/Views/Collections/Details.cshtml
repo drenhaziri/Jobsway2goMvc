@@ -9,13 +9,14 @@
     <h1> @Html.DisplayFor(model => model.Name) </h1>
 </dl>
 <hr />
-<div class="details-text">
-    <h4>Jobs</h4>
-</div>
-<hr />
 <form class="details-form">
     @if (Model.Jobs.Any())
     {
+      
+        <div class="details-text">
+            <h4>Jobs</h4>
+        </div>
+        <hr /> 
         <table class="table">
             <thead>
                 <tr>
@@ -108,8 +109,8 @@
                         <td>
                              
                             <a class="btn btn-secondary" asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id">Details</a>
-
-                            <a class="btn-group-sm" asp-action="RemoveJob" asp-route-id="@Model.Id">X</a>
+                            <a class="btn-outline-danger" href="@Url.Action("RemoveJob", "Collections")?jobId=@string.Join("&collectionId=", job.Id, ViewBag.CollectionId)">Remove</a>
+                        
                         </td>
                     </tr>
                 }

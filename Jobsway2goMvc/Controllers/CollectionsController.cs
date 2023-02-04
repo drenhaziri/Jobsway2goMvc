@@ -57,14 +57,10 @@ namespace Jobsway2goMvc.Controllers
             }
             else
             {
+                ViewBag.CollectionId = id;
                 return View(collection);
+                
             }
-            if (collection == null)
-            {
-                return NotFound();
-            }
-            ViewBag.CollectionId = id;
-            return View(collection);
         }
 
         // GET: Collections/Create
@@ -226,47 +222,36 @@ namespace Jobsway2goMvc.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> RemoveJob(int? id)
+
+        public async Task<IActionResult> RemoveJob(int? jobId, int? collectionId)
         {
-            if (id == null || _context.Jobs == null)
+            if (jobId == null || collectionId == null || _context.Jobs == null)
             {
                 return NotFound();
             }
 
-            var job = await _context.Jobs.FindAsync(id);
+            var job = await _context.Jobs.FindAsync(jobId);
             if (job == null)
             {
                 return NotFound();
             }
 
-            JobCollectionViewModel jobCollection = new JobCollectionViewModel();
-
-            jobCollection.Job = job;
-
-            var collections = _context.Collections
+            var collection = await _context.Collections
                 .Include(a => a.Jobs)
-                .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
-            ViewBag.Collections = new SelectList(collections, "Id", "Name");
-            return View(jobCollection);
-        }
+                .FirstOrDefaultAsync(a => a.Id == collectionId);
 
-        [HttpPost, ActionName("RemoveJob")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveJob(Job job, Collection collection)
-        {
-            var collectionRef = await _context.Collections
-                .Include(a => a.Jobs)
-                .FirstOrDefaultAsync(a => a.Id == collection.Id);
-            var jobRef = await _context.Jobs.FirstOrDefaultAsync(a => a.Id == job.Id);
-
-            if (collectionRef != null && jobRef != null)
+            if (collection == null || !collection.Jobs.Contains(job))
             {
-                collectionRef.Jobs.Remove(jobRef);
-                await _context.SaveChangesAsync();
-            
+                return NotFound();
             }
-            return RedirectToAction(nameof(Index));
+
+            collection.Jobs.Remove(job);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Collections");
         }
+
+
         private bool CollectionExists(int id)
         {
             return _context.Collections.Any(e => e.Id == id);
