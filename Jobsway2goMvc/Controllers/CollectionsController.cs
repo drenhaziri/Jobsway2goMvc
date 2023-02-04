@@ -248,7 +248,7 @@ namespace Jobsway2goMvc.Controllers
             collection.Jobs.Remove(job);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "Collections");
+            return RedirectToAction(nameof(Index));
         }
 
 
