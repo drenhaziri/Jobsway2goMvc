@@ -281,7 +281,7 @@ namespace Jobsway2goMvc.Controllers
                 }
                 collectionRef.Jobs.Add(jobRef);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Collections");
+                return RedirectToAction(nameof(Index));
             }
             return RedirectToAction("Index", "Jobs");
         }
