@@ -65,30 +65,22 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
         }
 
     </div>
-    <div class="d-flex flex-column mt-4">
-        <div class="group-access-label">
-            Is Public
-        </div>
-        <div class="group-access-switch mt-2">
-            @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.UserId == @Model.CreatedBy))
-            {
+    @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.UserId == Model.CreatedBy
+         && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
+    {
+        <div class="d-flex flex-column mt-4">
+            <div class="group-access-label">
+                Is Public
+            </div>
+            <div class="group-access-switch mt-2">
                 <label class="switch switch-handle" data-id="@Model.Id">
                     @Html.CheckBoxFor(model => model.IsPublic)
                     <div class="slider round">
                     </div>
                 </label>
-            }
-            else 
-            {
-                <label class="switch switch-handle">
-                    @Html.CheckBoxFor(model => model.IsPublic, htmlAttributes: new { @disabled = true })
-                    <div class="slider round">
-                    </div>
-                </label>
-            }
+            </div>
         </div>
-    </div>
-
+    }
     <div class="d-flex justify-content-end">
         @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsMember == true))
         {
