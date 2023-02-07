@@ -1,15 +1,15 @@
-﻿/*.switch {
+﻿.switch {
     position: relative;
     display: inline-block;
     width: 60px;
     height: 34px;
 }
 
-    .switch input {
-        display: none;
-    }
+.switch input {
+    display: none;
+}
 
-.slider {
+.switch .slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -20,43 +20,43 @@
     transition: .4s;
 }
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        transition: .4s;
-    }
+.switch .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
 
-/* include generated hidden field here 
-input[type="checkbox"]:checked + input[type="hidden"] + .slider,
-input[type="checkbox"]:checked + .slider {
+/* include generated hidden field here */
+.switch input[type="checkbox"]:checked + input[type="hidden"] + .slider,
+.switch input[type="checkbox"]:checked + .slider {
     background-color: #2196F3;
 }
 
-/* include generated hidden field here 
-input[type="checkbox"]:focus + input[type="hidden"] + .slider,
-input[type="checkbox"]:focus + .slider {
+/* include generated hidden field here */
+.switch input[type="checkbox"]:focus + input[type="hidden"] + .slider,
+.switch input[type="checkbox"]:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
 }
 
-/* include generated hidden field here 
-input[type="checkbox"]:checked + input[type="hidden"] + .slider:before,
-input[type="checkbox"]:checked + .slider:before {
+/* include generated hidden field here */
+.switch input[type="checkbox"]:checked + input[type="hidden"] + .slider:before,
+.switch input[type="checkbox"]:checked + .slider:before {
     transform: translateX(26px);
 }
 
-/* Rounded sliders 
-.slider.round {
+/* Rounded sliders */
+.switch .slider.round {
     border-radius: 34px;
 }
 
-    .slider.round:before {
-        border-radius: 50%;
-    }*/
+.switch .slider.round:before {
+    border-radius: 50%;
+}
 
 /*group cards*/
 
