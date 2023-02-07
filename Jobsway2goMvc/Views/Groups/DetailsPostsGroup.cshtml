@@ -51,10 +51,14 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 
 <div>
     <div class="d-flex justify-content-start">
-        @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
+        @if(Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsOwner == true){
+             <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete Group</a>
+        }
+        else if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
         {
             <a asp-action="Leave" asp-route-groupId="@ViewBag.GroupId" class="btn btn-secondary">Leave Group</a>
         }
+
         @if (Model.CurrentMembershipList == null || Model.CurrentMembershipList.Status == Approval.Rejected)
         {
             <a asp-action="Join" asp-controller="Groups" asp-route-id="@ViewBag.GroupId" class="btn btn-secondary">Join Group</a>

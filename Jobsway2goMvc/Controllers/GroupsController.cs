@@ -16,6 +16,7 @@ using Group = Jobsway2goMvc.Models.Group;
 using System.Data;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Jobsway2goMvc.Enums;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -235,7 +236,8 @@ namespace Jobsway2goMvc.Controllers
                     IsMember = true,
                     IsAdmin = false,
                     IsModerator = false,
-                    IsBanned = false
+                    IsBanned = false,
+                    IsOwner=false
                 };
 
                 _context.GroupMemberships.Add(members);
@@ -504,7 +506,8 @@ namespace Jobsway2goMvc.Controllers
                     IsModerator = true,
                     IsMember = true,
                     IsAdmin = true,
-                    IsBanned = false
+                    IsBanned = false,
+                    IsOwner=true
                 };
                 _context.Add(membership);
                 await _context.SaveChangesAsync();
@@ -807,6 +810,11 @@ namespace Jobsway2goMvc.Controllers
             var membership = await _context.GroupMemberships
                 .FirstOrDefaultAsync(m => m.UserId == currentUserId && m.GroupId == groupId);
             if (membership == null || (membership.Status != Approval.Accepted && membership.Status != Approval.Pending))
+            {
+                return NotFound();
+            }
+            var membersCount = _context.GroupMemberships.Where(g=>g.GroupId == groupId && g.IsAdmin==true).Count(); 
+            if(membersCount < 1)
             {
                 return NotFound();
             }
