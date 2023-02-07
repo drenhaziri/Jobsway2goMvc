@@ -1,0 +1,34 @@
+﻿@model Jobsway2goMvc.Models.ViewModel.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Profile"] - Jobsway2goMvc</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Jobsway2goMvc.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container">
+        <div class="profile-main">
+            <div class="profile-container">
+                <div class="profile-container-inner">
+                    <img src=@Model.ImagePath class="profile-pic mt-2" />
+                    <h1> @Model.CompanyName @Model.CompanyArea</h1>
+                    <b>@Model.Email</b>
+                    <div class="profile-btn">
+                        <a class="btn btn-primary">Connect</a>
+                        <a class="btn btn-primary" asp-action="AccountSettings" asp-controller="UserProfile">Account Settings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

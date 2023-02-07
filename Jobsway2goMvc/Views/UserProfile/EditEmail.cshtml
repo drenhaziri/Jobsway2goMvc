@@ -1,0 +1,39 @@
+﻿@page
+@using Jobsway2goMvc.Areas.Identity.Pages.Account.Manage
+@model EmailModel
+
+
+
+<link rel="stylesheet" href="~/css/EditEmail.css" asp-append-version="true" />
+
+<div class="emaili container d-flex flex-column">
+    <div class="row align-items-center justify-content-center min-vh-40 g-0">
+        <div class="col-12 col-md-8 col-lg-4 border-top border-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5>Change Email</h5>
+                        <p class="mb-2" style="text-align:center;">
+                            Enter your new email and a code will be provided to your old email for verification
+                        </p>
+                    </div>
+                    <form>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Current Email</label>
+                            <input type="email" id="email" class="form-control" name="email" placeholder="Current Email" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">New Email</label>
+                            <input type="email" id="email" class="form-control" name="email" placeholder="New Email" />
+                        </div>
+                        <div class="mb-3 d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                Change Email
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
