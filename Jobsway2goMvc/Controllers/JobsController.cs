@@ -10,6 +10,8 @@ using Jobsway2goMvc.Validators.Jobs;
 using FluentValidation.Results;
 using Jobsway2goMvc.Models.ViewModel;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -47,15 +49,19 @@ namespace Jobsway2goMvc.Controllers
             var job = await _context.Jobs
                  .Include(j => j.Category)
                  .Include(j => j.Applicants)
-                 .FirstOrDefaultAsync(m => m.Id == id);                 
+                 .FirstOrDefaultAsync(m => m.Id == id);
             if (job == null)
             {
                 return NotFound();
             }
-
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            ViewBag.HasAlreadyApplied = job.Applicants.Any(a => a.Id == user.Id);
             return View(job);
         }
 
+
+        [Authorize(Roles = "User")]
         [HttpPost, ActionName("ApplyJob")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApplyJobConfirmed(int id)
@@ -81,6 +87,9 @@ namespace Jobsway2goMvc.Controllers
             }
             return View(job);
         }
+
+   
+
 
         public async Task<IActionResult> Details(int? id)
         {
