@@ -40,6 +40,8 @@ namespace Jobsway2goMvc.Controllers
             return user;
         }
 
+
+
         [HttpGet]
         public async Task<IActionResult> ApplyJob(int? id)
         {
@@ -48,23 +50,30 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
             var job = await _context.Jobs
-                 .Include(j => j.Category)
-                 .Include(j => j.Applicants)
-                 .FirstOrDefaultAsync(m => m.Id == id);
+                     .Include(j => j.Category)
+                     .Include(j => j.Applicants)
+                     .FirstOrDefaultAsync(m => m.Id == id);
             if (job == null)
             {
                 return NotFound();
             }
             var userAccessor = _httpContextAccessor.HttpContext.User;
             var user = GetApplicationUser(userAccessor);
+            if (User.IsInRole("Business"))
+            {
+                return RedirectToAction("Create");
+            }
             ViewBag.HasAlreadyApplied = job.Applicants.Any(a => a.Id == user.Id);
             return View(job);
         }
 
-        [Authorize(Roles = "User")]
         [HttpPost]
         public async Task<IActionResult> ApplyJob(int id)
         {
+            if (User.IsInRole("Business"))
+            {
+                return RedirectToAction("Create");
+            }
             var job = await _context.Jobs.FindAsync(id);
             if (job == null)
             {
@@ -80,6 +89,10 @@ namespace Jobsway2goMvc.Controllers
         [HttpPost]
         public async Task<IActionResult> UnApplyJob(int id)
         {
+            if (User.IsInRole("Business"))
+            {
+                return RedirectToAction("Create");
+            }
             var job = await _context.Jobs
                 .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -93,6 +106,63 @@ namespace Jobsway2goMvc.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("ApplyJob", new { id = id });
         }
+
+
+
+
+        //[HttpGet]
+        //public async Task<IActionResult> ApplyJob(int? id)
+        //{
+        //    if (id == null || _context.Jobs == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var job = await _context.Jobs
+        //         .Include(j => j.Category)
+        //         .Include(j => j.Applicants)
+        //         .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var userAccessor = _httpContextAccessor.HttpContext.User;
+        //    var user = GetApplicationUser(userAccessor);
+        //    ViewBag.HasAlreadyApplied = job.Applicants.Any(a => a.Id == user.Id);
+        //    return View(job);
+        //}
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> ApplyJob(int id)
+        //{
+        //    var job = await _context.Jobs.FindAsync(id);
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var userAccessor = _httpContextAccessor.HttpContext.User;
+        //    var user = GetApplicationUser(userAccessor);
+        //    job.Applicants.Add(user);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction("ApplyJob", new { id = id });
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> UnApplyJob(int id)
+        //{
+        //    var job = await _context.Jobs
+        //        .Include(j => j.Applicants)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var userAccessor = _httpContextAccessor.HttpContext.User;
+        //    var user = GetApplicationUser(userAccessor);
+        //    job.Applicants.Remove(user);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction("ApplyJob", new { id = id });
+        //}
 
         public async Task<IActionResult> Details(int? id)
         {
