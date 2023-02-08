@@ -19,11 +19,11 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
+     
         public JobsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;           
         }
 
         public async Task<IActionResult> Index()
@@ -39,6 +39,7 @@ namespace Jobsway2goMvc.Controllers
 
             return user;
         }
+
         [HttpGet]
         public async Task<IActionResult> ApplyJob(int? id)
         {
@@ -60,36 +61,38 @@ namespace Jobsway2goMvc.Controllers
             return View(job);
         }
 
-
         [Authorize(Roles = "User")]
-        [HttpPost, ActionName("ApplyJob")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ApplyJobConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> ApplyJob(int id)
         {
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
             var userAccessor = _httpContextAccessor.HttpContext.User;
             var user = GetApplicationUser(userAccessor);
-            var job = await _context.Jobs
-                .Include(j => j.Category)
-                .Include(j => j.Applicants)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (job != null && user != null )
-            {
-                bool exists = job.Applicants.Any(x => x.Id == user.Id);
-                if (exists)
-                {
-                    ViewBag.JobApplicationExists = "Job Application Exists";
-                    return View(job);
-                }
-                job.Applicants.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(job);
+            job.Applicants.Add(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ApplyJob", new { id = id });
         }
 
-   
-
+        [HttpPost]
+        public async Task<IActionResult> UnApplyJob(int id)
+        {
+            var job = await _context.Jobs
+                .Include(j => j.Applicants)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (job == null)
+            {
+                return NotFound();
+            }
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            job.Applicants.Remove(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ApplyJob", new { id = id });
+        }
 
         public async Task<IActionResult> Details(int? id)
         {

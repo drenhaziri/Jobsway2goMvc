@@ -85,20 +85,21 @@
             @Html.DisplayFor(model => model.Applicants)
         </dd>
     </dl>
-    
-   
+
         @if (ViewBag.HasAlreadyApplied)
         {
-            <button disabled="disabled">Already Applied</button> 
+            <form asp-controller="Jobs" asp-action="UnApplyJob">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="submit" value="UnApply" class="btn btn-danger" />
+            </form>
         }
         else
         {
-        <form asp-action="ApplyJob">
-            <input type="hidden" asp-for="Id" />
-            <input type="submit" value="Apply" class="btn btn-danger" /> 
-        </form>
+            <form asp-controller="Jobs" asp-action="ApplyJob">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="submit" value="Apply" class="btn btn-danger" />
+            </form>
         }
-
         <a asp-action="Index">Back to List</a>
     
 </div>
