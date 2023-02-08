@@ -28,7 +28,7 @@ namespace Jobsway2goMvc.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public IActionResult Index(int? page, int itemsPerPage = 3, int pageIndex = 1)
+        public IActionResult Index(int? page, int itemsPerPage = 6, int pageIndex = 1)
         {
             //Showing 3 jobs per page
             var jobs = _context.Jobs.ToPagedList(page ?? pageIndex,itemsPerPage);
