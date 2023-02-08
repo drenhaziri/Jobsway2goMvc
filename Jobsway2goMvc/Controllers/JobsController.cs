@@ -10,6 +10,8 @@ using Jobsway2goMvc.Validators.Jobs;
 using FluentValidation.Results;
 using Jobsway2goMvc.Models.ViewModel;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Drawing.Printing;
 using Jobsway2goMvc.Extensions;
@@ -21,11 +23,11 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
+     
         public JobsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;           
         }
 
         public IActionResult Index(int? page, int itemsPerPage = 6, int pageIndex = 1)
@@ -44,6 +46,9 @@ namespace Jobsway2goMvc.Controllers
 
             return user;
         }
+
+
+
         [HttpGet]
         public async Task<IActionResult> ApplyJob(int? id)
         {
@@ -52,41 +57,61 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
             var job = await _context.Jobs
-                 .Include(j => j.Category)
-                 .Include(j => j.Applicants)
-                 .FirstOrDefaultAsync(m => m.Id == id);                 
+                     .Include(j => j.Category)
+                     .Include(j => j.Applicants)
+                     .FirstOrDefaultAsync(m => m.Id == id);
             if (job == null)
             {
                 return NotFound();
             }
-
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            if (User.IsInRole("Business"))
+            {
+                return NotFound("You can not apply");
+            }
+            ViewBag.HasAlreadyApplied = job.Applicants.Any(a => a.Id == user.Id);
             return View(job);
         }
 
-        [HttpPost, ActionName("ApplyJob")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ApplyJobConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> ApplyJob(int id)
         {
+            if (User.IsInRole("Business"))
+            {
+                return NotFound("You can not apply");
+            }
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
             var userAccessor = _httpContextAccessor.HttpContext.User;
             var user = GetApplicationUser(userAccessor);
+            job.Applicants.Add(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ApplyJob", new { id = id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UnApplyJob(int id)
+        {
+            if (User.IsInRole("Business"))
+            {
+                return NotFound("You can not apply");
+            }
             var job = await _context.Jobs
-                .Include(j => j.Category)
                 .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (job != null && user != null )
+            if (job == null)
             {
-                bool exists = job.Applicants.Any(x => x.Id == user.Id);
-                if (exists)
-                {
-                    ViewBag.JobApplicationExists = "Job Application Exists";
-                    return View(job);
-                }
-                job.Applicants.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            return View(job);
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            job.Applicants.Remove(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ApplyJob", new { id = id });
         }
 
         public async Task<IActionResult> Details(int? id)
