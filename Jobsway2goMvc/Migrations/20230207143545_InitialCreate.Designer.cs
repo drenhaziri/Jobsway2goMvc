@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230131220046_Initial")]
-    partial class Initial
+    [Migration("20230207143545_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -445,7 +445,6 @@ namespace Jobsway2goMvc.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -474,6 +473,9 @@ namespace Jobsway2goMvc.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsModerator")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsOwner")
                         .HasColumnType("bit");
 
                     b.Property<int>("Status")

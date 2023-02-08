@@ -14,5 +14,6 @@ namespace Jobsway2goMvc.Models
         public bool IsAdmin { get; set; }
         public bool IsModerator { get; set; }
         public bool? IsBanned { get; set; }
+        public bool? IsOwner { get; set; }
     }
 }
