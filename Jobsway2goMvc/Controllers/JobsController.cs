@@ -12,6 +12,10 @@ using Jobsway2goMvc.Models.ViewModel;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Drawing.Printing;
+using Jobsway2goMvc.Extensions;
+using X.PagedList;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -26,11 +30,14 @@ namespace Jobsway2goMvc.Controllers
             _httpContextAccessor = httpContextAccessor;           
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? page, int itemsPerPage = 6, int pageIndex = 1)
         {
-            var result = await _context.Jobs.Include(j => j.Category).ToListAsync();
-            return View(result);
+            //Showing 3 jobs per page
+            var jobs = _context.Jobs.ToPagedList(page ?? pageIndex,itemsPerPage);
+
+            return View(jobs);
         }
+
         private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
         {
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
