@@ -1,5 +1,6 @@
-﻿@model IEnumerable<Jobsway2goMvc.Models.Job>
-
+﻿@model IEnumerable<Job>
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
 @{
     ViewData["Title"] = "Index";
 }
@@ -17,27 +18,14 @@
             }
         </div>
     </div>
-    <br />
-    <nav class="d-flex justify-content-center">
-        <ul class="pagination pg-blue">
-            <li class="page-item">
-                <a class="page-link" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-            <li class="page-item active"><a class="page-link">1</a></li>
-            <li class="page-item"><a class="page-link">2</a></li>
-            <li class="page-item"><a class="page-link">3</a></li>
-            <li class="page-item"><a class="page-link">4</a></li>
-            <li class="page-item">
-                <a class="page-link" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <br/>
+    <div class="d-flex justify-content-center">
+    @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page}),
+    new X.PagedList.Web.Common.PagedListRenderOptions {
+    LiElementClasses = new string[] {"page-item"},
+    PageClasses = new string[] { "page-link" }
+    })
+    </div>
 </div>
 
 
