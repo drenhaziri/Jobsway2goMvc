@@ -27,6 +27,7 @@ namespace Jobsway2goMvc.Controllers
             var users = _context.Users.ToList();
             ViewBag.Users = users;
 
+            
             return View();
         }
 
