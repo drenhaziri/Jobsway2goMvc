@@ -443,7 +443,6 @@ namespace Jobsway2goMvc.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -472,6 +471,9 @@ namespace Jobsway2goMvc.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsModerator")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsOwner")
                         .HasColumnType("bit");
 
                     b.Property<int>("Status")

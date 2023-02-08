@@ -51,10 +51,14 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 
 <div>
     <div class="d-flex justify-content-start">
-        @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
+        @if(Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsOwner == true){
+             <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete Group</a>
+        }
+        else if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
         {
             <a asp-action="Leave" asp-route-groupId="@ViewBag.GroupId" class="btn btn-secondary">Leave Group</a>
         }
+
         @if (Model.CurrentMembershipList == null || Model.CurrentMembershipList.Status == Approval.Rejected)
         {
             <a asp-action="Join" asp-controller="Groups" asp-route-id="@ViewBag.GroupId" class="btn btn-secondary">Join Group</a>
@@ -65,6 +69,22 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
         }
 
     </div>
+    @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.UserId == Model.CreatedBy
+         && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
+    {
+        <div class="d-flex flex-column mt-4">
+            <div class="group-access-label">
+                Is Public
+            </div>
+            <div class="group-access-switch mt-2">
+                <label class="switch switch-handle" data-id="@Model.Id">
+                    @Html.CheckBoxFor(model => model.IsPublic)
+                    <div class="slider round">
+                    </div>
+                </label>
+            </div>
+        </div>
+    }
     <div class="d-flex justify-content-end">
         @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsMember == true))
         {
@@ -169,3 +189,10 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 <div>
     <a class="btn btn-outline-light" style="color:black;" asp-action="Index">Back to List</a>
 </div>
+
+
+@section Scripts
+{
+    <link rel="stylesheet" href="~/css/group.css" />
+    <script type="text/javascript" src="~/js/group.js"></script>
+}

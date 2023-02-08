@@ -21,6 +21,8 @@
         public List<Certification> Certifications { get; set; }
         public List<Award> Awards { get; set; }
 
+        public Connection? CurrentConnectionList { get; set; }
+
     }
     
 }
