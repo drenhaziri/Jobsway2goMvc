@@ -73,7 +73,7 @@
                 </table>
             </div>
         </div>
-        <h3>    @Html.DisplayNameFor(model => model.Applicants)</h3>
+
 
         @{
             bool isDisplayed = false;
@@ -84,7 +84,6 @@
             if (!isDisplayed)
             {
                 <div>
-                    <p>@Html.DisplayFor(model => model.Applicants) @ViewBag.JobApplication </p>
                     <a class="btn btn-outline-success" href="@Url.Action("Index", "UserProfile", new { id = applicant.Id })">View Profile</a>
                 </div>
                 isDisplayed = true;
@@ -96,8 +95,14 @@
     </div>
     <br />
     <div>
+
         @if (ViewBag.ShowEditButton)
         {
+            <div>
+                <h3>  @Html.DisplayNameFor(model => model.Applicants)</h3>
+                <p>@Html.DisplayFor(model => model.Applicants) @ViewBag.JobApplication </p>
+            </div>
+
             <a class="btn post-btn" type="submit" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
         }
         <a class="btn post-btn" asp-action="Index">Back to job</a>
