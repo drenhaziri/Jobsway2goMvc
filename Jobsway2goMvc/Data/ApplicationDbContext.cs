@@ -5,6 +5,7 @@ using static System.Collections.Specialized.BitVector32;
 using System.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Jobsway2goMvc.Models.ViewModel;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Jobsway2goMvc.Data
 {
@@ -33,7 +34,6 @@ namespace Jobsway2goMvc.Data
         public DbSet<Education> Educations { get; set; }
 
         public DbSet<Certification> Certifications { get; set; }
-
         public DbSet<Award> Awards { get; set; }
         //public DbSet<Section> Sections { get; set; }
 
@@ -59,19 +59,19 @@ namespace Jobsway2goMvc.Data
                 .HasMany(p => p.Jobs)
                 .WithMany(p => p.Collections)
                 .UsingEntity(j => j.ToTable("JobCollections"));
-            modelBuilder.Entity<Experience>()
-                .HasOne(p => p.User)
-                .WithMany(g => g.Experiences)
-                .HasForeignKey(p => p.UserId);
-            modelBuilder.Entity<Education>()
-                .HasOne(p => p.User)
-                .WithMany(g => g.Educations)
-                .HasForeignKey(p => p.UserId);
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Certification>()
-                .HasOne(p => p.User)
-                .WithMany(g => g.Certifications)
-                .HasForeignKey(p => p.UserId);
+            //modelBuilder.Entity<Experience>()
+            //    .HasOne(p => p.User)
+            //    .WithMany(g => g.Experiences)
+            //    .HasForeignKey(p => p.UserId);
+            //modelBuilder.Entity<Education>()
+            //    .HasOne(p => p.User)
+            //    .WithMany(g => g.Educations)
+            //    .HasForeignKey(p => p.UserId);
+            //base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<Certification>()
+            //    .HasOne(p => p.User)
+            //    .WithMany(g => g.Certifications)
+            //    .HasForeignKey(p => p.UserId);
 
             modelBuilder.Entity<EventGuest>()
                 .HasKey(eg => new { eg.EventId, eg.GuestId });
@@ -81,10 +81,10 @@ namespace Jobsway2goMvc.Data
                 .WithMany(e => e.EventGuests)
                 .HasForeignKey(eg => eg.EventId);
 
-            modelBuilder.Entity<EventGuest>()
-                .HasOne(eg => eg.ApplicationUser)
-                .WithMany(u => u.EventGuests)
-                .HasForeignKey(eg => eg.GuestId);
+            //modelBuilder.Entity<EventGuest>()
+            //    .HasOne(eg => eg.ApplicationUser)
+            //    .WithMany(u => u.EventGuests)
+            //    .HasForeignKey(eg => eg.GuestId);
 
             base.OnModelCreating(modelBuilder);
         }
