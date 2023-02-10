@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Drawing.Printing;
 using Jobsway2goMvc.Extensions;
 using X.PagedList;
+using Jobsway2goMvc.Enums;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -33,10 +34,40 @@ namespace Jobsway2goMvc.Controllers
         public IActionResult Index(int? page, int itemsPerPage = 6, int pageIndex = 1)
         {
             //Showing 3 jobs per page
-            var jobs = _context.Jobs.ToPagedList(page ?? pageIndex,itemsPerPage);
+            var jobs = _context.Jobs.Include(j => j.Category).ToPagedList(page ?? pageIndex,itemsPerPage);
 
             return View(jobs);
         }
+        public IActionResult FilterJobs(JobLocation location, JobPosition position, JobSite site, int? page, int itemsPerPage = 6, int pageIndex = 1)
+        {
+            IEnumerable<Job> jobs = _context.Jobs.Include(j => j.Category);
+
+            if (location != JobLocation.None)
+            {
+                jobs = jobs.Where(j => j.Location == location);
+            }
+            if (position != JobPosition.None)
+            {
+                jobs = jobs.Where(j => j.Schedule == position);
+            }
+            if (site != JobSite.None)
+            {
+                jobs = jobs.Where(j => j.Site == site);
+            }
+
+            jobs = jobs.OrderBy(p => p.Id).ToPagedList(page ?? pageIndex, itemsPerPage);
+
+
+            return View(jobs);
+        }
+
+        public IActionResult FilterBySalary(int minSalary, int maxSalary)
+         {
+            var jobs = _context.Jobs.Where(p => p.MinSalary >= minSalary && p.MaxSalary <= maxSalary)
+              .OrderBy(p => p.MaxSalary);
+
+            return View(jobs); 
+         }
 
         private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
         {
@@ -151,11 +182,23 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId,Site")] Job job)
         {
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
-            
+            if(job.Schedule == JobPosition.None)
+            {
+                ModelState.AddModelError("Schedule", "Please specify a Schedule");
+            }
+            if (job.Location == JobLocation.None)
+            {
+                ModelState.AddModelError("Location", "Please specify a location");
+            }
+            if (job.Site == JobSite.None)
+            {
+                ModelState.AddModelError("Site", "Please specify a site");
+            }
+
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
