@@ -4,66 +4,118 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<div class="job-post ptb-100">
+    <div class="container">
+        <form class="job-post-from" asp-action="Edit">
+            <h2>Edit Job</h2>
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="companyName" class="form-label">Company Name</label>
+                        <input asp-for="CompanyName" type="text" class="form-control" id="companyName" placeholder="Company Name">
+                    </div>
+                </div>
 
-<h4>Job</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CompanyName" class="control-label"></label>
-                <input asp-for="CompanyName" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Schedule" class="control-label"></label>
-                <input asp-for="Schedule" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="OpenSpots" class="control-label"></label>
-                <input asp-for="OpenSpots" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Requirements" class="control-label"></label>
-                <input asp-for="Requirements" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="DateFrom" class="control-label"></label>
-                <input asp-for="DateFrom" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="DateTo" class="control-label"></label>
-                <input asp-for="DateTo" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="MinSalary" class="control-label"></label>
-                <input asp-for="MinSalary" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="MaxSalary" class="control-label"></label>
-                <input asp-for="MaxSalary" class="form-control" />
-            </div>
-            <div class="form-group">
-                @Html.DropDownListFor(model => model.CategoryId, (IEnumerable<SelectListItem>)ViewBag.Categories, "-- Select a category --", htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CategoryId, "Please Select a Category", new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="jobCategory" class="form-label">Job Category</label>
+                        @Html.DropDownListFor(model => model.CategoryId, (IEnumerable<SelectListItem>)ViewBag.Categories, "-- Select a category --", htmlAttributes: new { @class = "form-control", @id = "jobCategory" })
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="schedule" class="form-label">Schedule</label>
+                        <input asp-for="Schedule" type="text" class="form-control" id="schedule" placeholder="Schedule">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="openSpots" class="form-label">Open Spots</label>
+                        <input asp-for="OpenSpots" type="number" class="form-control" id="openSpots" placeholder="Number of spots available">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="dateFrom" class="form-label">Date From</label>
+                        <input asp-for="DateFrom" type="date" class="form-control" id="dateFrom" placeholder="">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="dateTo" class="form-label">Date To</label>
+                        <input asp-for="DateTo" type="date" class="form-control" id="dateTo" placeholder="">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="minSalary" class="form-label">Minimum Salary</label>
+                        <input asp-for="MinSalary" type="number" class="form-control" id="minSalary" placeholder="e.g. $20,000">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="maxSalary" class="form-label">Maximum Salary</label>
+                        <input asp-for="MaxSalary" type="number" class="form-control" id="maxSalary" placeholder="e.g. $30,000">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="location" class="form-label">Location</label>
+                        <input asp-for="Location" type="text" class="form-control" id="location" placeholder="e.g. London">
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="requirements" class="form-label">Requirements</label>
+                        <textarea asp-for="Requirements" class="form-control requirements-area" id="requirements" rows="6" placeholder="Job Requirements"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="description" class="form-label">Job Description</label>
+                        <textarea asp-for="Description" class="form-control description-area" id="description" rows="6" placeholder="Job Description"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary post-btn">
+                        Edit Job
+                    </button>
+                    <a class="btn back-btn" asp-action="Index">Back to List</a>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Scripts{
+    <script>
+        tinymce.init({
+            selector: 'textarea#requirements',
+            menubar: true,
+            plugins: [
+                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
+                'anchor', 'pagebreak',
+                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
+                'fullscreen', 'insertdatetime',
+                'media', 'table', 'emoticons', 'template', 'help'
+            ],
+            toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
+                'forecolor backcolor emoticons | help',
+            advlist_bullet_styles: 'square',
+            advlist_number_styles: 'lower-alpha,lower-roman,upper-alpha,upper-roman'
+        });
+    </script>
+}
