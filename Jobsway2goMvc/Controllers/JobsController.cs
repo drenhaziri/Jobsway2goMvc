@@ -119,11 +119,12 @@ namespace Jobsway2goMvc.Controllers
             if (id == null || _context.Jobs == null)
             {
                 return NotFound();
-            }        
+            }
             var job = await _context.Jobs
                 .Include(j => j.Category)
                 .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            ViewBag.ShowEditButton = User.IsInRole("Business");
             if (job.Applicants == null || !job.Applicants.Any())
             {
                 ViewBag.JobApplication = "There are no applicants for this job";
@@ -138,9 +139,39 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-
+           
             return View(job);
         }
+
+
+
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null || _context.Jobs == null)
+        //    {
+        //        return NotFound();
+        //    }        
+        //    var job = await _context.Jobs
+        //        .Include(j => j.Category)
+        //        .Include(j => j.Applicants)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (job.Applicants == null || !job.Applicants.Any())
+        //    {
+        //        ViewBag.JobApplication = "There are no applicants for this job";
+        //        return View(job);
+        //    }
+        //    else
+        //    {
+        //        return View(job);
+        //    }
+
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(job);
+        //}
 
         public IActionResult Create()
         {
