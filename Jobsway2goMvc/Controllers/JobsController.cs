@@ -186,19 +186,7 @@ namespace Jobsway2goMvc.Controllers
         {
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
-            if(job.Schedule == JobPosition.None)
-            {
-                ModelState.AddModelError("Schedule", "Please specify a Schedule");
-            }
-            if (job.Location == JobLocation.None)
-            {
-                ModelState.AddModelError("Location", "Please specify a location");
-            }
-            if (job.Site == JobSite.None)
-            {
-                ModelState.AddModelError("Site", "Please specify a site");
-            }
-
+           
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
