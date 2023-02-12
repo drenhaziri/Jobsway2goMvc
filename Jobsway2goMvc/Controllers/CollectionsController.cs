@@ -25,12 +25,12 @@ namespace Jobsway2goMvc.Controllers
         }
 
         // GET: Collections
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(String id)
         {
             if (_signinmanager.IsSignedIn(User))
             {
                 return View(await _context.Collections
-                    .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
+                    .Where(a => a.User.Id == id)
                     .ToListAsync());
             }
             else
