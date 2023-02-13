@@ -38,9 +38,9 @@ namespace Jobsway2goMvc.Controllers
 
             return View(jobs);
         }
-        public IActionResult FilterJobs(JobLocation location, JobPosition position, JobSite site, int? page, int itemsPerPage = 6, int pageIndex = 1)
+        public IActionResult FilterJobs(JobLocation location, JobPosition position, JobSite site,int minSalary ,int maxSalary, int? page, int itemsPerPage = 6, int pageIndex = 1)
         {
-            IEnumerable<Job> jobs = _context.Jobs.Include(j => j.Category);
+            IEnumerable<Job> jobs = _context.Jobs;
 
             if (location != JobLocation.None)
             {
@@ -54,6 +54,10 @@ namespace Jobsway2goMvc.Controllers
             {
                 jobs = jobs.Where(j => j.Site == site);
             }
+            if(minSalary != 0)
+            {
+                jobs = jobs.Where(j => j.MinSalary >= minSalary && j.MaxSalary <= maxSalary);
+            }
 
             jobs = jobs.OrderBy(p => p.Id).ToPagedList(page ?? pageIndex, itemsPerPage);
 
@@ -61,14 +65,7 @@ namespace Jobsway2goMvc.Controllers
             return View(jobs);
         }
 
-        public IActionResult FilterBySalary(int minSalary, int maxSalary)
-         {
-            var jobs = _context.Jobs.Where(p => p.MinSalary >= minSalary && p.MaxSalary <= maxSalary)
-              .OrderBy(p => p.MaxSalary);
-
-            return View(jobs); 
-         }
-
+   
         private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
         {
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);

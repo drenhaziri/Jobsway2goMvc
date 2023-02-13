@@ -16,35 +16,47 @@
         <form class="form-group" asp-controller="Jobs" asp-action="FilterJobs" method="get">
             <div class="form-row d-flex">
 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <label>Select Location</label>
                     <select class="form-control" name="location" asp-items="Html.GetEnumSelectList<JobLocation>()"></select>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <label>Select Schedule </label>
                     <select class="form-control" name="position" asp-items="Html.GetEnumSelectList<JobPosition>()"></select>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-2">
                     <label>Select Site</label>
                     <select class="form-control" name="site" asp-items="Html.GetEnumSelectList<JobSite>()"></select>
+                </div> 
+                <div class="form-group col-md-2">
+                    <label>Select min salary</label>
+                    <select class="form-control" name="minSalary">
+                        <option>0</option>
+                        <option>200</option>
+                        <option>400</option>
+                        <option>600</option>
+                        <option>800</option>
+                        <option>1000</option>
+                        <option>1200</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Select max alary</label>
+                    <select class="form-control" name="maxSalary">
+                        <option>0</option>
+                        <option>600</option>
+                        <option>800</option>
+                        <option>1000</option>
+                        <option>1200</option>
+                        <option>1400</option>
+                        <option>1600</option>
+                    </select>
                 </div>
             </div>
             <button class="btn btn-primary" type="submit">Filter Jobs</button>
         </form>
         <br/>
-        <form class="form-group" asp-controller="Jobs" asp-action="FilterBySalary" method="get">
-            <div class="form-row d-flex">
-                <div class="form-group mr-3">
-                    <label>Min Salary</label>
-                    <input class="form-control" type="text" aria-label="Min Salary" name="minSalary">
-                </div>
-                <div class="form-group mr-3">
-                    <label>Max Salary</label>
-                    <input class="form-control" type="text" aria-label="Max Salary" name="maxSalary">
-                </div>
-            </div>
-            <button class="btn btn-primary" type="submit">Filter By Salary</button>
-        </form>
+ 
 
         <div class="row d-flex flex-wrap">
             @foreach (var item in Model)
