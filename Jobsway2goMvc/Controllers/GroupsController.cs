@@ -102,6 +102,7 @@ namespace Jobsway2goMvc.Controllers
 
             var @group = await _context.Groups
                 .Include(g => g.Posts)
+                .ThenInclude(c=>c.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (@group == null)
@@ -118,6 +119,7 @@ namespace Jobsway2goMvc.Controllers
                 CreatedBy = group.CreatedBy,
                 IsPublic = group.IsPublic,
                 Name = group.Name,
+                Comments = group.Posts.SelectMany(p => p.Comments).ToList(),
                 Description= group.Description,
                 CurrentMembershipList = (GroupMembership)membership.Model
             };

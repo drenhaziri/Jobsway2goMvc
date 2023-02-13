@@ -51,8 +51,9 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 
 <div>
     <div class="d-flex justify-content-start">
-        @if(Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsOwner == true){
-             <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete Group</a>
+        @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsOwner == true)
+        {
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete Group</a>
         }
         else if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
         {
@@ -70,7 +71,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 
     </div>
     @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.UserId == Model.CreatedBy
-         && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
+    && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
     {
         <div class="d-flex flex-column mt-4">
             <div class="group-access-label">
@@ -123,17 +124,17 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                         @if (item.ImagePath == null)
                                         {
                                             <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
-                                            <img style=" border-radius: 50%;" width="45" height="45" src="~/Images/user.jpg" alt="">
+                                                <img style=" border-radius: 50%;" width="45" height="45" src="~/Images/user.jpg" alt="">
                                             </a>
                                         }
                                         else
                                         {
                                             <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
-                                            <img style="border-radius: 50%;" width="45" height="45" src="@item.ImagePath" alt="">
+                                                <img style="border-radius: 50%;" width="45" height="45" src="@item.ImagePath" alt="">
                                             </a>
                                         }
                                     </div>
-                                    <br/>
+                                    <br />
                                     <div class="ml-4">
                                         <div class="h5 m-0">@item.FirstName @item.LastName</div>
                                         <div class="h7 text-muted">@item.UserName</div>
@@ -171,12 +172,44 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                             <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
                             <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
                         </div>
-                        <div class="card-footer">
-                            <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
-                            <span class="input-group-btn p-l-10">
-                                <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
-                            </span>
 
+
+                        @foreach (var comment in item.Comments)
+                        {
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="mr-3">
+                                    @if (comment.UserImage == null)
+                                    {
+                                        <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
+                                            <img class="rounded-circle" width="35" height="35" src="~/Images/user.jpg" alt="">
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
+                                            <img class="rounded-circle" width="35" height="35" src="@comment.UserImage" alt="">
+                                        </a>
+                                    }
+                                </div>
+                                <div class="mr-3">
+                                    <div class="m-0 font-weight-bold">@comment.FirstName @comment.LastName</div>
+                                </div>
+                                <div class="w-100">
+                                    <p>@comment.Text</p>
+                                </div>
+                            </div>
+                        }
+
+
+
+                        <div class="card-footer">
+                            <form asp-controller="Post" asp-action="AddComment">
+                                <input name="postId" value="@item.Id" hidden />
+                                <input name="text" class="form-control rounded-corner" placeholder="Write a comment...">
+                                <span class="input-group-btn p-l-10">
+                                    <button class="btn btn-primary f-s-12 rounded-corner" type="submit">Comment</button>
+                                </span>
+                            </form>
                         </div>
                     </div>
                 }
@@ -192,7 +225,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 
 
 @section Scripts
-{
+    {
     <link rel="stylesheet" href="~/css/group.css" />
     <script type="text/javascript" src="~/js/group.js"></script>
 }

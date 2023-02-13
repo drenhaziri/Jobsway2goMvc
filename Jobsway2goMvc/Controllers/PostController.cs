@@ -11,6 +11,7 @@ using Jobsway2goMvc.Enums;
 using System.Security.Claims;
 using System.Timers;
 using Microsoft.AspNetCore.Identity;
+using System.Text.RegularExpressions;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -44,6 +45,7 @@ namespace Jobsway2goMvc.Controllers
 
             var post = await _context.Posts
                 .Include(p => p.Group)
+                .Include(p=> p.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
@@ -67,6 +69,7 @@ namespace Jobsway2goMvc.Controllers
             ApplicationUser user = await _userManager.FindByIdAsync(userid);
             ModelState.Remove("Group");
             ModelState.Remove("CreatedById");
+            ModelState.Remove("Comments");
             if (ModelState.IsValid)
             {
                 post.FirstName = user.FirstName;
@@ -199,6 +202,39 @@ namespace Jobsway2goMvc.Controllers
         private bool PostExists(int id)
         {
             return _context.Posts.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddComment(int postId, string text)
+        {
+            var post = await _context.Posts.FindAsync(postId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            if (!string.IsNullOrEmpty(text))
+            {
+                var userId = _userManager.GetUserId(HttpContext.User);
+                ApplicationUser user = await _userManager.FindByIdAsync(userId);
+
+           
+                var comment = new Comment
+                {
+                    Text = text,
+                    DateTimeCreated = DateTime.Now,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserImage = user.ImagePath,
+                    UserId = userId,
+                    PostId = postId
+                };
+
+                _context.Comments.Add(comment);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("DetailsPostsGroup", "Groups", new {id = post.GroupId});
         }
     }
 }
