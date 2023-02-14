@@ -131,6 +131,7 @@ namespace Jobsway2goMvc.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed([FromRoute] int id)
         {
             if(_context.Jobs == null)

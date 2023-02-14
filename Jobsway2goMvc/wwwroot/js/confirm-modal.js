@@ -1,7 +1,6 @@
 ﻿function getDefaultToastrOptions () {
     return {
-        timeOut: 5000,
-        positionClass: "toast-bottom-left"
+        timeOut: 5000
     }
 }
 
@@ -12,6 +11,8 @@ $('a[id^="deleteAction"]').click(function (e) {
     const reloadUrl = $(this).data('reload-url');
 
     const question = `Do you want to delete ${name}?`;
+    const token = $('input[name="__RequestVerificationToken"]').val();
+
     UpdateGeneralTwoButtonsModal(question, (answer) => {
 
         if (answer) {
@@ -19,6 +20,12 @@ $('a[id^="deleteAction"]').click(function (e) {
             $.ajax({
                 type: "POST",
                 url: deleteUrl,
+                headers:{
+                    "RequestVerificationToken": token
+                },
+                data: {
+                    __RequestVerificationToken: token
+                },
                 success: function(data) {
                     toastr.success(`${name} deleted successfully`, '', getDefaultToastrOptions());
                     setTimeout(() => {
