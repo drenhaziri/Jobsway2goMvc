@@ -570,23 +570,6 @@ namespace Jobsway2goMvc.Controllers
             return RedirectToAction("Edit", "Post", new { id = id });
         }
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Groups == null)
-            {
-                return NotFound();
-            }
-
-            var @group = await _context.Groups
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@group == null)
-            {
-                return NotFound();
-            }
-
-            return View(@group);
-        }
-
         [HttpPost]
         public async Task<IActionResult> UpdatePrivacy([FromRoute] int id, [FromBody] bool isPublic)
         {
@@ -616,9 +599,8 @@ namespace Jobsway2goMvc.Controllers
             return Ok(@group);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed([FromRoute] int id)
         {
             if (_context.Groups == null || _context.Posts == null)
             {
@@ -635,7 +617,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
 
         public IActionResult DeletePost(int id)

@@ -176,29 +176,12 @@ namespace Jobsway2goMvc.Controllers
 
             return View(collection);
         }
-
-        // GET: Collections/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Collections == null)
-            {
-                return NotFound();
-            }
-
-            var collection = await _context.Collections
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (collection == null)
-            {
-                return NotFound();
-            }
-
-            return View(collection);
-        }
+        
+        
 
         // POST: Collections/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed([FromRoute] int id)
         {
             if (_context.Collections == null)
             {
@@ -213,14 +196,14 @@ namespace Jobsway2goMvc.Controllers
                 if (collection.Jobs.Count() > 0)
                 {
                     ViewBag.DeleteWarning = "The collection you’re about to delete is not empty.";
-                    return View();
+                    return BadRequest();
                 }
 
                 _context.Collections.Remove(collection);
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
 
         public async Task<IActionResult> RemoveJob(int? jobId, int? collectionId)

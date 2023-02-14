@@ -52,7 +52,9 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 <div>
     <div class="d-flex justify-content-start">
         @if(Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsOwner == true){
-             <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete Group</a>
+            <a id="deleteAction" class="btn btn-danger" data-name="@Model.Name"
+               data-delete-action-url="/Groups/DeleteConfirmed/@Model.Id"
+               data-reload-url="@Url.Action("Index","Groups")">Delete Group</a>
         }
         else if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
         {
