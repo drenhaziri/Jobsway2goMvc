@@ -563,9 +563,8 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Location")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("MaxSalary")
                         .HasColumnType("decimal(18,2)");
@@ -580,9 +579,11 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Schedule")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Schedule")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Site")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
