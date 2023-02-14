@@ -2,7 +2,7 @@
 @using X.PagedList;
 @using X.PagedList.Mvc.Core;
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "FilterByCity";
 }
 <div class="container">
     <div class="container">
@@ -12,7 +12,7 @@
             <a asp-controller="Jobs" asp-action="Create" class="mx-3"><i class="fa fa-plus create-button-size" title="Create a Job"></i></a>
         </div>
 
-        <br/>
+        <br />
         <form class="form-group" asp-controller="Jobs" asp-action="FilterJobs" method="get">
             <div class="form-row d-flex">
 
@@ -27,7 +27,7 @@
                 <div class="form-group col-md-2">
                     <label>Select Site</label>
                     <select class="form-control" name="site" asp-items="Html.GetEnumSelectList<JobSite>()"></select>
-                </div> 
+                </div>
                 <div class="form-group col-md-2">
                     <label>Select min salary</label>
                     <select class="form-control" name="minSalary">
@@ -41,22 +41,21 @@
                     </select>
                 </div>
                 <div class="form-group col-md-2">
-                    <label>Select max alary</label>
+                    <label>Select max salary</label>
                     <select class="form-control" name="maxSalary">
                         <option>0</option>
+                        <option>200</option>
+                        <option>400</option>
                         <option>600</option>
                         <option>800</option>
                         <option>1000</option>
                         <option>1200</option>
-                        <option>1400</option>
-                        <option>1600</option>
                     </select>
                 </div>
             </div>
             <button class="btn btn-primary" type="submit">Filter Jobs</button>
         </form>
         <br/>
- 
 
         <div class="row d-flex flex-wrap">
             @foreach (var item in Model)
@@ -67,7 +66,7 @@
     </div>
     <br />
     <div class="d-flex justify-content-center">
-        @Html.PagedListPager((IPagedList) Model, page => Url.Action("Index", new {page}),
+        @Html.PagedListPager((IPagedList) Model, page => Url.Action("FilterJobs", new {page}),
         new X.PagedList.Web.Common.PagedListRenderOptions {
         LiElementClasses = new string[] {"page-item"},
         PageClasses = new string[] { "page-link" }
