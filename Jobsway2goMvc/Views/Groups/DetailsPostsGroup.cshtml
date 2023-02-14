@@ -8,23 +8,72 @@
 }
 
 <style>
-    body {
-        background-color: #eeeeee;
+        body {
+            background-color: #eeeeee;
+        }
+
+        .h7 {
+            font-size: 0.8rem;
+        }
+
+        .gedf-wrapper {
+            margin-top: 0.97rem;
+        }
+
+        /**Reset Bootstrap*/
+        .dropdown-toggle::after {
+            content: none;
+            display: none;
+        }
+        .comment {
+        display: flex;
+    align-items: flex-start;
+    margin: 10px 0;
     }
 
-    .h7 {
-        font-size: 0.8rem;
+    .comment-profile-pic {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        margin-right: 10px;
     }
 
-    .gedf-wrapper {
-        margin-top: 0.97rem;
+    .comment-content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
 
-    /**Reset Bootstrap*/
-    .dropdown-toggle::after {
-        content: none;
-        display: none;
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
     }
+
+    .comment-name {
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .comment-date {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .comment-text {
+        background-color: #f2f3f5;
+    padding: 8px 10px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    width:auto;
+    height: auto;
+    overflow: hidden;
+    }
+
 </style>
 @if (Model.CurrentMembershipList == null)
 {
@@ -176,26 +225,41 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 
                         @foreach (var comment in item.Comments)
                         {
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="mr-3">
-                                    @if (comment.UserImage == null)
-                                    {
-                                        <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
-                                            <img class="rounded-circle" width="35" height="35" src="~/Images/user.jpg" alt="">
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
-                                            <img class="rounded-circle" width="35" height="35" src="@comment.UserImage" alt="">
-                                        </a>
-                                    }
-                                </div>
-                                <div class="mr-3">
-                                    <div class="m-0 font-weight-bold">@comment.FirstName @comment.LastName</div>
-                                </div>
-                                <div class="w-100">
-                                    <p>@comment.Text</p>
+                            <div class="card-footer comment">
+                                @if (comment.UserImage == null)
+                                {
+                                    <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@comment.UserId">
+                                    <img class="comment-profile-pic" src="~/Images/user.jpg" alt="">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@comment.UserId">
+                                    <img class="comment-profile-pic" src="@comment.UserImage" alt="">
+                                    </a>
+                                }
+                                <div class="comment-content">
+                                    <div class="comment-header">
+                                        <span class="comment-name">@comment.FirstName @comment.LastName</span>
+                                        <span class="comment-date">
+                                        @if (Model.CurrentMembershipList.UserId == comment.UserId)
+                                        {
+                                            <div class="dropdown d-flex justify-content-end">
+                                                <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-ellipsis-h"></i>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id">Edit comment</a></li>
+                                                    <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="Delete" asp-route-id="@item.Id">Delete comment</a></li>
+                                                </ul>
+                                            </div>
+                                        }
+                                            @comment.DateTimeCreated
+                                        </span>
+                                    </div>
+                                    <div class="comment-text">
+                                        <p>@comment.Text</p>
+                                    </div>
                                 </div>
                             </div>
                         }

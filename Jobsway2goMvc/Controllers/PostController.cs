@@ -233,7 +233,11 @@ namespace Jobsway2goMvc.Controllers
                 _context.Comments.Add(comment);
                 await _context.SaveChangesAsync();
             }
-
+            TempData["Info"] = Newtonsoft.Json.JsonConvert.SerializeObject(new
+            {
+                title = "Info",
+                message = "Comment succefully created!"
+            });
             return RedirectToAction("DetailsPostsGroup", "Groups", new {id = post.GroupId});
         }
     }
