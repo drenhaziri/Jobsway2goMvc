@@ -295,7 +295,8 @@ namespace Jobsway2goMvc.Controllers
                 UserName = creator.UserName,
                 Message = guest.UserName +" just accepted the invitation to the "+@event.Title+" event.",
                 MessageType = "Personal",
-                NotificationDateTime = DateTime.Now
+                NotificationDateTime = DateTime.Now,
+                IsRead = false
             };
 
             _context.Notifications.Add(notification);
@@ -331,7 +332,8 @@ namespace Jobsway2goMvc.Controllers
                 UserName = guest.UserName,
                 Message = $"You have declined the invitation to the '{@event.Title}' event.",
                 MessageType = "Personal",
-                NotificationDateTime = DateTime.Now
+                NotificationDateTime = DateTime.Now,
+                IsRead = false
             };
 
             _context.Notifications.Add(notification);
