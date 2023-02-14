@@ -865,7 +865,7 @@ namespace Jobsway2goMvc.Controllers
                     .FirstOrDefault(m => m.GroupId == groupId && m.UserId == currentUserId);
                 if (groupOwnership != null && groupOwnership.IsOwner.HasValue && groupOwnership.IsOwner.Value && userId == currentUserId)
                 {
-                    TempData["BanMessage"] = "You can not ban your self";
+                    TempData["BanMessage"] = "You can't ban your self";
                     return RedirectToAction("Details", new { id = groupId });
                 }
 
