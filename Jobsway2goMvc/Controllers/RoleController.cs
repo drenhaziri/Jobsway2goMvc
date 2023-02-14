@@ -159,8 +159,6 @@ namespace Jobsway2goMvc.Controllers
         {
             if (roleName != null)
             {
-                //var role = new IdentityRole(roleName);
-                //var result = await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
                 await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
             }
             return RedirectToAction("Index");
@@ -200,8 +198,7 @@ namespace Jobsway2goMvc.Controllers
             else
             {
                 role.Name = model.Name;
-
-                // Update the Role using UpdateAsync
+                
                 var result = await _roleManager.UpdateAsync(role);
 
                 if (result.Succeeded)
@@ -220,6 +217,7 @@ namespace Jobsway2goMvc.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed([FromRoute] string id)
         {
             if (_roleManager.Roles == null)
