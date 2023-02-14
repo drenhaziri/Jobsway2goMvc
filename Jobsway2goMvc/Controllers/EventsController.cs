@@ -274,8 +274,8 @@ namespace Jobsway2goMvc.Controllers
 
             var notification = new Notification
             {
-                UserName = guest.UserName,
-                Message = $"You have accepted the invitation to the '{@event.Title}' event.",
+                UserName = creator.UserName,
+                Message = guest.UserName +" just accepted the invitation to the "+@event.Title+" event.",
                 MessageType = "Personal",
                 NotificationDateTime = DateTime.Now
             };
