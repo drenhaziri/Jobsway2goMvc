@@ -250,6 +250,15 @@ profile-sidebar {
     min-height: 40px;
     min-width: 400px;
 }
+.details-form .save-btn {
+    background-color: #fd1616;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 20px;
+    min-height: 40px;
+    min-width: 400px;
+}
 /*---------- Details Job Page CSS End ----------*/
 /*---------- Post Jobs Page CSS Start ----------*/
 .job-post-from {

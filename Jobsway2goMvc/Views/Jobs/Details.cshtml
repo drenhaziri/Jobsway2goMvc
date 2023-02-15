@@ -77,7 +77,6 @@
     </div>
     <br />
     <div>
-
         @if (ViewBag.ShowEditButton)
         {
             <div>
@@ -86,14 +85,11 @@
                 {
                     <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@applicant.Id"><p>@applicant.FirstName @applicant.LastName</p></a>
                 }
-
-
             </div>
-
             <a class="btn Edit-btn" type="submit" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
         }
-        <a class="btn bb-btn" asp-action="Index">Back to jobs</a>
-        <a class="btn Edit-btn" asp-action="SaveToCollection" asp-route-id="@Model?.Id">Save To Collectiont</a>
+        <a class="btn save-btn" asp-action="SaveToCollection" asp-route-id="@Model?.Id">Save To Collections</a>
+        <a class="btn bb-btn" asp-action="Index">Back to jobs</a>      
     </div>
 
 </form>
