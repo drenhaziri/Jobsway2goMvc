@@ -81,7 +81,7 @@ profile-sidebar {
         margin: 10px 0 20px;
         font-weight: 600;
     }
-
+/*---------- Details job Page CSS Start ----------*/
 @media screen and (min-width: 50em) {
     .containerR {
         max-width: 400px;
@@ -230,8 +230,28 @@ profile-sidebar {
     color: #ffffff;
     text-align: center;
 }
-/*---------- Post Jobs Page CSS Start ----------*/
 
+.details-form .Edit-btn {
+    background-color: #001935;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 20px;
+    min-height: 40px;
+    min-width: 400px;
+}
+
+.details-form .bb-btn {
+    background-color: #f2f2f2;
+    color: black;
+    border: none;
+    border-radius: 20px;
+    padding: 20px;
+    min-height: 40px;
+    min-width: 400px;
+}
+/*---------- Details Job Page CSS End ----------*/
+/*---------- Post Jobs Page CSS Start ----------*/
 .job-post-from {
     -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);

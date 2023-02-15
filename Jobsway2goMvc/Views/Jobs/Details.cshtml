@@ -84,18 +84,16 @@
                 <h3>  @Html.DisplayNameFor(model => model.Applicants)</h3>
                 @foreach (var applicant in Model.Applicants)
                 {
-                    <li>
-                        <a href="@Url.Action("Index", "UserProfile", new { id = applicant.Id })">@applicant.FirstName</a>
-                    </li>
+                    <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@applicant.Id"><p>@applicant.FirstName @applicant.LastName</p></a>
                 }
 
 
             </div>
 
-            <a class="btn post-btn" type="submit" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn Edit-btn" type="submit" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
         }
-        <a class="btn post-btn" asp-action="Index">Back to jobs</a>
-        <a class="btn back-btn" asp-action="SaveToCollection" asp-route-id="@Model?.Id">Save To Collectiont</a>
+        <a class="btn bb-btn" asp-action="Index">Back to jobs</a>
+        <a class="btn Edit-btn" asp-action="SaveToCollection" asp-route-id="@Model?.Id">Save To Collectiont</a>
     </div>
 
 </form>
