@@ -192,7 +192,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                     </div>
                                 </div>
                                 <div>
-                                    @if ((item.CreatedById == item.UserName))
+                                    @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.UserId == item.CreatedById || Model.CurrentMembershipList.IsAdmin))
                                     {
                                         <div class="dropdown">
                                             <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
