@@ -17,6 +17,7 @@ using System.Data;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Jobsway2goMvc.Enums;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using System.Security.Claims;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -75,9 +76,11 @@ namespace Jobsway2goMvc.Controllers
             };
 
             ViewBag.Id = id;
+            var banMessage = TempData["BanMessage"] as string;
+            ViewBag.BanMessage = banMessage;
 
             return View(viewModel);
-        }
+            }
 
         public IActionResult currentMembership(int? id)
         {
@@ -825,7 +828,7 @@ namespace Jobsway2goMvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Ban(string userId, int groupId)
+         public async Task<IActionResult> Ban(string userId, int groupId)
         {
             try
             {
@@ -841,7 +844,7 @@ namespace Jobsway2goMvc.Controllers
                 }
 
                 var membership = await _context.GroupMemberships
-              .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id);
+                  .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id);
 
                 if (membership == null)
                 {
@@ -855,9 +858,19 @@ namespace Jobsway2goMvc.Controllers
 
                 if (userExist)
                 {
-                    ViewBag.AdminExist = "User Already Banned";
+                    ViewBag.AdminExistAdminExist = "User Already Banned";
                     return RedirectToAction("Details", new { id = groupId });
                 }
+
+                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var groupOwnership = _context.GroupMemberships
+                    .FirstOrDefault(m => m.GroupId == groupId && m.UserId == currentUserId);
+                if (groupOwnership != null && groupOwnership.IsOwner.HasValue && groupOwnership.IsOwner.Value && userId == currentUserId)
+                {
+                    TempData["BanMessage"] = "You can not ban your self";
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+
 
                 if (ModelState.IsValid)
                 {
