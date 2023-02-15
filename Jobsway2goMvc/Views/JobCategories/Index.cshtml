@@ -26,7 +26,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+@*                <a asp-action="Details" asp-route-id="@item.Id">Details</a> *@
                 <a id="deleteAction-@item.Id" class="btn btn-link text-decoration-none px-0 delete-btn-link" data-name="@item.Name"
                                    data-delete-action-url="/JobCategories/DeleteConfirmed/@item.Id"
                                    data-reload-url="@Url.Action("Index","JobCategories")">Delete</a>
