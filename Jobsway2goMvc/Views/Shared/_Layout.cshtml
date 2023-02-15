@@ -95,6 +95,7 @@
         <main role="main" class="pb-3">
             <input type="hidden" id="hfUsername" value="@UserManager.GetUserName(User)" />
             @RenderBody()
+            <partial name="_DeleteConfirmationPartial" />
         </main>
     </div>
 
@@ -112,6 +113,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="~/js/ListView.js"></script>
     <script src="~/lib/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="~/js/generate-modal-content.js"></script>
+    <script src="~/js/confirm-modal.js"></script>
     @if (TempData["Info"] != null)
     {
         <script>
