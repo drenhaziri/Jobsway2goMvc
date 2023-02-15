@@ -23,17 +23,17 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-     
+
         public JobsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;           
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult Index(int? page, int itemsPerPage = 6, int pageIndex = 1)
         {
             //Showing 3 jobs per page
-            var jobs = _context.Jobs.ToPagedList(page ?? pageIndex,itemsPerPage);
+            var jobs = _context.Jobs.ToPagedList(page ?? pageIndex, itemsPerPage);
 
             return View(jobs);
         }
@@ -119,11 +119,12 @@ namespace Jobsway2goMvc.Controllers
             if (id == null || _context.Jobs == null)
             {
                 return NotFound();
-            }        
+            }
             var job = await _context.Jobs
                 .Include(j => j.Category)
                 .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            ViewBag.ShowEditButton = User.IsInRole("Business");
             if (job.Applicants == null || !job.Applicants.Any())
             {
                 ViewBag.JobApplication = "There are no applicants for this job";
@@ -142,6 +143,7 @@ namespace Jobsway2goMvc.Controllers
             return View(job);
         }
 
+
         public IActionResult Create()
         {
             var categories = _context.JobCategories.ToList();
@@ -155,14 +157,14 @@ namespace Jobsway2goMvc.Controllers
         {
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
-            
+
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-                
+
                 var categories = _context.JobCategories.ToList();
                 ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
@@ -199,7 +201,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-            
+
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
             ModelState.Remove("Collections");
@@ -265,7 +267,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 _context.Jobs.Remove(job);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -320,7 +322,7 @@ namespace Jobsway2goMvc.Controllers
 
         private bool JobExists(int id)
         {
-          return _context.Jobs.Any(e => e.Id == id);
+            return _context.Jobs.Any(e => e.Id == id);
         }
     }
 }

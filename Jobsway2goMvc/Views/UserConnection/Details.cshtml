@@ -1,4 +1,5 @@
 ﻿@model Jobsway2goMvc.Models.ViewModel.UserProfileViewModel
+@using System.Security.Claims;
 
 @{
     ViewData["Title"] = "Profile";
@@ -62,9 +63,14 @@
 
         <div class="profile-sidebar">
         </div>
-        <div>
+    @{
+        string currentUserId = User.Identity.IsAuthenticated ? User.FindFirst(ClaimTypes.NameIdentifier).Value : null;
+    }
+    @if (currentUserId != null && currentUserId == Model.Id)
+    {
+         <div>
             <a class="nav-link text-dark" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
         </div>
-    </div>
-
+    }
+</div>
  

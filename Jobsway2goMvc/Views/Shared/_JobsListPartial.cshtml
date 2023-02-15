@@ -1,5 +1,6 @@
 ﻿@model Jobsway2goMvc.Models.Job
 
+
 <div class="col-md-4 col-sm-6 col-12" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;width:26rem;">
     <div class="card-body">
         <a asp-action="Details" asp-controller="Jobs" asp-route-id="@Model?.Id">
@@ -12,7 +13,7 @@
             <div>
                 <span class="btn-sm mx-2" style="color: #20B2AA;background:#E0FFFF; " disabled>@Model?.Schedule</span>
                 <span class="btn-sm mx-2" style="color: #20B2AA;background:#E0FFFF; " disabled>@Model?.Location</span>
-                <span class="btn-sm mx-2" style="color: #20B2AA;background:#E0FFFF; " disabled>@Model?.OpenSpots open spots</span>
+                <span class="btn-sm mx-2" style="color: #20B2AA;background:#E0FFFF; " disabled>@Model?.Site</span>
             </div>
             <br />
             <div class="theme-btn text-center">

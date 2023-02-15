@@ -39,10 +39,7 @@
                             <ul class="navbar-nav  flex-grow-1">
                                 <li class="nav-item">
                                     <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                                </li>
+                                </li>                              
                                 <li class="nav-item">
                                     <a class="nav-link" asp-area="Events" asp-controller="Events" asp-action="Index">Events</a>
                                 </li>
@@ -95,6 +92,7 @@
         <main role="main" class="pb-3">
             <input type="hidden" id="hfUsername" value="@UserManager.GetUserName(User)" />
             @RenderBody()
+            <partial name="_DeleteConfirmationPartial" />
         </main>
     </div>
 
@@ -112,6 +110,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="~/js/ListView.js"></script>
     <script src="~/lib/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="~/js/generate-modal-content.js"></script>
+    <script src="~/js/confirm-modal.js"></script>
+    @if (TempData["Info"] != null)
+    {
+        <script>
+            $(function () {
+                var toastrOptions = @Html.Raw(TempData["Info"]);
+                toastr.info(toastrOptions.title, toastrOptions.message);
+            });
+        </script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
