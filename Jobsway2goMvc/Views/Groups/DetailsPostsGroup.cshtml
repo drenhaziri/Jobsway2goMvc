@@ -113,7 +113,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
             @foreach (var item in Model.Posts)
             {
                 <!-- Post /////-->
-                @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true && item.Status == Approval.Accepted))
+                @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true && item.Status == Approval.Accepted) || (Model.IsPublic == true && item.Status == Approval.Accepted))
                 {
                     <div class="card gedf-card">
                         <div class="card-header">
@@ -140,7 +140,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                     </div>
                                 </div>
                                 <div>
-                                    @if (Model.CurrentMembershipList.UserId == item.CreatedById || Model.CurrentMembershipList.IsAdmin)
+                                    @if ((item.CreatedById == item.UserName))
                                     {
                                         <div class="dropdown">
                                             <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
