@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Drawing.Printing;
 using Jobsway2goMvc.Extensions;
 using X.PagedList;
-using Jobsway2goMvc.Enums;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -24,48 +23,21 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-     
+
         public JobsController(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-            _httpContextAccessor = httpContextAccessor;           
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult Index(int? page, int itemsPerPage = 6, int pageIndex = 1)
         {
             //Showing 3 jobs per page
-            var jobs = _context.Jobs.Include(j => j.Category).ToPagedList(page ?? pageIndex,itemsPerPage);
-
-            return View(jobs);
-        }
-        public IActionResult FilterJobs(JobLocation location, JobPosition position, JobSite site,int minSalary ,int maxSalary, int? page, int itemsPerPage = 6, int pageIndex = 1)
-        {
-            IEnumerable<Job> jobs = _context.Jobs;
-
-            if (location != JobLocation.None)
-            {
-                jobs = jobs.Where(j => j.Location == location);
-            }
-            if (position != JobPosition.None)
-            {
-                jobs = jobs.Where(j => j.Schedule == position);
-            }
-            if (site != JobSite.None)
-            {
-                jobs = jobs.Where(j => j.Site == site);
-            }
-            if(minSalary != 0)
-            {
-                jobs = jobs.Where(j => j.MinSalary >= minSalary && j.MaxSalary <= maxSalary);
-            }
-
-            jobs = jobs.OrderBy(p => p.Id).ToPagedList(page ?? pageIndex, itemsPerPage);
-
+            var jobs = _context.Jobs.ToPagedList(page ?? pageIndex, itemsPerPage);
 
             return View(jobs);
         }
 
-   
         private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
         {
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -147,11 +119,12 @@ namespace Jobsway2goMvc.Controllers
             if (id == null || _context.Jobs == null)
             {
                 return NotFound();
-            }        
+            }
             var job = await _context.Jobs
                 .Include(j => j.Category)
                 .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            ViewBag.ShowEditButton = User.IsInRole("Business");
             if (job.Applicants == null || !job.Applicants.Any())
             {
                 ViewBag.JobApplication = "There are no applicants for this job";
@@ -170,6 +143,7 @@ namespace Jobsway2goMvc.Controllers
             return View(job);
         }
 
+
         public IActionResult Create()
         {
             var categories = _context.JobCategories.ToList();
@@ -179,18 +153,18 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId,Site")] Job job)
+        public async Task<IActionResult> Create([Bind("Id,CompanyName,Location,Schedule,Description,OpenSpots,Requirements,DateFrom,DateTo,MinSalary,MaxSalary,CategoryId")] Job job)
         {
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
-           
+
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-                
+
                 var categories = _context.JobCategories.ToList();
                 ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
@@ -227,7 +201,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-            
+
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
             ModelState.Remove("Collections");
@@ -293,7 +267,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 _context.Jobs.Remove(job);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -348,7 +322,7 @@ namespace Jobsway2goMvc.Controllers
 
         private bool JobExists(int id)
         {
-          return _context.Jobs.Any(e => e.Id == id);
+            return _context.Jobs.Any(e => e.Id == id);
         }
     }
 }
