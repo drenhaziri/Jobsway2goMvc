@@ -26,7 +26,7 @@
         <p> @Html.DisplayFor(model => model.Description)</p>
 
         <h3>    @Html.DisplayNameFor(model => model.Requirements) </h3>
-        <p>@Html.Raw(Model.Requirements)</p>
+        <p>   @Html.DisplayFor(model => model.Requirements)</p>
         <div class="row">
             <div class="col-md-6">
                 <table class="table">
@@ -73,17 +73,23 @@
                 </table>
             </div>
         </div>
-        <h3>    @Html.DisplayNameFor(model => model.Applicants)</h3>
-        <p>  @Html.DisplayFor(model => model.Applicants) @ViewBag.JobApplication</p>
+
     </div>
+    <br />
     <div>
-        <div class="col-md-12 text-center">
-            <a asp-action="Edit" asp-route-id="@Model?.Id" type="submit" class="btn post-btn">
-                Edit
-            </a>
-            <a class="btn back-btn" asp-action="Index">Back to List</a>
-            <a class="btn back-btn" asp-action="SaveToCollection" asp-route-id="@Model?.Id">Save To Collectiont</a>
-        </div>
+        @if (ViewBag.ShowEditButton)
+        {
+            <div>
+                <h3>  @Html.DisplayNameFor(model => model.Applicants)</h3>
+                @foreach (var applicant in Model.Applicants)
+                {
+                    <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@applicant.Id"><p>@applicant.FirstName @applicant.LastName</p></a>
+                }
+            </div>
+            <a class="btn Edit-btn" type="submit" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        }
+        <a class="btn save-btn" asp-action="SaveToCollection" asp-route-id="@Model?.Id">Save To Collections</a>
+        <a class="btn bb-btn" asp-action="Index">Back to jobs</a>      
     </div>
 
 </form>

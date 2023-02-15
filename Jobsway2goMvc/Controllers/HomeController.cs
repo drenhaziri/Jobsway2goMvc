@@ -30,8 +30,15 @@ namespace Jobsway2goMvc.Controllers
 
             var users = _context.Users.Where(x=>x.Id != userid).ToList();
             ViewBag.Users = users;
+            if (User.Identity.IsAuthenticated)
+            {
 
-            
+            }
+            else
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
+
             return View();
         }
 
