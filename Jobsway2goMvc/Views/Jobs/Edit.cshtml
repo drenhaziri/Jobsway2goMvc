@@ -92,7 +92,7 @@
                     <button type="submit" class="btn btn-primary post-btn">
                         Edit Job
                     </button>
-                    <a class="btn back-btn" asp-action="Index">Back to List</a>
+                    <a class="btn back-btn" asp-action="Details" asp-controller="Jobs" asp-route-id="@Model?.Id">Back to job</a>
                 </div>
             </div>
         </form>
