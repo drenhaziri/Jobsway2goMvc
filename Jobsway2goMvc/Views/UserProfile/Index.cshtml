@@ -6,16 +6,21 @@
 
 
 <div class="container">
-<div class="profile-main">
-    <div class="profile-container">
-        <div class="profile-container-inner">
-            <img src=@Model.ImagePath class="profile-pic mt-2"/>
-            <h1> @Model.FirstName @Model.LastName</h1>
-            <b>@Model.Email</b>
-            <p>@Model.CompanyName</p>
-            <p>@Model.CompanyArea</p>
-            <div class="profile-btn">
-                <a class="btn btn-primary" asp-action="EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
+    <div class="profile-main">
+        <div class="profile-container">
+            <div class="profile-container-inner">
+                <a href="#" onclick="document.getElementById('fileInput').click();">
+                    <img src="@Model.ImagePath" class="profile-pic mt-2" />
+                </a>
+                <form method="post" enctype="multipart/form-data" asp-controller="UserProfile" asp-action="UploadFile">
+                    <div class="form-group">
+                        <input type="file" name="file" id="fileInput" style="display:none" onchange="this.form.submit();" />
+                    </div>
+                </form>
+                <h1> @Model.FirstName @Model.LastName</h1>
+                <b>@Model.Email</b>
+                <p>@Model.CompanyName</p>
+                <p>@Model.CompanyArea</p>
             </div>
         </div>
     </div>
@@ -275,4 +280,12 @@
 <div>
     <a class="nav-link text-dark" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
 </div>
-</div>
+
+<style>
+    .profile-pic {
+        width: 100px; 
+        height: 100px; 
+        float: right;
+        margin-right: 10px;
+    }
+</style>
