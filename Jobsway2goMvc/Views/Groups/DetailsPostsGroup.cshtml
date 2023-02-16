@@ -244,7 +244,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                     <div class="comment-header">
                                         <span class="comment-name">@comment.FirstName @comment.LastName</span>
                                         <span class="comment-date">
-                                        @if (Model.CurrentMembershipList.UserId == comment.UserId)
+                                            @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.UserId == comment.UserId)
                                         {
                                             <div class="dropdown d-flex justify-content-end">
                                                 <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -267,16 +267,18 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                         }
 
 
-
-                        <div class="card-footer">
-                            <form asp-controller="Post" asp-action="AddComment">
-                                <input name="postId" value="@item.Id" hidden />
-                                <input name="text" class="form-control rounded-corner" placeholder="Write a comment...">
-                                <span class="input-group-btn p-l-10">
-                                    <button class="btn btn-primary f-s-12 rounded-corner" type="submit">Comment</button>
-                                </span>
-                            </form>
-                        </div>
+                        @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsMember == true)
+                        {
+                            <div class="card-footer">
+                                <form asp-controller="Post" asp-action="AddComment">
+                                    <input name="postId" value="@item.Id" hidden />
+                                    <input name="text" class="form-control rounded-corner" placeholder="Write a comment...">
+                                    <span class="input-group-btn p-l-10">
+                                        <button class="btn btn-primary f-s-12 rounded-corner" type="submit">Comment</button>
+                                    </span>
+                                </form>
+                            </div>
+                        }
                     </div>
                 }
             }
