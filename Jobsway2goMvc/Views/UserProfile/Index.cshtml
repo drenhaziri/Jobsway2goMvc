@@ -10,7 +10,14 @@
         <div class="profile-container">
             <div class="profile-container-inner">
                 <a href="#" onclick="document.getElementById('fileInput').click();">
-                    <img src="@Model.ImagePath" class="profile-pic mt-2" />
+                    @if (string.IsNullOrEmpty(Model.ImagePath))
+                    {
+                        <img src="~/Images/ProfilePic.jpg" class="profile-pic mt-2" />
+                    }
+                    else
+                    {
+                        <img src="@Model.ImagePath" class="profile-pic mt-2" />
+                    }
                 </a>
                 <form method="post" enctype="multipart/form-data" asp-controller="UserProfile" asp-action="UploadFile">
                     <div class="form-group">
@@ -25,6 +32,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="profile-description">
     <h2>About</h2>
@@ -282,10 +290,22 @@
 </div>
 
 <style>
-    .profile-pic {
-        width: 100px; 
-        height: 100px; 
-        float: right;
-        margin-right: 10px;
+    .container {
+        position: relative;
     }
+
+    .profile-main {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        background-color: white;
+        padding: 20px;
+    }
+
+        .profile-main h1 {
+            margin-top: 50px;
+        }
+
 </style>
