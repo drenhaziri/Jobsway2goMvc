@@ -67,7 +67,7 @@ namespace Jobsway2goMvc.Data
                 .HasOne(p => p.User)
                 .WithMany(g => g.Educations)
                 .HasForeignKey(p => p.UserId);
-            base.OnModelCreating(modelBuilder);
+            
             modelBuilder.Entity<Certification>()
                 .HasOne(p => p.User)
                 .WithMany(g => g.Certifications)
