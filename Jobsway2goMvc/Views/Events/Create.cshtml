@@ -6,6 +6,7 @@
 
 <!-- Post Event  Section Start -->
 <div class="event-post ptb-100">
+    
     <div class="container">
         <form class="event-post-from" asp-action="Create">
             <h2>Create an event</h2>
@@ -38,9 +39,17 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="ImagePath" class="form-label">Image Path</label>
-                        <input asp-for="ImagePath" class="form-control"/>
+
+                        <br />
+                        <div style="display:inline-flex">
+                            <input type="file" asp-for="ImagePath" class="form-control" accept="image/*" />
+                        </div>
+
                     </div>
+                    <br />
+                   
                 </div>
+                
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="eventDate" class="form-label">Event Date</label>
@@ -50,8 +59,8 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="GuestsIds" class="form-label">GuestsIds</label>
-                        <select asp-for="GuestsIds" asp-items="ViewBag.Users" class="form-control guest-multi-select" multiple="multiple"></select>
+                        <label for="EventGuests" class="form-label">GuestsIds</label>
+                        <select asp-for="EventGuests" asp-items="ViewBag.Users" class="form-control guest-multi-select" multiple="multiple"></select>
                     </div>
                 </div>
 

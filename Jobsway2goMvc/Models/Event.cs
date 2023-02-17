@@ -11,6 +11,8 @@ namespace Jobsway2goMvc.Models
         public string CompanyName { get; set; }
         public string ImagePath { get; set; }
         [NotMapped]
+        public IFormFile ImageName { get; set; }
+        [NotMapped]
         public List<string> GuestsIds { get; set; }
         public virtual ICollection<EventGuest> EventGuests { get; set; }
         public EApproval Status { get; set; }

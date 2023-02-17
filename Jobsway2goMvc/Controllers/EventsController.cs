@@ -5,10 +5,12 @@ using Jobsway2goMvc.Hubs;
 using Jobsway2goMvc.Models;
 using Jobsway2goMvc.Models.ViewModel;
 using Jobsway2goMvc.Validators.Events;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Jobsway2goMvc.Controllers
@@ -18,12 +20,13 @@ namespace Jobsway2goMvc.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly NotificationHub _notificationHub;
-
-        public EventsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationHub notificationHub)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public EventsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, NotificationHub notificationHub, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _notificationHub = notificationHub;
+            this._hostEnvironment = hostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -48,9 +51,11 @@ namespace Jobsway2goMvc.Controllers
             return View(@event);
         }
 
-        public IActionResult Create()
+        public IActionResult Create(Event @event)
         {
             var eventModel = new Event();
+            string uniqueFileName = UploadedFile(@event);
+            eventModel.ImagePath = uniqueFileName;
             var selectList = new List<SelectListItem>();
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             foreach (var user in _userManager.Users.Where(u => u.Id != currentUserId))
@@ -61,6 +66,7 @@ namespace Jobsway2goMvc.Controllers
                     Text = user.UserName
                 });
             }
+            
             ViewBag.Users = selectList;
             return View(eventModel);
         }
@@ -113,6 +119,12 @@ namespace Jobsway2goMvc.Controllers
                 _context.Notifications.Add(notification);
                 await _notificationHub.SendNotificationToClient(notification.Message, notification.UserName);
             }
+
+            var userid = _userManager.GetUserId(HttpContext.User);
+            ApplicationUser creator = _userManager.FindByIdAsync(userid).Result;
+            string uniqueFileName = UploadedFile(@event);
+            @event.ImagePath = uniqueFileName;
+
             @event.CreatedBy = creator.Id;
 
             _context.Add(@event);
@@ -123,6 +135,8 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var @event = await _context.Events.FindAsync(id);
+            string uniqueFileName = UploadedFile(@event);
+            @event.ImagePath = uniqueFileName;
             if (@event == null)
             {
                 return NotFound();
@@ -336,5 +350,24 @@ namespace Jobsway2goMvc.Controllers
                                .Where(i => i.EventId == eventId);
             return View(eventGuests);
         }
-    }
+
+
+        private string UploadedFile(Event model)
+            {
+                string uniqueFileName = null;
+
+                if (model.ImagePath != null)
+                {
+                    string uploadsFolder = Path.Combine(_hostEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.ImageName.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        model.ImageName.CopyTo(fileStream);
+                    }
+                }
+                return uniqueFileName;
+            }
+
+}
 }
