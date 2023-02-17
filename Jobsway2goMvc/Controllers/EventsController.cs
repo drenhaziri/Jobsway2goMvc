@@ -51,7 +51,7 @@ namespace Jobsway2goMvc.Controllers
             return View(@event);
         }
 
-        public IActionResult Create()
+        public IActionResult Create(Event @event)
         {
             var eventModel = new Event();
             string uniqueFileName = UploadedFile(@event);
