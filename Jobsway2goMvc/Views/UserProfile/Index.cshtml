@@ -7,27 +7,29 @@
 <div class="container">
     <div class="profile-main">
         <div class="profile-container">
-            <div class="profile-container-inner profile-info">
-                <a href="#" onclick="document.getElementById('fileInput').click();">
-                    @if (string.IsNullOrEmpty(Model.ImagePath))
-                    {
-                        <img src="~/Images/ProfilePic.jpg" class="profile-pic mt-2" />
-                    }
-                    else
-                    {
-                        <img src="@Model.ImagePath" class="profile-pic mt-2" />
-                    }
-                </a>
-                <form method="post" enctype="multipart/form-data" asp-controller="UserProfile" asp-action="UploadFile">
-                    <div class="form-group">
-                        <input type="file" name="file" id="fileInput" style="display:none" onchange="this.form.submit();" />
+            <div class="profile-container-inner">
+                <div class="profile-info">
+                    <a href="#" onclick="document.getElementById('fileInput').click();">
+                        @if (string.IsNullOrEmpty(Model.ImagePath))
+                        {
+                            <img src="~/Images/ProfilePic.jpg" class="profile-pic mt-2" />
+                        }
+                        else
+                        {
+                            <img src="@Model.ImagePath" class="profile-pic mt-2" />
+                        }
+                    </a>
+                    <form method="post" enctype="multipart/form-data" asp-controller="UserProfile" asp-action="UploadFile">
+                        <div class="form-group">
+                            <input type="file" name="file" id="fileInput" style="display:none" onchange="this.form.submit();" />
+                        </div>
+                    </form>
+                    <div class="profile-info-text">
+                        <h1> @Model.FirstName @Model.LastName</h1>
+                        <b>@Model.Email</b>
+                        <p>@Model.CompanyName</p>
+                        <p>@Model.CompanyArea</p>
                     </div>
-                </form>
-                <div class="profile-info-text">
-                    <h1> @Model.FirstName @Model.LastName</h1>
-                    <b>@Model.Email</b>
-                    <p>@Model.CompanyName</p>
-                    <p>@Model.CompanyArea</p>
                 </div>
             </div>
         </div>
@@ -298,13 +300,14 @@
         margin-top: 80px;
     }
 
-    .profile-info {
+    .profile-container-inner {
         display: flex;
-        flex-direction: row;
+        align-items: center;
     }
 
-    .profile-container-inner {
-        margin-right: auto;
+    .profile-info {
+        display: flex;
+        align-items: center;
     }
 
     .profile-pic {
