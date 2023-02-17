@@ -159,8 +159,6 @@ namespace Jobsway2goMvc.Controllers
         {
             if (roleName != null)
             {
-                //var role = new IdentityRole(roleName);
-                //var result = await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
                 await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
             }
             return RedirectToAction("Index");
@@ -200,8 +198,7 @@ namespace Jobsway2goMvc.Controllers
             else
             {
                 role.Name = model.Name;
-
-                // Update the Role using UpdateAsync
+                
                 var result = await _roleManager.UpdateAsync(role);
 
                 if (result.Succeeded)
@@ -218,27 +215,10 @@ namespace Jobsway2goMvc.Controllers
             }
         }
 
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null || _roleManager.Roles == null)
-            {
-                return NotFound();
-            }
 
-            var role = await _roleManager.Roles
-                .FirstOrDefaultAsync(r => r.Id == id);
-            if (role == null)
-            {
-                return NotFound();
-            }
-
-            return View(role);
-        }
-
-
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed([FromRoute] string id)
         {
             if (_roleManager.Roles == null)
             {
@@ -253,11 +233,11 @@ namespace Jobsway2goMvc.Controllers
             if (role != null && !user.Any())
             {
                 await _roleManager.DeleteAsync(role);
-                return RedirectToAction(nameof(Index));
+                return Ok();
             }
 
             ViewBag.Delete = "Cannot delete role beacuse there are users assigned to it";
-            return View();
+            return BadRequest();
         }
 
     }

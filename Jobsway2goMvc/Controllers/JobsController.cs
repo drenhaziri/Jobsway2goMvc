@@ -10,6 +10,12 @@ using Jobsway2goMvc.Validators.Jobs;
 using FluentValidation.Results;
 using Jobsway2goMvc.Models.ViewModel;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Drawing.Printing;
+using Jobsway2goMvc.Extensions;
+using X.PagedList;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -24,11 +30,14 @@ namespace Jobsway2goMvc.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index(int? page, int itemsPerPage = 6, int pageIndex = 1)
         {
-            var result = await _context.Jobs.Include(j => j.Category).ToListAsync();
-            return View(result);
+            //Showing 3 jobs per page
+            var jobs = _context.Jobs.ToPagedList(page ?? pageIndex, itemsPerPage);
+
+            return View(jobs);
         }
+
         private ApplicationUser GetApplicationUser(ClaimsPrincipal principal)
         {
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -37,6 +46,9 @@ namespace Jobsway2goMvc.Controllers
 
             return user;
         }
+
+
+
         [HttpGet]
         public async Task<IActionResult> ApplyJob(int? id)
         {
@@ -45,41 +57,61 @@ namespace Jobsway2goMvc.Controllers
                 return NotFound();
             }
             var job = await _context.Jobs
-                 .Include(j => j.Category)
-                 .Include(j => j.Applicants)
-                 .FirstOrDefaultAsync(m => m.Id == id);                 
+                     .Include(j => j.Category)
+                     .Include(j => j.Applicants)
+                     .FirstOrDefaultAsync(m => m.Id == id);
             if (job == null)
             {
                 return NotFound();
             }
-
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            if (User.IsInRole("Business"))
+            {
+                return NotFound("You can not apply");
+            }
+            ViewBag.HasAlreadyApplied = job.Applicants.Any(a => a.Id == user.Id);
             return View(job);
         }
 
-        [HttpPost, ActionName("ApplyJob")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ApplyJobConfirmed(int id)
+        [HttpPost]
+        public async Task<IActionResult> ApplyJob(int id)
         {
+            if (User.IsInRole("Business"))
+            {
+                return NotFound("You can not apply");
+            }
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
             var userAccessor = _httpContextAccessor.HttpContext.User;
             var user = GetApplicationUser(userAccessor);
+            job.Applicants.Add(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ApplyJob", new { id = id });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UnApplyJob(int id)
+        {
+            if (User.IsInRole("Business"))
+            {
+                return NotFound("You can not apply");
+            }
             var job = await _context.Jobs
-                .Include(j => j.Category)
                 .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (job != null && user != null )
+            if (job == null)
             {
-                bool exists = job.Applicants.Any(x => x.Id == user.Id);
-                if (exists)
-                {
-                    ViewBag.JobApplicationExists = "Job Application Exists";
-                    return View(job);
-                }
-                job.Applicants.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            return View(job);
+            var userAccessor = _httpContextAccessor.HttpContext.User;
+            var user = GetApplicationUser(userAccessor);
+            job.Applicants.Remove(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ApplyJob", new { id = id });
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -87,11 +119,12 @@ namespace Jobsway2goMvc.Controllers
             if (id == null || _context.Jobs == null)
             {
                 return NotFound();
-            }        
+            }
             var job = await _context.Jobs
                 .Include(j => j.Category)
                 .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            ViewBag.ShowEditButton = User.IsInRole("Business");
             if (job.Applicants == null || !job.Applicants.Any())
             {
                 ViewBag.JobApplication = "There are no applicants for this job";
@@ -110,6 +143,7 @@ namespace Jobsway2goMvc.Controllers
             return View(job);
         }
 
+
         public IActionResult Create()
         {
             var categories = _context.JobCategories.ToList();
@@ -123,14 +157,14 @@ namespace Jobsway2goMvc.Controllers
         {
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
-            
+
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
-                
+
                 var categories = _context.JobCategories.ToList();
                 ViewBag.Categories = new SelectList(categories, "Id", "Name");
 
@@ -167,7 +201,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
-            
+
             var validator = new JobValidator();
             ValidationResult result = validator.Validate(job);
             ModelState.Remove("Collections");
@@ -233,7 +267,7 @@ namespace Jobsway2goMvc.Controllers
             {
                 _context.Jobs.Remove(job);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -281,14 +315,14 @@ namespace Jobsway2goMvc.Controllers
                 }
                 collectionRef.Jobs.Add(jobRef);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Collections");
+                return RedirectToAction(nameof(Index));
             }
             return RedirectToAction("Index", "Jobs");
         }
 
         private bool JobExists(int id)
         {
-          return _context.Jobs.Any(e => e.Id == id);
+            return _context.Jobs.Any(e => e.Id == id);
         }
     }
 }

@@ -23,8 +23,7 @@
     <br />
     <table class="table table-hover table-bordered">
         <thead>
-            <tr class="table-dark">
-                <th>Id</th>
+            <tr class="table-dark">             
                 <th>Role Name</th>
                 <th>Options</th>
             </tr>
@@ -33,12 +32,13 @@
             @foreach (var role in Model)
             {
                 <tr>
-                    <td>@role.Id</td>
                     <td>@role.Name</td>
                     <td> 
                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@role.Id">Edit </a> 
-                      <a class="btn btn-info" asp-controller="Role" asp-action="Details" asp-route-id="@role.Id">Details </a> 
-                        <a class="btn btn-danger" asp-controller="Role" asp-action="Delete" asp-route-id="@role.Id" > Delete </a>
+                        <a class="btn btn-info" asp-controller="Role" asp-action="Details" asp-route-id="@role.Id">Details </a>
+                        <a id="deleteAction-@role.Id" class="btn btn-danger" data-name="@role.Name"
+                                           data-delete-action-url="/Role/DeleteConfirmed/@role.Id"
+                                           data-reload-url="@Url.Action("Index","Role")">Delete</a>
                     </td>
                 </tr>
             }

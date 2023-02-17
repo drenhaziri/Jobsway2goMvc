@@ -130,26 +130,9 @@ namespace Jobsway2goMvc.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.JobCategories == null)
-            {
-                return NotFound();
-            }
-
-            var jobCategory = await _context.JobCategories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (jobCategory == null)
-            {
-                return NotFound();
-            }
-
-            return View(jobCategory);
-        }
-
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromRoute] int id)
         {
             if(_context.Jobs == null)
             {
@@ -160,15 +143,14 @@ namespace Jobsway2goMvc.Controllers
  
             if (jobs.Count() > 0)
             {
-                ViewBag.Delete = "Cannot delete Job Category because it has jobs assigned to it.";
-                return View();
+                return BadRequest("Cannot delete Job Category because it has jobs assigned to it.");
             }
             else
             {
                 var category = _context.JobCategories.Single(x => x.Id == id);
                 _context.JobCategories.Remove(category);
                 _context.SaveChanges();
-                return RedirectToAction("Index");
+                return Ok();
             }
         }
         private bool JobCategoryExists(int id)

@@ -16,6 +16,8 @@ using Group = Jobsway2goMvc.Models.Group;
 using System.Data;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Jobsway2goMvc.Enums;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using System.Security.Claims;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -74,9 +76,11 @@ namespace Jobsway2goMvc.Controllers
             };
 
             ViewBag.Id = id;
+            var banMessage = TempData["BanMessage"] as string;
+            ViewBag.BanMessage = banMessage;
 
             return View(viewModel);
-        }
+            }
 
         public IActionResult currentMembership(int? id)
         {
@@ -101,6 +105,7 @@ namespace Jobsway2goMvc.Controllers
 
             var @group = await _context.Groups
                 .Include(g => g.Posts)
+                .ThenInclude(c=>c.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (@group == null)
@@ -112,10 +117,12 @@ namespace Jobsway2goMvc.Controllers
 
             var viewModel = new GroupDetailsPostsViewModel
             {
+                Id = group.Id,
                 Posts = group.Posts,
                 CreatedBy = group.CreatedBy,
                 IsPublic = group.IsPublic,
                 Name = group.Name,
+                Comments = group.Posts.SelectMany(p => p.Comments).ToList(),
                 Description= group.Description,
                 CurrentMembershipList = (GroupMembership)membership.Model
             };
@@ -234,7 +241,8 @@ namespace Jobsway2goMvc.Controllers
                     IsMember = true,
                     IsAdmin = false,
                     IsModerator = false,
-                    IsBanned = false
+                    IsBanned = false,
+                    IsOwner=false
                 };
 
                 _context.GroupMemberships.Add(members);
@@ -487,7 +495,7 @@ namespace Jobsway2goMvc.Controllers
                 var newGroup = new Group
                 {
                     Name = @group.Name,
-                    CreatedBy = owner.UserName,
+                    CreatedBy = owner.Id,
                     IsPublic = @group.IsPublic,
                     Description = @group.Description
                 };
@@ -503,7 +511,8 @@ namespace Jobsway2goMvc.Controllers
                     IsModerator = true,
                     IsMember = true,
                     IsAdmin = true,
-                    IsBanned = false
+                    IsBanned = false,
+                    IsOwner=true
                 };
                 _context.Add(membership);
                 await _context.SaveChangesAsync();
@@ -566,23 +575,6 @@ namespace Jobsway2goMvc.Controllers
             return RedirectToAction("Edit", "Post", new { id = id });
         }
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Groups == null)
-            {
-                return NotFound();
-            }
-
-            var @group = await _context.Groups
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (@group == null)
-            {
-                return NotFound();
-            }
-
-            return View(@group);
-        }
-
         [HttpPost]
         public async Task<IActionResult> UpdatePrivacy([FromRoute] int id, [FromBody] bool isPublic)
         {
@@ -612,9 +604,9 @@ namespace Jobsway2goMvc.Controllers
             return Ok(@group);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([FromRoute] int id)
         {
             if (_context.Groups == null || _context.Posts == null)
             {
@@ -631,7 +623,7 @@ namespace Jobsway2goMvc.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
 
         public IActionResult DeletePost(int id)
@@ -809,12 +801,17 @@ namespace Jobsway2goMvc.Controllers
             {
                 return NotFound();
             }
+            var membersCount = _context.GroupMemberships.Where(g=>g.GroupId == groupId && g.IsAdmin==true).Count(); 
+            if(membersCount < 1)
+            {
+                return NotFound();
+            }
             _context.GroupMemberships.Remove(membership);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Ban(string userId, int groupId)
+         public async Task<IActionResult> Ban(string userId, int groupId)
         {
             try
             {
@@ -830,7 +827,7 @@ namespace Jobsway2goMvc.Controllers
                 }
 
                 var membership = await _context.GroupMemberships
-              .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id);
+                  .FirstOrDefaultAsync(m => m.GroupId == groupId && m.UserId == user.Id);
 
                 if (membership == null)
                 {
@@ -844,9 +841,19 @@ namespace Jobsway2goMvc.Controllers
 
                 if (userExist)
                 {
-                    ViewBag.AdminExist = "User Already Banned";
+                    ViewBag.AdminExistAdminExist = "User Already Banned";
                     return RedirectToAction("Details", new { id = groupId });
                 }
+
+                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var groupOwnership = _context.GroupMemberships
+                    .FirstOrDefault(m => m.GroupId == groupId && m.UserId == currentUserId);
+                if (groupOwnership != null && groupOwnership.IsOwner.HasValue && groupOwnership.IsOwner.Value && userId == currentUserId)
+                {
+                    TempData["BanMessage"] = "You can not ban your self";
+                    return RedirectToAction("Details", new { id = groupId });
+                }
+
 
                 if (ModelState.IsValid)
                 {

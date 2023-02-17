@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
-   
+
 }
 <head>
     <meta charset="UTF-8">
@@ -16,73 +16,80 @@
 <div class="details-title">
     <h3>Job Details</h3>
 </div>
-    <hr />
-    <form class="details-form">
+<hr />
+<form class="details-form">
     <div class="details-text">
-    <h3> @Html.DisplayNameFor(model => model.CompanyName) </h3>
-    <p>@Html.DisplayFor(model => model.CompanyName)</p>
+        <h3> @Html.DisplayNameFor(model => model.CompanyName) </h3>
+        <p>@Html.DisplayFor(model => model.CompanyName)</p>
 
-    <h3>  @Html.DisplayNameFor(model => model.Description) </h3>
-    <p> @Html.DisplayFor(model => model.Description)</p>
+        <h3>  @Html.DisplayNameFor(model => model.Description) </h3>
+        <p> @Html.DisplayFor(model => model.Description)</p>
 
-    <h3>    @Html.DisplayNameFor(model => model.Requirements) </h3>
-    <p>   @Html.DisplayFor(model => model.Requirements)</p>
-    <div class="row">
-        <div class="col-md-6">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td><span> @Html.DisplayNameFor(model => model.Schedule)</span></td>
-                        <td>  @Html.DisplayFor(model => model.Schedule)</td>
-                    </tr>
-                    <tr>
-                        <td><span> @Html.DisplayNameFor(model => model.Location)</span></td>
-                        <td> @Html.DisplayFor(model => model.Location)</td>
-                    </tr>
-                    <tr>
-                        <td><span> @Html.DisplayNameFor(model => model.Category)</span></td>
-                        <td> @Html.DisplayFor(model => model.Category.Name)</td>
-                    </tr>
-                    <tr>
-                        <td><span> @Html.DisplayNameFor(model => model.OpenSpots)</span></td>
-                        <td>@Html.DisplayFor(model => model.OpenSpots)</td>
-                    </tr>
-                </tbody>
-            </table>
+        <h3>    @Html.DisplayNameFor(model => model.Requirements) </h3>
+        <p>   @Html.Raw(Model.Requirements)</p>
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><span> @Html.DisplayNameFor(model => model.Schedule)</span></td>
+                            <td>  @Html.DisplayFor(model => model.Schedule)</td>
+                        </tr>
+                        <tr>
+                            <td><span> @Html.DisplayNameFor(model => model.Location)</span></td>
+                            <td> @Html.DisplayFor(model => model.Location)</td>
+                        </tr>
+                        <tr>
+                            <td><span> @Html.DisplayNameFor(model => model.Category)</span></td>
+                            <td> @Html.DisplayFor(model => model.Category.Name)</td>
+                        </tr>
+                        <tr>
+                            <td><span> @Html.DisplayNameFor(model => model.OpenSpots)</span></td>
+                            <td>@Html.DisplayFor(model => model.OpenSpots)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><span> @Html.DisplayNameFor(model => model.DateFrom)</span></td>
+                            <td>  @Html.DisplayFor(model => model.DateFrom)</td>
+                        </tr>
+                        <tr>
+                            <td><span>  @Html.DisplayNameFor(model => model.DateTo)</span></td>
+                            <td> @Html.DisplayFor(model => model.DateTo)</td>
+                        </tr>
+                        <tr>
+                            <td><span> @Html.DisplayNameFor(model => model.MinSalary)</span></td>
+                            <td> @Html.DisplayFor(model => model.MinSalary)</td>
+                        </tr>
+                        <tr>
+                            <td><span>@Html.DisplayNameFor(model => model.MaxSalary)</span></td>
+                            <td>@Html.DisplayFor(model => model.MaxSalary)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-md-6">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td><span> @Html.DisplayNameFor(model => model.DateFrom)</span></td>
-                        <td>  @Html.DisplayFor(model => model.DateFrom)</td>
-                    </tr>
-                    <tr>
-                        <td><span>  @Html.DisplayNameFor(model => model.DateTo)</span></td>
-                        <td> @Html.DisplayFor(model => model.DateTo)</td>
-                    </tr>
-                    <tr>
-                        <td><span> @Html.DisplayNameFor(model => model.MinSalary)</span></td>
-                        <td> @Html.DisplayFor(model => model.MinSalary)</td>
-                    </tr>
-                    <tr>
-                        <td><span>@Html.DisplayNameFor(model => model.MaxSalary)</span></td>
-                        <td>@Html.DisplayFor(model => model.MaxSalary)</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+
     </div>
-    <h3>    @Html.DisplayNameFor(model => model.Applicants)</h3>
-        <p>  @Html.DisplayFor(model => model.Applicants) @ViewBag.JobApplication</p>
+    <br />
+    <div>
+        @if (ViewBag.ShowEditButton)
+        {
+            <div>
+                <h3>  @Html.DisplayNameFor(model => model.Applicants)</h3>
+                @foreach (var applicant in Model.Applicants)
+                {
+                    <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@applicant.Id"><p>@applicant.FirstName @applicant.LastName</p></a>
+                }
+            </div>
+            <a class="btn Edit-btn" type="submit" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        }
+        <a class="btn save-btn" asp-action="SaveToCollection" asp-route-id="@Model?.Id">Save To Collections</a>
+        <a class="btn bb-btn" asp-action="Index">Back to jobs</a>      
     </div>
-<div>
-    <div class="col-md-12 text-center">
-        <a asp-action="Edit" asp-route-id="@Model?.Id" type="submit" class="btn post-btn">
-            Edit
-        </a>
-        <a class="btn back-btn" asp-action="Index">Back to List</a>
-    </div>
-</div>
 
 </form>

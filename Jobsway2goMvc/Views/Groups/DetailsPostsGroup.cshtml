@@ -8,23 +8,72 @@
 }
 
 <style>
-    body {
-        background-color: #eeeeee;
+        body {
+            background-color: #eeeeee;
+        }
+
+        .h7 {
+            font-size: 0.8rem;
+        }
+
+        .gedf-wrapper {
+            margin-top: 0.97rem;
+        }
+
+        /**Reset Bootstrap*/
+        .dropdown-toggle::after {
+            content: none;
+            display: none;
+        }
+        .comment {
+        display: flex;
+    align-items: flex-start;
+    margin: 10px 0;
     }
 
-    .h7 {
-        font-size: 0.8rem;
+    .comment-profile-pic {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        margin-right: 10px;
     }
 
-    .gedf-wrapper {
-        margin-top: 0.97rem;
+    .comment-content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
 
-    /**Reset Bootstrap*/
-    .dropdown-toggle::after {
-        content: none;
-        display: none;
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
     }
+
+    .comment-name {
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .comment-date {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .comment-text {
+        background-color: #f2f3f5;
+    padding: 8px 10px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    width:auto;
+    height: auto;
+    overflow: hidden;
+    }
+
 </style>
 @if (Model.CurrentMembershipList == null)
 {
@@ -51,10 +100,17 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 
 <div>
     <div class="d-flex justify-content-start">
-        @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
+        @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsOwner == true)
+        {
+            <a id="deleteAction" class="btn btn-danger" data-name="@Model.Name"
+               data-delete-action-url="/Groups/DeleteConfirmed/@Model.Id"
+               data-reload-url="@Url.Action("Index","Groups")">Delete Group</a>
+        }
+        else if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true))
         {
             <a asp-action="Leave" asp-route-groupId="@ViewBag.GroupId" class="btn btn-secondary">Leave Group</a>
         }
+
         @if (Model.CurrentMembershipList == null || Model.CurrentMembershipList.Status == Approval.Rejected)
         {
             <a asp-action="Join" asp-controller="Groups" asp-route-id="@ViewBag.GroupId" class="btn btn-secondary">Join Group</a>
@@ -65,6 +121,22 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
         }
 
     </div>
+    @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.UserId == Model.CreatedBy
+    && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
+    {
+        <div class="d-flex flex-column mt-4">
+            <div class="group-access-label">
+                Is Public
+            </div>
+            <div class="group-access-switch mt-2">
+                <label class="switch switch-handle" data-id="@Model.Id">
+                    @Html.CheckBoxFor(model => model.IsPublic)
+                    <div class="slider round">
+                    </div>
+                </label>
+            </div>
+        </div>
+    }
     <div class="d-flex justify-content-end">
         @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsMember == true))
         {
@@ -93,7 +165,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
             @foreach (var item in Model.Posts)
             {
                 <!-- Post /////-->
-                @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true && item.Status == Approval.Accepted))
+                @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true && item.Status == Approval.Accepted) || (Model.IsPublic == true && item.Status == Approval.Accepted))
                 {
                     <div class="card gedf-card">
                         <div class="card-header">
@@ -103,24 +175,24 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                         @if (item.ImagePath == null)
                                         {
                                             <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
-                                            <img style=" border-radius: 50%;" width="45" height="45" src="~/Images/user.jpg" alt="">
+                                                <img style=" border-radius: 50%;" width="45" height="45" src="~/Images/user.jpg" alt="">
                                             </a>
                                         }
                                         else
                                         {
                                             <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.CreatedById">
-                                            <img style="border-radius: 50%;" width="45" height="45" src="@item.ImagePath" alt="">
+                                                <img style="border-radius: 50%;" width="45" height="45" src="@item.ImagePath" alt="">
                                             </a>
                                         }
                                     </div>
-                                    <br/>
+                                    <br />
                                     <div class="ml-4">
                                         <div class="h5 m-0">@item.FirstName @item.LastName</div>
                                         <div class="h7 text-muted">@item.UserName</div>
                                     </div>
                                 </div>
                                 <div>
-                                    @if (Model.CurrentMembershipList.UserId == item.CreatedById || Model.CurrentMembershipList.IsAdmin)
+                                    @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.UserId == item.CreatedById || Model.CurrentMembershipList.IsAdmin))
                                     {
                                         <div class="dropdown">
                                             <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -146,18 +218,69 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                 @item.Description
                             </p>
                         </div>
-                        <div class="card-footer">
-                            <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-                            <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
-                            <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
-                        </div>
-                        <div class="card-footer">
-                            <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
-                            <span class="input-group-btn p-l-10">
-                                <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
-                            </span>
+                        @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsMember == true)
+                        {
+                            <div class="card-footer">
+                                <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
+                                <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
+                                <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
+                            </div>
+                        }
 
-                        </div>
+                        @foreach (var comment in item.Comments)
+                        {
+                            <div class="card-footer comment">
+                                @if (comment.UserImage == null)
+                                {
+                                    <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@comment.UserId">
+                                    <img class="comment-profile-pic" src="~/Images/user.jpg" alt="">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@comment.UserId">
+                                    <img class="comment-profile-pic" src="@comment.UserImage" alt="">
+                                    </a>
+                                }
+                                <div class="comment-content">
+                                    <div class="comment-header">
+                                        <span class="comment-name">@comment.FirstName @comment.LastName</span>
+                                        <span class="comment-date">
+                                            @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.UserId == comment.UserId)
+                                        {
+                                            <div class="dropdown d-flex justify-content-end">
+                                                <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-ellipsis-h"></i>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id">Edit comment</a></li>
+                                                    <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="Delete" asp-route-id="@item.Id">Delete comment</a></li>
+                                                </ul>
+                                            </div>
+                                        }
+                                            @comment.DateTimeCreated
+                                        </span>
+                                    </div>
+                                    <div class="comment-text">
+                                        <p>@comment.Text</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+
+                        @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsMember == true)
+                        {
+                            <div class="card-footer">
+                                <form asp-controller="Post" asp-action="AddComment">
+                                    <input name="postId" value="@item.Id" hidden />
+                                    <input name="text" class="form-control rounded-corner" placeholder="Write a comment...">
+                                    <span class="input-group-btn p-l-10">
+                                        <button class="btn btn-primary f-s-12 rounded-corner" type="submit">Comment</button>
+                                    </span>
+                                </form>
+                            </div>
+                        }
                     </div>
                 }
             }
@@ -169,3 +292,10 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 <div>
     <a class="btn btn-outline-light" style="color:black;" asp-action="Index">Back to List</a>
 </div>
+
+
+@section Scripts
+    {
+    <link rel="stylesheet" href="~/css/group.css" />
+    <script type="text/javascript" src="~/js/group.js"></script>
+}

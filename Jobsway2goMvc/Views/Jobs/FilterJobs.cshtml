@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Job>
+@using X.PagedList;
+@using X.PagedList.Mvc.Core;
+@{
+    ViewData["Title"] = "FilterByCity";
+}
+<div class="container">
+    <div class="container">
+        <h1 class="text-center mb-5" data-wow-delay="0.1s">Job Listing</h1>
+        <div class="d-flex align-items-center">
+            <h3 class="font-weight-bold">Showing @Model.Count() Jobs </h3>
+            <a asp-controller="Jobs" asp-action="Create" class="mx-3"><i class="fa fa-plus create-button-size" title="Create a Job"></i></a>
+        </div>
+
+        <br />
+        <form class="form-group" asp-controller="Jobs" asp-action="FilterJobs" method="get">
+            <div class="form-row d-flex">
+
+                <div class="form-group col-md-2">
+                    <label>Select Location</label>
+                    <select class="form-control" name="location" asp-items="Html.GetEnumSelectList<JobLocation>()"></select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Select Schedule </label>
+                    <select class="form-control" name="position" asp-items="Html.GetEnumSelectList<JobPosition>()"></select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Select Site</label>
+                    <select class="form-control" name="site" asp-items="Html.GetEnumSelectList<JobSite>()"></select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Select min salary</label>
+                    <select class="form-control" name="minSalary">
+                        <option>0</option>
+                        <option>200</option>
+                        <option>400</option>
+                        <option>600</option>
+                        <option>800</option>
+                        <option>1000</option>
+                        <option>1200</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Select max salary</label>
+                    <select class="form-control" name="maxSalary">
+                        <option>0</option>
+                        <option>200</option>
+                        <option>400</option>
+                        <option>600</option>
+                        <option>800</option>
+                        <option>1000</option>
+                        <option>1200</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Filter Jobs</button>
+        </form>
+        <br/>
+
+        <div class="row d-flex flex-wrap">
+            @foreach (var item in Model)
+            {
+                <partial name="_JobsListPartial" model="item" />
+            }
+        </div>
+    </div>
+    <br />
+    <div class="d-flex justify-content-center">
+        @Html.PagedListPager((IPagedList) Model, page => Url.Action("FilterJobs", new {page}),
+        new X.PagedList.Web.Common.PagedListRenderOptions {
+        LiElementClasses = new string[] {"page-item"},
+        PageClasses = new string[] { "page-link" }
+        })
+    </div>
+</div>
+
+
+
+
+

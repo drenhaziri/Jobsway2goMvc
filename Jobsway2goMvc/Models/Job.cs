@@ -1,11 +1,14 @@
-﻿namespace Jobsway2goMvc.Models
+﻿using Jobsway2goMvc.Enums;
+
+namespace Jobsway2goMvc.Models
 {
     public class Job
     {
         public int Id { get; set; }
         public string CompanyName { get; set; }
-        public string Location { get; set; }
-        public string Schedule { get; set; }
+        public JobLocation Location { get; set; } = JobLocation.Prishtinë;
+        public JobSite Site { get; set; }=JobSite.On_Site;
+        public JobPosition Schedule { get; set; } = JobPosition.Full_Time;
         public string Description { get; set; }
         public int OpenSpots { get; set; }
         public string Requirements { get; set; }

@@ -1,20 +1,10 @@
 ﻿@model Jobsway2goMvc.Models.ViewModel.UserProfileViewModel
+@using System.Security.Claims;
 
 @{
     ViewData["Title"] = "Profile";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Profile"] - Jobsway2goMvc</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Jobsway2goMvc.styles.css" asp-append-version="true" />
-</head>
-<body>
     <div class="container">
         <div class="profile-main">
             <div class="profile-container">
@@ -25,11 +15,19 @@
                     <p>@Model.CompanyName</p>
                     <p>@Model.CompanyArea</p>
                     <div class="profile-btn">
+                        @if(Model.CurrentConnectionList == null)
+                        {
                         <form asp-controller="UserConnection" asp-action="RequestConnection">
                             <input asp-for="@Model.Id"  hidden/>
-                            <button class="btn btn-primary">Connect</button>
-                         </form>
-                     
+                               <button class="btn btn-primary">Connect</button> 
+                        </form>
+                        }else if(Model.CurrentConnectionList !=null && Model.CurrentConnectionList.Status == ConnectionStatus.Pending ){
+                                <button class="btn btn-secondary">Pending</button>
+                         }
+                         else if(Model.CurrentConnectionList != null && Model.CurrentConnectionList.Status == ConnectionStatus.Accepted)
+                         {
+                                <button class="btn btn-secondary">Connected</button>
+                         }
                     </div>
                 </div>
             </div>
@@ -65,13 +63,14 @@
 
         <div class="profile-sidebar">
         </div>
-        <div>
+    @{
+        string currentUserId = User.Identity.IsAuthenticated ? User.FindFirst(ClaimTypes.NameIdentifier).Value : null;
+    }
+    @if (currentUserId != null && currentUserId == Model.Id)
+    {
+         <div>
             <a class="nav-link text-dark" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
         </div>
-    </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-</body>
-</html>
+    }
+</div>
+ 
