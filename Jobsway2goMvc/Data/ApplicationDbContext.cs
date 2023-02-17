@@ -59,10 +59,12 @@ namespace Jobsway2goMvc.Data
                 .HasMany(p => p.Jobs)
                 .WithMany(p => p.Collections)
                 .UsingEntity(j => j.ToTable("JobCollections"));
+
             modelBuilder.Entity<Experience>()
                 .HasOne(p => p.User)
                 .WithMany(g => g.Experiences)
                 .HasForeignKey(p => p.UserId);
+
             modelBuilder.Entity<Education>()
                 .HasOne(p => p.User)
                 .WithMany(g => g.Educations)
