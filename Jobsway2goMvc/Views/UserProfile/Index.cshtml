@@ -4,11 +4,10 @@
     ViewData["Title"] = "Profile";
 }
 
-
 <div class="container">
     <div class="profile-main">
         <div class="profile-container">
-            <div class="profile-container-inner">
+            <div class="profile-container-inner profile-info">
                 <a href="#" onclick="document.getElementById('fileInput').click();">
                     @if (string.IsNullOrEmpty(Model.ImagePath))
                     {
@@ -24,15 +23,16 @@
                         <input type="file" name="file" id="fileInput" style="display:none" onchange="this.form.submit();" />
                     </div>
                 </form>
-                <h1> @Model.FirstName @Model.LastName</h1>
-                <b>@Model.Email</b>
-                <p>@Model.CompanyName</p>
-                <p>@Model.CompanyArea</p>
+                <div class="profile-info-text">
+                    <h1> @Model.FirstName @Model.LastName</h1>
+                    <b>@Model.Email</b>
+                    <p>@Model.CompanyName</p>
+                    <p>@Model.CompanyArea</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 
 <div class="profile-description">
     <h2>About</h2>
@@ -291,21 +291,41 @@
 
 <style>
     .container {
-        position: relative;
+        margin-right: 20px;
     }
 
     .profile-main {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1;
-        background-color: white;
-        padding: 20px;
+        margin-top: 80px;
     }
 
-        .profile-main h1 {
-            margin-top: 50px;
-        }
+    .profile-info {
+        display: flex;
+        flex-direction: row;
+    }
 
+    .profile-container-inner {
+        margin-right: auto;
+    }
+
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-right: 20px;
+    }
+
+    h1 {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    b {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
 </style>
