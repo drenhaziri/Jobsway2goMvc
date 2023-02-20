@@ -5,6 +5,7 @@ using static System.Collections.Specialized.BitVector32;
 using System.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Jobsway2goMvc.Models.ViewModel;
+using Microsoft.AspNetCore.Identity;
 
 namespace Jobsway2goMvc.Data
 {
@@ -87,6 +88,12 @@ namespace Jobsway2goMvc.Data
                 .HasOne(eg => eg.ApplicationUser)
                 .WithMany(u => u.EventGuests)
                 .HasForeignKey(eg => eg.GuestId);
+
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole() { Name = "User" },
+                new IdentityRole() { Name = "Business" },
+                new IdentityRole() { Name = "Admin" }
+            );
 
             base.OnModelCreating(modelBuilder);
         }
