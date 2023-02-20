@@ -49,7 +49,10 @@ namespace Jobsway2goMvc.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFile([FromForm(Name = "file")] IFormFile file)
         {
-            if (file.Length > 0)
+            var userid = _userManager.GetUserId(HttpContext.User);
+            var user = await _userManager.FindByIdAsync(userid);
+
+            if (file != null && file.Length > 0)
             {
                 var filePath = Path.Combine(
                     Directory.GetCurrentDirectory(), "wwwroot/images",
@@ -59,13 +62,18 @@ namespace Jobsway2goMvc.Controllers
                     await file.CopyToAsync(stream);
                 }
 
-                var userid = _userManager.GetUserId(HttpContext.User);
-                var user = await _userManager.FindByIdAsync(userid);
                 user.ImagePath = "/images/" + file.FileName;
                 await _userManager.UpdateAsync(user);
             }
+            else
+            {
+                user.ImagePath = "/Images/ProfilePic.jpg"; // or the path to your default profile picture
+                await _userManager.UpdateAsync(user);
+            }
+
             return RedirectToAction("Index");
         }
+
         public IActionResult EditProfile()
         {
             return View();

@@ -10,13 +10,13 @@
             <div class="profile-container-inner">
                 <div class="profile-info">
                     <a href="#" onclick="document.getElementById('fileInput').click();">
-                        @if (string.IsNullOrEmpty(Model.ImagePath))
+                        @if (string.IsNullOrEmpty(Model?.ImagePath))
                         {
-                            <img src="~/Images/ProfilePic.jpg" class="profile-pic mt-2" />
+                            <img src="~/Images/ProfilePic.jpg" alt="Profile picture" class="profile-pic mt-2" />
                         }
                         else
                         {
-                            <img src="@Model.ImagePath" class="profile-pic mt-2" />
+                            <img src="@Model.ImagePath" alt="Profile picture" class="profile-pic mt-2" />
                         }
                     </a>
                     <form method="post" enctype="multipart/form-data" asp-controller="UserProfile" asp-action="UploadFile">
@@ -25,10 +25,14 @@
                         </div>
                     </form>
                     <div class="profile-info-text">
-                        <h1> @Model.FirstName @Model.LastName</h1>
+                        <h1>@Model.FirstName @Model.LastName</h1>
                         <b>@Model.Email</b>
                         <p>@Model.CompanyName</p>
                         <p>@Model.CompanyArea</p>
+                        @if (!string.IsNullOrEmpty(Model?.ImagePath))
+                        {
+                            <button class="btn btn-danger" onclick="removeProfilePic()">Remove Profile Picture</button>
+                        }
                     </div>
                 </div>
             </div>
@@ -328,3 +332,18 @@
         margin-bottom: 10px;
     }
 </style>
+<script>
+    function removeProfilePic() {
+    $.ajax({
+        type: "POST",
+        url: "/UserProfile/UploadFile",
+        data: { imagePath: null },
+        success: function () {
+            location.reload();
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+        }
+    });
+}
+</script>
