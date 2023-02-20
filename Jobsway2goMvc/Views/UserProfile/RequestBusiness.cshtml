@@ -4,10 +4,11 @@
     ViewData["Title"] = "RequestBusiness";
 }
 
-<div class="ptb-100">
+<div class="job-post ptb-100">
     <div class="container">
-        <form class="" asp-action="RequestBusiness">
+        <form class="job-post-from" asp-action="RequestBusiness">
             <h2>Request Business Account</h2>
+            <h4>Fill out these additional properties in order to submit the request</h4>
             <div class="row">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="col-md-6">
@@ -25,7 +26,7 @@
                 </div>
 
                 <div class="col-md-12 text-center">
-                    <button type="submit" class="btn btn-outline-primary">
+                    <button type="submit" class="btn btn-outline-primary mt-1">
                         Request Business Account
                     </button>
                     <a class="btn back-btn" asp-controller="UserProfile" asp-action="Index" >Back to job</a>
