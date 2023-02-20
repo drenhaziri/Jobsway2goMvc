@@ -13,6 +13,7 @@ using System.Timers;
 using Microsoft.AspNetCore.Identity;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Hosting;
+using System.Security.Cryptography;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -162,7 +163,7 @@ namespace Jobsway2goMvc.Controllers
                     await _context.SaveChangesAsync();
                     return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
             }
-            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
+            return View(post);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -265,6 +266,44 @@ namespace Jobsway2goMvc.Controllers
                 message = "Comment succefully deleted!"
             });
             return RedirectToAction("DetailsPostsGroup", "Groups", new { id = findgroup.GroupId });
+        }
+
+        public async Task<IActionResult> EditComment (int id)
+        {
+            if(id == 0)
+            {
+                return NotFound();
+            }
+            var comment = await _context.Comments.FindAsync(id);
+            if(comment == null)
+            {
+                return NotFound();
+            }
+            return View(comment);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditComment(int id, string text)
+        {
+           
+            var findComment = await _context.Comments.FindAsync(id);
+            if (findComment == null)
+            {
+                return NotFound();
+            }
+            var findgroup = await _context.Posts.FindAsync(findComment.PostId);
+            if (!string.IsNullOrEmpty(text))
+            {
+                findComment.Text = text;
+                await _context.SaveChangesAsync();
+                TempData["Info"] = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    title = "Info",
+                    message = "Comment succefully updated!"
+                });
+                return RedirectToAction("DetailsPostsGroup", "Groups", new { id = findgroup.GroupId });
+            }
+            return View(findComment);
         }
     }
 }

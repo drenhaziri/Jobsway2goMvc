@@ -251,7 +251,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                                     <i class="fa fa-ellipsis-h"></i>
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                    <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id">Edit comment</a></li>
+                                                    <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="EditComment" asp-route-id="@comment.Id">Edit comment</a></li>
                                                     <form asp-controller="Post" asp-action="DeleteComment" asp-route-id="@comment.Id">
                                                     <li class="nav-item"><button type="submit" class="dropdown-item">Delete comment</button></li>
                                                     </form>
