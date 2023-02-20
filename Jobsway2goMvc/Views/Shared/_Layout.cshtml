@@ -109,6 +109,15 @@
             });
         </script>
     }
+    @if (TempData["Warning"] != null)
+    {
+        <script>
+            $(function () {
+                var toastrOptions = @Html.Raw(TempData["Warning"]);
+                toastr.warning(toastrOptions.title, toastrOptions.message);
+            });
+        </script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
