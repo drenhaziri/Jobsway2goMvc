@@ -24,13 +24,6 @@
                     </div>
                 </div>
 
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="requirements" class="form-label">Reasoning</label>
-                        <textarea class="form-control requirements-area" id="requirements" rows="6" placeholder="Give your reasoning for account change request."></textarea>
-                    </div>
-                </div>
-
                 <div class="col-md-12 text-center">
                     <button type="submit" class="btn btn-outline-primary">
                         Request Business Account
@@ -42,23 +35,3 @@
     </div>
 </div>
 
-@section Scripts{
-    <script>
-        tinymce.init({
-            selector: 'textarea#requirements',
-            menubar: true,
-            plugins: [
-                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
-                'anchor', 'pagebreak',
-                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
-                'fullscreen', 'insertdatetime',
-                'media', 'table', 'emoticons', 'template', 'help'
-            ],
-            toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +
-                'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
-                'forecolor backcolor emoticons | help',
-            advlist_bullet_styles: 'square',
-            advlist_number_styles: 'lower-alpha,lower-roman,upper-alpha,upper-roman'
-        });
-    </script>
-}
