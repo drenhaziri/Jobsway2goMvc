@@ -272,7 +272,11 @@
 
 <div class="profile-sidebar">
 </div>
-<div>
-    <a class="nav-link text-dark" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
-</div>
+
+    <div>
+        <a class="nav-link btn btn-outline-secondary btn-sm text-dark mb-1" asp-route-id="@Model.Id" asp-controller="UserProfile" asp-action="RequestBusiness">Request Businesss Account</a>
+    </div>
+    <div>
+        <a class="nav-link btn btn-outline-secondary btn-sm text-dark" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
+    </div>
 </div>
