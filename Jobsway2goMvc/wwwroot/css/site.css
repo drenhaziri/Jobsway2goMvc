@@ -161,7 +161,7 @@ button:focus {
     font-size: 17px;
 }
 
-.navbar-area .main-nav .navbar .navbar-nav .nav-item .nav-link.active {
+.navbar-area .main-nav .navbar .navbar-nav .nav-item.active .nav-link{
     color: #fd1616;
 }
 

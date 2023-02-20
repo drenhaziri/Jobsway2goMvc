@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Jobsway2goMvc.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Jobsway2goMvc.Extensions
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 <!DOCTYPE html>
@@ -25,7 +27,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="d-flex flex-column min-vh-100">
-    <header>
+<header>
         <div class="navbar-area">
             <div class="main-nav">
                 <div class="container">
@@ -37,27 +39,13 @@
                         </button>
                         <div class="collapse navbar-collapse">
                             <ul class="navbar-nav  flex-grow-1">
-                                <li class="nav-item">
-                                    <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                                </li>                              
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="Events" asp-controller="Events" asp-action="Index">Events</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="Collection" asp-controller="Collections" asp-action="Index">Collections</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="Groups" asp-controller="Groups" asp-action="Index">Groups</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="Role" asp-controller="Role" asp-action="Index">Roles</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Jobs" asp-action="Index">Jobs</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="JobCategories" asp-action="Index">Job Categories</a>
-                                </li>
+                                @Html.ActiveActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
+                                @Html.ActiveActionLink("Events", "Index", "Events", null, new { @class = "nav-link" })
+                                @Html.ActiveActionLink("Collections", "Index", "Collections", null, new { @class = "nav-link" })
+                                @Html.ActiveActionLink("Groups", "Index", "Groups", null, new { @class = "nav-link" })
+                                @Html.ActiveActionLink("Roles", "Index", "Role", null, new { @class = "nav-link" })
+                                @Html.ActiveActionLink("Jobs", "Index", "Jobs", null, new { @class = "nav-link" })
+                                @Html.ActiveActionLink("Job Categories", "Index", "JobCategories", null, new { @class = "nav-link" })
                                 <li>
                                 @if(SignInManager.IsSignedIn(User)){
                             
