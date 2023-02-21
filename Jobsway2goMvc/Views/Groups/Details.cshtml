@@ -27,15 +27,15 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 }
 
 <div class="d-flex justify-content-between align-items-center mt-3">
-    <a class="btn btn-outline-secondary" asp-action="Index">Back to group list</a>
+    <a class="btn btn-outline-secondary" style="width: 20%;" asp-action="Index">Back to group list</a>
     @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
     {
-        <a class="btn btn-outline-primary" asp-action="MemberList" asp-route-id="@groupId">View Member List</a>
-        <a class="btn btn-outline-primary" asp-action="ModeratorList" asp-route-id="@groupId">View Moderator List</a>
-        <a class="btn btn-outline-info" asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
-        <a class="btn btn-outline-danger" asp-action="BannedMembersList" asp-route-id="@groupId">View Banned Member List</a>
-        <a class="btn btn-outline-primary" asp-action="Requests" asp-route-id="@groupId">View Membership Requests</a>
-        <a class="text btn btn-light" style="text-decoration: none;" asp-action="DetailsPostsGroup" asp-route-id="@groupId"><i class="fas fa-long-arrow-alt-right me-2"></i> Go to Group Details</a>
+        <a class="btn btn-outline-primary mx-1" style="width: 20%;" asp-action="MemberList" asp-route-id="@groupId">View Member List</a>
+        <a class="btn btn-outline-primary mx-1" style="width: 20%;" asp-action="ModeratorList" asp-route-id="@groupId">View Moderator List</a>
+        <a class="btn btn-outline-info mx-1" style="width: 20%;" asp-action="AdminList" asp-route-id="@groupId">View Admin List</a>
+        <a class="btn btn-outline-danger mx-1" style="width: 20%;" asp-action="BannedMembersList" asp-route-id="@groupId">View Banned Member List</a>
+        <a class="btn btn-outline-primary mx-1" style="width: 20%;" asp-action="Requests" asp-route-id="@groupId">View Membership Requests</a>
+        <a class="text btn btn-light mx-1" style="text-decoration: none;width: 20%;" asp-action="DetailsPostsGroup" asp-route-id="@groupId"><i class="fas fa-long-arrow-alt-right me-2"></i> Go to Group Details</a>
     }
 
 
@@ -68,12 +68,12 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                         <form asp-action="AddAdmin" asp-controller="Groups">
                             <input asp-for="@user.Id" name="userId" hidden />
                             <input asp-for="@groupId" name="groupId" hidden />
-                            <button class="btn btn-info">Add Admin </button>
+                            <button class="btn btn-info mb-1" style="width: 100%;">Add Admin </button>
                         </form>
                         <form asp-action="AddModerator" asp-controller="Groups">
                             <input asp-for="@user.Id" name="userId" hidden />
                             <input asp-for="@groupId" name="groupId" hidden />
-                            <button class="btn btn-primary">Add Moderator </button>
+                            <button class="btn btn-primary mb-1" style="width: 100%;">Add Moderator </button>
                         </form>
                     }
                     @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
@@ -81,12 +81,12 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                         <form asp-action="AddMember" asp-controller="Groups">
                             <input asp-for="@user.Id" name="userId" hidden />
                             <input asp-for="@groupId" name="groupId" hidden />
-                            <button class="btn btn-secondary">Add Member </button>
+                            <button class="btn btn-secondary mb-1" style="width: 100%;">Add Member </button>
                         </form>
                         <form asp-action="Ban" asp-controller="Groups">
                             <input asp-for="@user.Id" name="userId" hidden />
                             <input asp-for="@groupId" name="groupId" hidden />
-                            <button class="btn btn-danger">Ban User </button>
+                            <button class="btn btn-danger mb-1" style="width: 100%;">Ban User </button>
                         </form>
                     }
                 </td>

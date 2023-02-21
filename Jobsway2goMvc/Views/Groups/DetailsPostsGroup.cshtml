@@ -102,7 +102,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
     <div class="d-flex justify-content-start">
         @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsOwner == true)
         {
-            <a id="deleteAction" class="btn btn-danger" data-name="@Model.Name"
+            <a id="deleteAction" class="btn btn-danger" style="width: 20%;" data-name="@Model.Name"
                data-delete-action-url="/Groups/DeleteConfirmed/@Model.Id"
                data-reload-url="@Url.Action("Index","Groups")">Delete Group</a>
         }
@@ -140,16 +140,16 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
     <div class="d-flex justify-content-end">
         @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsMember == true))
         {
-            <a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary">Create New Post</a>
+            <a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary mx-1" style="width: 20%;">Create New Post</a>
         }
         @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
         {
 
-            <a type="button" class="btn btn-warning" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
+            <a type="button" class="btn btn-warning mx-1" style="width: 20%;" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
                 Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p=>p.Status == Approval.Pending).Count()</span>
             </a>
 
-            <a class="text btn btn-light" style="text-decoration: none;" asp-action="Details" asp-route-id="@ViewBag.GroupId"> <i class="fas fa-long-arrow-alt-right me-2"></i> Manage Group</a>
+            <a class="text btn btn-light mx-1" style="text-decoration: none; width:20%;" asp-action="Details" asp-route-id="@ViewBag.GroupId"> <i class="fas fa-long-arrow-alt-right me-2"></i> Manage Group</a>
 
         }
 
@@ -292,7 +292,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 </div>
 
 <div>
-    <a class="btn btn-outline-light" style="color:black;" asp-action="Index">Back to List</a>
+    <a class="btn btn-outline-light" style="color:black; width:20%;" asp-action="Index">Back to List</a>
 </div>
 
 
