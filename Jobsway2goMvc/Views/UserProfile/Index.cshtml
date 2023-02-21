@@ -1,9 +1,12 @@
 ﻿@model Jobsway2goMvc.Models.ViewModel.UserProfileViewModel
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
 
 @{
     ViewData["Title"] = "Profile";
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+    var roleOfUser = claimsIdentity != null ? claimsIdentity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value : "Business";
 }
-
 
 <div class="container">
 <div class="profile-main">
@@ -13,9 +16,21 @@
             <h1> @Model.FirstName @Model.LastName</h1>
             <b>@Model.Email</b>
             <p>@Model.CompanyName</p>
-            <p>@Model.CompanyArea</p>
-            <div class="profile-btn">
-                <a class="btn btn-primary" asp-action="EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
+            <p>@Model?.CompanyArea</p>
+
+            <div class="row">
+                <div class="profile-btn col">
+                    <a class="btn btn-primary" asp-action="EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
+                </div>
+                    @if (roleOfUser == "User")
+                    {
+                        <div class="profile-btn col">
+                            <a class="btn btn-primary btn-sm mb-1" asp-route-id="@Model.Id" asp-controller="UserProfile" asp-action="RequestBusiness">Request Businesss Account</a>
+                        </div>
+                    }
+                    <div class="profile-btn col">
+                    <a class="btn btn-primary btn-sm" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
+                </div>
             </div>
         </div>
     </div>
@@ -272,7 +287,5 @@
 
 <div class="profile-sidebar">
 </div>
-<div>
-    <a class="nav-link text-dark" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
-</div>
+
 </div>
