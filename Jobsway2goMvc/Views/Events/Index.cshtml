@@ -11,7 +11,7 @@
 <p>
     <a class="btn post-btn" asp-action="Create">Create new Event</a>
 </p>
-<table id="event" class="table">
+<table id="event" class="category-table">
     <thead>
         <tr>
             <th>
@@ -22,6 +22,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+
             </th>
         </tr>
     </thead>
@@ -49,64 +52,28 @@
     </tbody>
 </table>
 <style>
-    .table {
-        width: 100%;
-        margin-bottom: 1rem;
-        color: #212529;
+    .category-table {
         border-collapse: collapse;
+        width: 100%;
     }
 
-        .table th,
-        .table td {
-            padding: 0.75rem;
-            vertical-align: top;
-            border-top: 1px solid #dee2e6;
+        .category-table th, .category-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
 
-        .table thead th {
-            vertical-align: bottom;
-            border-bottom: 2px solid #dee2e6;
+        .category-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
         }
 
-        .table tbody + tbody {
-            border-top: 2px solid #dee2e6;
+        .category-table tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
 
-        .table .table {
-            background-color: #fff;
-        }
-
-    .table-sm th,
-    .table-sm td {
-        padding: 0.3rem;
-    }
-
-    .table-bordered {
-        border: 1px solid #dee2e6;
-    }
-
-        .table-bordered th,
-        .table-bordered td {
-            border: 1px solid #dee2e6;
-        }
-
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.075);
-    }
-
-    .table-primary,
-    .table-primary > th,
-    .table-primary > td {
-        background-color: #b8daff;
-    }
-
-    .table-hover .table-primary:hover {
-        background-color: #9fcdff;
-    }
-
-        .table-hover .table-primary:hover > td,
-        .table-hover .table-primary:hover > th {
-            background-color: #9fcdff;
+        .category-table tr:hover {
+            background-color: #ddd;
         }
     .post-btn {
         background-color: #001935;
