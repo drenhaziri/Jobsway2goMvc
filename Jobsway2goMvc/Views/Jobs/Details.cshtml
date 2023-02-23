@@ -134,21 +134,21 @@
             show: false
         });
 
-        // Show the modal when the button is clicked
         $('.save-btn').on('click', function () {
             $('#saveModal').modal('show');
         });
     });
-    $(document).ready(function () {
-        $("#saveJobButton").click(function () {
-            // Get the selected collection ID from the dropdown list
-            var collectionId = $("#collectionId").val();
+    //$(document).ready(function () {
+    //    $("#saveJobButton").click(function () {
+    //        // Get the selected collection ID from the dropdown list
+    //        var collectionId = $("#collectionId").val();
 
-            // Add the collection ID to the form data
-            $("#saveJobForm").append('<input type="hidden" name="collectionId" value="' + collectionId + '">');
+    //        // Add the collection ID to the form data
+    //        $("#saveJobForm").append('<input type="hidden" name="collectionId" value="' + collectionId + '">');
 
-            // Submit the form to the server
-            $("#saveJobForm").submit();
-        });
-    });
+    //        // Submit the form to the server
+    //        $("#saveJobForm").submit();
+    //    });
+    //});
+
 </script>

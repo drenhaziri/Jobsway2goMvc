@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Drawing.Printing;
 using Jobsway2goMvc.Extensions;
 using X.PagedList;
+using System.Text.RegularExpressions;
 
 namespace Jobsway2goMvc.Controllers
 {
