@@ -9,7 +9,7 @@
 </dl>
 <hr />
 <p>
-    <a class="btn post-btn" asp-action="Create">Create new Event</a>
+    <a class="btn post-btn" style="width:20%;" asp-action="Create">Create new Event</a>
 </p>
 <table id="event" class="category-table">
     <thead>
@@ -41,9 +41,9 @@
                 @Html.DisplayFor(modelItem => item.Location)
             </td>          
             <td>
-                    <a class="btn post-btn" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a class="btn post-btn" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a id="deleteAction-@item.Id" class="btn del-btn" text-decoration-none px-0 delete-btn-link" data-name="@item.Title"
+                    <a class="btn post-btn" style="width:30%;" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a class="btn post-btn" style="width:30%;" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a id="deleteAction-@item.Id" style="width:30%;" class="btn del-btn" text-decoration-none px-0 delete-btn-link" data-name="@item.Title"
                                    data-delete-action-url="/Events/DeleteConfirmed/@item.Id"
                                    data-reload-url="@Url.Action("Index","Events")">Delete</a>
             </td>

@@ -113,7 +113,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 
         @if (Model.CurrentMembershipList == null || Model.CurrentMembershipList.Status == Approval.Rejected)
         {
-            <a asp-action="Join" asp-controller="Groups" asp-route-id="@ViewBag.GroupId" class="btn btn-secondary">Join Group</a>
+            <a asp-action="Join" asp-controller="Groups" asp-route-id="@ViewBag.GroupId" style="width:20%;" class="btn btn-secondary">Join Group</a>
         }
         else if (Model.CurrentMembershipList.Status == Approval.Pending)
         {
