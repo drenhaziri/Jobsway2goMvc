@@ -29,7 +29,7 @@
                         <b>@Model.Email</b>
                         <p>@Model.CompanyName</p>
                         <p>@Model.CompanyArea</p>
-                        @if (!string.IsNullOrEmpty(Model?.ImagePath))
+                        @if (Model?.ImagePath != "/Images/ProfilePic.jpg")
                         {
                             <button class="btn btn-danger" onclick="removeProfilePic()">Remove Profile Picture</button>
                         }
