@@ -4,6 +4,11 @@ namespace Jobsway2goMvc.Models
 {
     public class Post
     {
+        public Post()
+        {
+            Comments = new List<Comment>();
+        }
+
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
@@ -17,5 +22,7 @@ namespace Jobsway2goMvc.Models
         public Approval Status { get; set; }
         public int GroupId { get; set; }
         public Group? Group { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

@@ -11,6 +11,9 @@ using Jobsway2goMvc.Enums;
 using System.Security.Claims;
 using System.Timers;
 using Microsoft.AspNetCore.Identity;
+using System.Text.RegularExpressions;
+using Microsoft.Extensions.Hosting;
+using System.Security.Cryptography;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -44,6 +47,7 @@ namespace Jobsway2goMvc.Controllers
 
             var post = await _context.Posts
                 .Include(p => p.Group)
+                .Include(p=> p.Comments)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
@@ -67,6 +71,7 @@ namespace Jobsway2goMvc.Controllers
             ApplicationUser user = await _userManager.FindByIdAsync(userid);
             ModelState.Remove("Group");
             ModelState.Remove("CreatedById");
+            ModelState.Remove("Comments");
             if (ModelState.IsValid)
             {
                 post.FirstName = user.FirstName;
@@ -158,7 +163,7 @@ namespace Jobsway2goMvc.Controllers
                     await _context.SaveChangesAsync();
                     return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
             }
-            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
+            return View(post);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -199,6 +204,106 @@ namespace Jobsway2goMvc.Controllers
         private bool PostExists(int id)
         {
             return _context.Posts.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddComment(int postId, string text)
+        {
+            var post = await _context.Posts.FindAsync(postId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            if (!string.IsNullOrEmpty(text))
+            {
+                var userId = _userManager.GetUserId(HttpContext.User);
+                ApplicationUser user = await _userManager.FindByIdAsync(userId);
+
+           
+                var comment = new Comment
+                {
+                    Text = text,
+                    DateTimeCreated = DateTime.Now,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserImage = user.ImagePath,
+                    UserId = userId,
+                    PostId = postId
+                };
+
+                _context.Comments.Add(comment);
+                await _context.SaveChangesAsync();
+            }
+            TempData["Info"] = Newtonsoft.Json.JsonConvert.SerializeObject(new
+            {
+                title = "Info",
+                message = "Comment succefully created!"
+            });
+            return RedirectToAction("DetailsPostsGroup", "Groups", new {id = post.GroupId});
+        }
+
+        public async Task<IActionResult> DeleteComment(int id)
+        {
+            if(id == 0)
+            {
+                return NotFound();
+            }
+            var comment = await _context.Comments.FindAsync(id);
+
+            if(comment == null)
+            {
+                return NotFound();
+            }
+            var findgroup = await _context.Posts.FindAsync(comment.PostId);
+
+            _context.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            TempData["Warning"] = Newtonsoft.Json.JsonConvert.SerializeObject(new
+            {
+                title = "Warning",
+                message = "Comment succefully deleted!"
+            });
+            return RedirectToAction("DetailsPostsGroup", "Groups", new { id = findgroup.GroupId });
+        }
+
+        public async Task<IActionResult> EditComment (int id)
+        {
+            if(id == 0)
+            {
+                return NotFound();
+            }
+            var comment = await _context.Comments.FindAsync(id);
+            if(comment == null)
+            {
+                return NotFound();
+            }
+            return View(comment);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditComment(int id, string text)
+        {
+           
+            var findComment = await _context.Comments.FindAsync(id);
+            if (findComment == null)
+            {
+                return NotFound();
+            }
+            var findgroup = await _context.Posts.FindAsync(findComment.PostId);
+            if (!string.IsNullOrEmpty(text))
+            {
+                findComment.Text = text;
+                await _context.SaveChangesAsync();
+                TempData["Info"] = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    title = "Info",
+                    message = "Comment succefully updated!"
+                });
+                return RedirectToAction("DetailsPostsGroup", "Groups", new { id = findgroup.GroupId });
+            }
+            return View(findComment);
         }
     }
 }

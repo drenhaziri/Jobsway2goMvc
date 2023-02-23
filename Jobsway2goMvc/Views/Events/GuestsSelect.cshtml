@@ -2,38 +2,97 @@
 @using Jobsway2goMvc.Enums
 
 <table>
-    <tr>
-        <th>Event Title</th>
-        <th>Guest Name</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-
-    @foreach (var guest in Model)
-    {
+    <thead>
         <tr>
-            <td>@guest.Event.Title</td>
-            <td>@guest.ApplicationUser.UserName</td>
-            <td>@guest.Status</td>
-            <td>
-                @if (guest.Status == EApproval.Pending && User.Identity.Name == guest.ApplicationUser.UserName)
-                {
-                    <a asp-action="AcceptEvent" asp-route-eventId="@guest.EventId" asp-route-userId="@guest.GuestId">Accept</a>
-                    <a asp-action="DeclineEvent" asp-route-eventId="@guest.EventId" asp-route-userId="@guest.GuestId">Decline</a>
-                }
-                else if (guest.Status == EApproval.Accepted && User.Identity.Name == guest.ApplicationUser.UserName)
-                {
-                    <a asp-action="DeclineEvent" asp-route-eventId="@guest.EventId" asp-route-userId="@guest.GuestId">Decline</a>
-                }
-                else if (User.Identity.Name != guest.ApplicationUser.UserName)
-                {
-                    <p>Invitation not intended for you</p>
-                }
-                else
-                {
-                    <p>Invitation has already been @guest.Status</p>
-                }
-            </td>
+            <th>Event Title</th>
+            <th>Guest Name</th>
+            <th>Status</th>
+            <th>Actions</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var guest in Model)
+        {
+            <tr>
+                <td>@guest.Event.Title</td>
+                <td>@guest.ApplicationUser.FirstName @guest.ApplicationUser.LastName </td>
+                <td>@guest.Status</td>
+                <td>
+                    @if (guest.Status == EApproval.Pending && User.Identity.Name == guest.ApplicationUser.UserName)
+                    {
+                        <a class="btn btn-primary" asp-action="AcceptEvent" asp-route-eventId="@guest.EventId" asp-route-userId="@guest.GuestId">Accept</a>
+                        <a class="btn btn-danger" asp-action="DeclineEvent" asp-route-eventId="@guest.EventId" asp-route-userId="@guest.GuestId">Decline</a>
+                    }
+                    else if (guest.Status == EApproval.Accepted && User.Identity.Name == guest.ApplicationUser.UserName)
+                    {
+                        <a class="btn btn-danger" asp-action="DeclineEvent" asp-route-eventId="@guest.EventId" asp-route-userId="@guest.GuestId">Decline</a>
+                    }
+                    else if (User.Identity.Name != guest.ApplicationUser.UserName)
+                    {
+                        <p>Invitation not intended for you</p>
+                    }
+                    else
+                    {
+                        <p>Invitation has already been @guest.Status</p>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin-top: 20px;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    td:nth-child(1), td:nth-child(2) {
+        font-weight: bold;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: #fff;
+    }
+
+    .btn-primary {
+        background-color: #428bca;
+        border-color: #357ebd;
+    }
+
+    .btn-danger {
+        background-color: #d9534f;
+        border-color: #d43f3a;
+    }
+
+    p {
+        margin: 0;
+    }
+
+</style>

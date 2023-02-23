@@ -9,80 +9,89 @@
         <div class="container">
             <form class="find-form" asp-action="Index">
                 <div class="row">
-                        <div class="col-lg-4">
-                            <div class="form-group dropdown search-list-div" id="dropdown">
+                    <div class="col-lg-8">
+                        <div class="form-group dropdown search-list-div" id="dropdown">
                             <input type="text" name="SearchString" class="form-control dropdown-toggle" id="exampleInputEmail1" data-bs-toggle="dropdown" aria-expanded="false" placeholder="Search...">
-                                <i class="fa fa-search"></i>
+                            <i class="fa fa-search"></i>
                             <ul class="dropdown-menu search-list" id="listView" aria-labelledby="exampleInputEmail1">
-                                    
+
                             </ul>
-                            </div>
                         </div>
+                    </div>
 
-                        <div class="col-lg-4">
+                    <div class="col-md-2">
                         <select class="nice-select" name="searchEnum" asp-items="Html.GetEnumSelectList<SearchEnum>()"></select>
-                        </div>
+                    </div>
 
-                        <div class="col-lg-4">
-                            <button type="submit" class="find-btn">
-                                Search
-                                <i class='fa fa-search'></i>
-                            </button>
-                        </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="find-btn">
+                            Search
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
-    <!-- Job Section End -->
-    <section class="job-style-two  pb-70">
-        <div class="container">
-            <div class="row">
-                @foreach (var item in @ViewBag.FeedJobs as ICollection<Job>)
-                {
-                <div class="col-lg-12">
-                    <div class="job-card-two">
-                        <div class="row align-items-center">
-                            <div class="col-md-1">
-                                <div class="user-logo">
-                                    <a href="job-details.html">
-                                        <img width="50" height="50" src="~/Images/logo.png" alt="logo">
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="job-info">
-                                    <h3>
-                                        <a href="job-details.html">@item.CompanyName</a>
-                                    </h3>
-                                    <ul>
-                                        <li>
-                                            <i class='fa fa-briefcase'></i>
-                                               @item.MinSalary € - @item.MaxSalary €
-                                        </li>
-                                        <li>
-                                            <i class='fa fa-maps-marker'></i>
-                                            @item.Location
-                                        </li>
-                                    </ul>
-
-                                    <span>@item.Schedule</span>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="theme-btn text-end">
-                                    <a href="job-details.html" class="default-btn">
-                                        Browse Job
-                                    </a>
+    <!-- Jobs Section Start -->
+    		<section class="job-section pb-70">
+    			<div class="container">
+    				<div class="section-title text-center">
+    					<h2>Jobs You May Be Interested In</h2>
+                    </div>
+    
+    				<div class="row">
+                        
+                        
+                        @foreach (var item in @ViewBag.FeedJobs as ICollection<Job>)
+                        {
+                            <div class="col-sm-6">
+                            <div class="job-card">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-3">
+                                        <div class="thumb-img">
+                                            <img src="~/Images/logo.png" alt="company logo">
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-lg-6">
+                                        <div class="job-info">
+                                            <h3>
+                                                <a asp-action="Details" asp-controller="Jobs" asp-route-id="@item?.Id">@item.CompanyName</a>
+                                            </h3>
+                                            <ul>
+                                                <li>
+                                                    <i class='fa fa-briefcase'></i>
+                                                    @item.MinSalary € - @item.MaxSalary €
+                                                </li>
+                                                <li>
+                                                    <i class='fa fa-maps-marker'></i>
+                                                    @item.Location
+                                                </li>
+                                                
+                                            </ul>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-lg-3">
+                                        <div class="job-save">
+                                            <span>@item.Schedule</span>
+                                            <a asp-action="Details" asp-controller="Jobs" asp-route-id="@item?.Id" class="btn default-btn">
+                                                Browse Job
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        }
+                        
                     </div>
-                </div>
-                }
-            </div>
-        </div>
-    </section>
-    <!-- Job Section End -->
+    			</div>
+    		</section>
+    		<!-- Jobs Section End -->
+    
+    
+    
     <!-- User Section Start -->
     <section class="user-section pt-100 pb-70">
         <div class="container">
@@ -92,27 +101,27 @@
             </div>
 
             <div class="row">
-                 @foreach (var item in @ViewBag.Users as ICollection<ApplicationUser>)
+                @foreach (var item in @ViewBag.Users as ICollection<ApplicationUser>)
                 {
-                <div class="col-lg-3 col-sm-6">
-                    <div class="user-card">
-                        <div class="user-logo">
-                            <a href="job-list.html">
-                                <img width="50" height="50" src="@item.ImagePath" alt="user logo">
-                            </a>
-                        </div>
-                        <div class="user-text">
-                            <h3>@item.FirstName @item.LastName</h3>
-                            <p>
-                                <i class='fa fa-email'></i>
-                                @item.Email
-                            </p>
+                    <div class="col-lg-3 col-sm-6 d-flex align-items-stretch">
+                        <div class="user-card w-100">
+                            <div class="user-logo">
+                                <a href="job-list.html">
+                                    <img width="50" height="50" src="@item.ImagePath" alt="user logo">
+                                </a>
+                            </div>
+                            <div class="user-text">
+                                <h3>@item.FirstName @item.LastName</h3>
+                                <p>
+                                    <i class='fa fa-email'></i>
+                                    @item.Email
+                                </p>
                                 <a asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.Id" class="user-btn">
-                                View Profile
-                            </a>
+                                    View Profile
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
                 }
             </div>
         </div>

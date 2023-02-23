@@ -5,8 +5,9 @@
     ViewBag.Title = "Edit Role";
 }
 
-<h1>Details</h1>
-
+<h1 style="color: #fd1616;">Role Details</h1>
+<hr />
+<br />
     <div class="card">
         <div class="card-header">
             <h3> Users in this role: @Model.RoleName</h3>
@@ -27,4 +28,43 @@
         </div>
     </div>
 
-<a class="btn btn-primary" asp-controller="Role" asp-action="Index">Role Manager</a>
+<a class="btn post-btn" asp-controller="Role" asp-action="Index">Back to Role Manager</a>
+<style>
+    .card {
+        max-width: 500px;
+        margin: 50px auto;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        padding: 10px;
+    }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+    .card-body {
+        padding: 10px;
+    }
+
+    .card-title {
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+     .post-btn {
+        background-color: #001935;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+</style>

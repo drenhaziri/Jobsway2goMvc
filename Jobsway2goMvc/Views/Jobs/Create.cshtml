@@ -29,7 +29,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="schedule" class="form-label">Schedule</label>
-                        <input asp-for="Schedule" type="text" class="form-control" id="schedule" placeholder="Schedule">
+                        <select asp-for="Schedule" class="form-control" asp-items="Html.GetEnumSelectList<JobPosition>()"></select>
                     </div>
                 </div>
 
@@ -71,13 +71,20 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="location" class="form-label">Location</label>
-                        <input asp-for="Location" type="text" class="form-control" id="location" placeholder="e.g. London">
+                        <select asp-for="Location" class="form-control" asp-items="Html.GetEnumSelectList<JobLocation>()"></select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="location" class="form-label">Site</label>
+                        <select asp-for="Site" class="form-control" asp-items="Html.GetEnumSelectList<JobSite>()"></select>
                     </div>
                 </div>
 
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="requirements" class="form-label">Requirements</label>
+                        <label for="requirements" class="form-label">Job Requirements</label>
                         <textarea asp-for="Requirements" class="form-control requirements-area" id="requirements" rows="6" placeholder="Job Requirements"></textarea>
                     </div>
                 </div>
@@ -100,3 +107,23 @@
     </div>
 </div>
 <!-- Post Job Section End -->
+@section Scripts{
+    <script>
+        tinymce.init({
+            selector: 'textarea#requirements',
+            menubar: true,
+            plugins: [
+                'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview',
+                'anchor', 'pagebreak',
+                'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code',
+                'fullscreen', 'insertdatetime',
+                'media', 'table', 'emoticons', 'template', 'help'
+            ],
+            toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
+                'forecolor backcolor emoticons | help',
+            advlist_bullet_styles: 'square',
+            advlist_number_styles: 'lower-alpha,lower-roman,upper-alpha,upper-roman'
+        });
+    </script>
+}

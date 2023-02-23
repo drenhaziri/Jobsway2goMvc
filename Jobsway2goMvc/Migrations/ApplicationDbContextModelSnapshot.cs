@@ -259,6 +259,45 @@ namespace Jobsway2goMvc.Migrations
                     b.ToTable("Collections");
                 });
 
+            modelBuilder.Entity("Jobsway2goMvc.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("DateTimeCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.Connection", b =>
                 {
                     b.Property<int>("Id")
@@ -563,9 +602,8 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Location")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("MaxSalary")
                         .HasColumnType("decimal(18,2)");
@@ -580,9 +618,11 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Schedule")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Schedule")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Site")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -903,6 +943,25 @@ namespace Jobsway2goMvc.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Jobsway2goMvc.Models.Comment", b =>
+                {
+                    b.HasOne("Jobsway2goMvc.Models.Post", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Jobsway2goMvc.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.Education", b =>
                 {
                     b.HasOne("Jobsway2goMvc.Models.ApplicationUser", "User")
@@ -1083,6 +1142,11 @@ namespace Jobsway2goMvc.Migrations
             modelBuilder.Entity("Jobsway2goMvc.Models.JobCategory", b =>
                 {
                     b.Navigation("Jobs");
+                });
+
+            modelBuilder.Entity("Jobsway2goMvc.Models.Post", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

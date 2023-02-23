@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Jobsway2goMvc.Enums;
 using Jobsway2goMvc.Models;
 
 namespace Jobsway2goMvc.Validators.Jobs
@@ -8,8 +9,9 @@ namespace Jobsway2goMvc.Validators.Jobs
         public JobValidator()
         {
             RuleFor(e => e.CompanyName).NotEmpty().WithMessage("Please specify a company name");
-            RuleFor(e => e.Location).NotEmpty().WithMessage("Please specify a location");
-            RuleFor(e => e.Schedule).NotEmpty().WithMessage("Please specify a Schedule");
+            RuleFor(e => e.Location).Must(ValidateLocation).WithMessage("Please specify a location");
+            RuleFor(e => e.Schedule).Must(ValidatePostion).WithMessage("Please specify a schedule");
+            RuleFor(e => e.Site).Must(ValidateSite).WithMessage("Please specify a site");
             RuleFor(e => e.Description).NotEmpty().WithMessage("Please specify a description");
             RuleFor(e => e.OpenSpots).NotEmpty().WithMessage("Please specify an OpenSpots");
             RuleFor(e => e.Requirements).NotEmpty().WithMessage("Please specify Requirements");
@@ -29,6 +31,30 @@ namespace Jobsway2goMvc.Validators.Jobs
             RuleFor(x => x.DateFrom)
            .LessThanOrEqualTo(x => x.DateTo)
            .WithMessage("DateFrom number of characters must be less than or equal to DateTo.");
+        }
+
+        private bool ValidateLocation(Job e, JobLocation location)
+        {
+            if (location == JobLocation.None)
+                return false;
+
+            return true;
+        }
+
+        private bool ValidatePostion(Job e, JobPosition position)
+        {
+            if (position == JobPosition.None)
+                return false;
+
+            return true;
+        }
+
+        private bool ValidateSite(Job e, JobSite site)
+        {
+            if (site == JobSite.None)
+                return false;
+
+            return true;
         }
     }
 }

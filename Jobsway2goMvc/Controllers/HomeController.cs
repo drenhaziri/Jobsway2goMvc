@@ -2,6 +2,7 @@
 using Jobsway2goMvc.Enums;
 using Jobsway2goMvc.Extensions;
 using Jobsway2goMvc.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -12,22 +13,32 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
-
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _context = context;
+            _userManager= userManager;
         }
 
-        public IActionResult Index(int pageSize = 2, int page = 1)
+        public IActionResult Index(int pageSize = 10, int page = 1)
         {
             var result = _context.Jobs.Page(pageSize, page).ToList();
             ViewBag.FeedJobs = result;
 
-            var users = _context.Users.ToList();
-            ViewBag.Users = users;
+            var userid = _userManager.GetUserId(HttpContext.User);
 
-            
+            var users = _context.Users.Where(x=>x.Id != userid).ToList();
+            ViewBag.Users = users;
+            if (User.Identity.IsAuthenticated)
+            {
+
+            }
+            else
+            {
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+            }
+
             return View();
         }
 

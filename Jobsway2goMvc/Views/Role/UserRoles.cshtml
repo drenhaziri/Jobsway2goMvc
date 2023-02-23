@@ -8,7 +8,9 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>View User with Roles</h1>
+<h1 style="color: #fd1616;">View User with Roles</h1>
+<hr />
+<br />
 <table class="table table-hover table-bordered">
     <thead>
         <tr class="table-dark">
@@ -28,12 +30,27 @@
                 <td>@user.Email</td>
                 <td>@string.Join(" , ", user.Roles.ToList())</td>
                 <td>
-                    <a class="btn btn-primary" asp-controller="Role" asp-action="ManageUserRoles" asp-route-userId="@user.UserId">Manage Roles</a>
+                    <a class="btn post-btn" asp-controller="Role" asp-action="ManageUserRoles" asp-route-userId="@user.UserId">Manage Roles</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<a class="btn btn-primary" asp-controller="Role" asp-action="Index">Role Manager</a>
+<a class="btn post-btn" asp-controller="Role" asp-action="Index">Back to Role Manager</a>
 
+<style>
+    .post-btn {
+        background-color: #001935;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+</style>

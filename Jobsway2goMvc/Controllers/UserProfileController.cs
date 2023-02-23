@@ -17,13 +17,16 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
         public UserProfileController(UserManager<ApplicationUser> userManager, 
-            IMapper mapper, 
+            IMapper mapper,
+            RoleManager<IdentityRole> roleManager,
             ApplicationDbContext context)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _roleManager= roleManager;
             _context = context;
         }
         public async Task<IActionResult> Index()
@@ -89,7 +92,10 @@ namespace Jobsway2goMvc.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadFile([FromForm(Name = "file")] IFormFile file)
         {
-            if (file.Length > 0)
+            var userid = _userManager.GetUserId(HttpContext.User);
+            var user = await _userManager.FindByIdAsync(userid);
+
+            if (file != null && file.Length > 0)
             {
                 var filePath = Path.Combine(
                     Directory.GetCurrentDirectory(), "wwwroot/images",
@@ -99,13 +105,18 @@ namespace Jobsway2goMvc.Controllers
                     await file.CopyToAsync(stream);
                 }
 
-                var userid = _userManager.GetUserId(HttpContext.User);
-                var user = await _userManager.FindByIdAsync(userid);
                 user.ImagePath = "/images/" + file.FileName;
                 await _userManager.UpdateAsync(user);
             }
+            else
+            {
+                user.ImagePath = "/Images/ProfilePic.jpg"; // or the path to your default profile picture
+                await _userManager.UpdateAsync(user);
+            }
+
             return RedirectToAction("Index");
         }
+
         public IActionResult EditProfile()
         {
             return View();
@@ -114,7 +125,41 @@ namespace Jobsway2goMvc.Controllers
         {
             return View();
         }
-        
+
+        public async Task<IActionResult> RequestBusiness(string? id)
+        {
+            if (id == null || _context.Users == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RequestBusiness(int? id, ApplicationUser applicationUser)
+        {
+
+            var applicationUserRef = await _context.Users.FirstOrDefaultAsync(u => u.Id == applicationUser.Id);
+            applicationUserRef.CompanyName = applicationUser.CompanyName;
+            applicationUserRef.CompanyArea = applicationUser.CompanyArea;
+
+            _context.Update(applicationUserRef);
+            _context.SaveChanges();
+            var userRole = _roleManager.FindByNameAsync("user").Result;
+            var userRole2 = _roleManager.FindByNameAsync("Business").Result;
+            await _userManager.RemoveFromRoleAsync(applicationUserRef, userRole.Name);
+            await _userManager.AddToRoleAsync(applicationUserRef, userRole2.Name);
+
+            return RedirectToAction("Index", "UserProfile");
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddAward(Award award)
         {
