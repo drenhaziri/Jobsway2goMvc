@@ -17,6 +17,7 @@ using System.Drawing.Printing;
 using Jobsway2goMvc.Extensions;
 using X.PagedList;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -327,8 +328,8 @@ namespace Jobsway2goMvc.Controllers
 
             if (collection.Jobs.Any(j => j.Id == job.Id))
             {
-                ViewBag.JobExists = "Job Exists in Collection";
-                return View(job);
+                TempData["JobExists"] = "Job Exists in Collection";
+                return RedirectToAction("Details", new { id = job.Id });
             }
 
             collection.Jobs.Add(job);

@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Details";
-    @ViewBag.JobExists;
 }
 <head>
     <meta charset="UTF-8">
@@ -19,6 +18,12 @@
     <h3>Job Details</h3>
 </div>
 <hr />
+<br />
+ @if (TempData["JobExists"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["JobExists"]</div>
+                }
+
 <form class="details-form">
     <div class="details-text">
         <h3> @Html.DisplayNameFor(model => model.CompanyName) </h3>
@@ -105,11 +110,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                @if (ViewBag.JobExists != null)
-                {
-                    <div class="alert alert-danger">@ViewBag.JobExists</div>
-                }
-
+               
                 <form id="saveJobForm" asp-action="SaveToCollection" asp-route-id="@Model.Collections" method="post">
                     <input type="hidden" name="id" value="@Model.Id" />
                     <div class="form-group">
@@ -138,17 +139,17 @@
             $('#saveModal').modal('show');
         });
     });
-    //$(document).ready(function () {
-    //    $("#saveJobButton").click(function () {
-    //        // Get the selected collection ID from the dropdown list
-    //        var collectionId = $("#collectionId").val();
+    $(document).ready(function () {
+        $("#saveJobButton").click(function () {
+            // Get the selected collection ID from the dropdown list
+            var collectionId = $("#collectionId").val();
 
-    //        // Add the collection ID to the form data
-    //        $("#saveJobForm").append('<input type="hidden" name="collectionId" value="' + collectionId + '">');
+            // Add the collection ID to the form data
+            $("#saveJobForm").append('<input type="hidden" name="collectionId" value="' + collectionId + '">');
 
-    //        // Submit the form to the server
-    //        $("#saveJobForm").submit();
-    //    });
-    //});
+            // Submit the form to the server
+            $("#saveJobForm").submit();
+        });
+    });
 
 </script>
