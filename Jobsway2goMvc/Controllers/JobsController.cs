@@ -124,6 +124,11 @@ namespace Jobsway2goMvc.Controllers
                 .Include(j => j.Category)
                 .Include(j => j.Applicants)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            ViewBag.Collections = _context.Collections
+    .Include(a => a.Jobs)
+    .Where(a => a.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value)
+    .ToList();
+
             ViewBag.ShowEditButton = User.IsInRole("Business");
             if (job.Applicants == null || !job.Applicants.Any())
             {
@@ -298,27 +303,38 @@ namespace Jobsway2goMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveToCollection(Job job, Collection collection)
+        public async Task<IActionResult> SaveToCollection(int? id, int? collectionId)
         {
-            var collectionRef = await _context.Collections
-                .Include(a => a.Jobs)
-                .FirstOrDefaultAsync(a => a.Id == collection.Id);
-            var jobRef = await _context.Jobs.FirstOrDefaultAsync(a => a.Id == job.Id);
-
-            if (collectionRef != null && jobRef != null)
+            if (id == null || collectionId == null || _context.Jobs == null)
             {
-                bool exists = collectionRef.Jobs.Any(x => x.Id == job.Id);
-                if (exists)
-                {
-                    ViewBag.JobExists = "Job Exists in Collection";
-                    return View(job);
-                }
-                collectionRef.Jobs.Add(jobRef);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            return RedirectToAction("Index", "Jobs");
+
+            var job = await _context.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
+
+            var collection = await _context.Collections
+                .Include(c => c.Jobs)
+                .FirstOrDefaultAsync(c => c.Id == collectionId && c.User.Id == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (collection == null)
+            {
+                return NotFound();
+            }
+
+            if (collection.Jobs.Any(j => j.Id == job.Id))
+            {
+                ViewBag.JobExists = "Job Exists in Collection";
+                return View(job);
+            }
+
+            collection.Jobs.Add(job);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
+
 
         private bool JobExists(int id)
         {

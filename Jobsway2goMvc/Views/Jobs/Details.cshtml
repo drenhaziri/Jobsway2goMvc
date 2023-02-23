@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
-
+    @ViewBag.JobExists;
 }
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Jobsway2goMvc.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 </head>
 <div class="details-title">
     <h3>Job Details</h3>
@@ -88,8 +90,65 @@
             </div>
             <a class="btn Edit-btn" type="submit" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
         }
-        <a class="btn save-btn" asp-action="SaveToCollection" asp-route-id="@Model?.Id">Save To Collections</a>
+        <a class="btn save-btn" tabindex="-1" role="dialog" aria-labelledby="saveModalLabel" data-target="#saveModal">Save To Collection</a>
         <a class="btn bb-btn" asp-action="Index">Back to jobs</a>      
     </div>
 
 </form>
+<div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="saveModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="saveModalLabel">Save Job to Collection</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (ViewBag.JobExists != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.JobExists</div>
+                }
+
+                <form id="saveJobForm" asp-action="SaveToCollection" asp-route-id="@Model.Collections" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="form-group">
+                        <label for="collection">Select Collection:</label>
+                        <select class="form-control" id="collectionId" name="collection">
+                            @foreach (var collection in ViewBag.Collections)
+                            {
+                                <option value="@collection.Id">@collection.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" id="saveJobButton" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+<script>
+    $(document).ready(function () {
+        // Initialize the modal
+        $('#saveModal').modal({
+            show: false
+        });
+
+        // Show the modal when the button is clicked
+        $('.save-btn').on('click', function () {
+            $('#saveModal').modal('show');
+        });
+    });
+    $(document).ready(function () {
+        $("#saveJobButton").click(function () {
+            // Get the selected collection ID from the dropdown list
+            var collectionId = $("#collectionId").val();
+
+            // Add the collection ID to the form data
+            $("#saveJobForm").append('<input type="hidden" name="collectionId" value="' + collectionId + '">');
+
+            // Submit the form to the server
+            $("#saveJobForm").submit();
+        });
+    });
+</script>

@@ -4,12 +4,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Create a category</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn post-btn" asp-action="Create">Create new category</a>
 </p>
-<table class="table">
+<table class ="category-table">
     <thead>
         <tr>
             <th>
@@ -25,9 +25,8 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-@*                <a asp-action="Details" asp-route-id="@item.Id">Details</a> *@
-                <a id="deleteAction-@item.Id" class="btn btn-link text-decoration-none px-0 delete-btn-link" data-name="@item.Name"
+                    <a class="btn post-btn" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a id="deleteAction-@item.Id" class="btn del-btn" data-name="@item.Name"
                                    data-delete-action-url="/JobCategories/DeleteConfirmed/@item.Id"
                                    data-reload-url="@Url.Action("Index","JobCategories")">Delete</a>
             </td>
@@ -35,3 +34,55 @@
 }
     </tbody>
 </table>
+<style>
+    .category-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .category-table th, .category-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .category-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .category-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .category-table tr:hover {
+        background-color: #ddd;
+    }
+
+    .post-btn {
+        background-color: #001935;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .del-btn{
+        background-color: #fd1616;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+</style>
