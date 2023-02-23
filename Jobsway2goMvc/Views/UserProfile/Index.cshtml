@@ -41,6 +41,20 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="profile-btn col">
+                <a class="btn btn-primary justify-content-center" style="width:100%;" asp-action="EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
+            </div>
+            @if (roleOfUser == "User")
+            {
+                <div class="profile-btn col">
+                    <a class="btn btn-primary justify-content-center btn-sm mb-1" style="width:100%;" asp-route-id="@Model.Id" asp-controller="UserProfile" asp-action="RequestBusiness">Request Businesss Account</a>
+                </div>
+            }
+            <div class="profile-btn col">
+                <a class="btn btn-primary justify-content-center btn-sm" style="width:100%;" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
+            </div>
+        </div>
     </div>
 </div>
 
