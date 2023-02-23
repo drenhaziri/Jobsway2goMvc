@@ -11,7 +11,7 @@
 <p>
     <a class="btn post-btn" asp-action="Create">Create new Event</a>
 </p>
-<table class="table">
+<table id="event" class="table">
     <thead>
         <tr>
             <th>
@@ -137,3 +137,9 @@
     }
 
 </style>
+
+<script>
+    $(document).ready(function () {
+        $('#event').DataTable();
+    });
+</script>

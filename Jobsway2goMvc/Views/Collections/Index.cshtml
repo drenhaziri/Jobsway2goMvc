@@ -13,7 +13,7 @@
 <p>
     <a class="btn post-btn" asp-action="Create">Create new collection</a>
 </p>
-<table class="category-table">
+<table id="collection" class="table">
     <thead>
         <tr>
             <th>
@@ -93,3 +93,9 @@
         border-radius: 4px;
     }
 </style>
+
+<script>
+    $(document).ready(function () {
+        $('#collection').DataTable();
+    });
+</script>
