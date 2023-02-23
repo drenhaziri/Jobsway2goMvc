@@ -18,6 +18,7 @@ using Jobsway2goMvc.Extensions;
 using X.PagedList;
 using System.Text.RegularExpressions;
 using System.Text;
+using Jobsway2goMvc.Enums;
 
 namespace Jobsway2goMvc.Controllers
 {
@@ -36,6 +37,33 @@ namespace Jobsway2goMvc.Controllers
         {
             //Showing 3 jobs per page
             var jobs = _context.Jobs.ToPagedList(page ?? pageIndex, itemsPerPage);
+
+            return View(jobs);
+        }
+
+        public IActionResult FilterJobs(JobLocation location, JobPosition position, JobSite site, int minSalary, int maxSalary, int? page, int itemsPerPage = 6, int pageIndex = 1)
+        {
+            IEnumerable<Job> jobs = _context.Jobs;
+
+            if (location != JobLocation.None)
+            {
+                jobs = jobs.Where(j => j.Location == location);
+            }
+            if (position != JobPosition.None)
+            {
+                jobs = jobs.Where(j => j.Schedule == position);
+            }
+            if (site != JobSite.None)
+            {
+                jobs = jobs.Where(j => j.Site == site);
+            }
+            if (minSalary != 0)
+            {
+                jobs = jobs.Where(j => j.MinSalary >= minSalary && j.MaxSalary <= maxSalary);
+            }
+
+            jobs = jobs.OrderBy(p => p.Id).ToPagedList(page ?? pageIndex, itemsPerPage);
+
 
             return View(jobs);
         }
