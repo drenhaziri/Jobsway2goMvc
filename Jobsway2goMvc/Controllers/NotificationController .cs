@@ -10,7 +10,7 @@ namespace Jobsway2goMvc.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public NotificationController (ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public NotificationController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -18,19 +18,30 @@ namespace Jobsway2goMvc.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userId =  _userManager.GetUserId(HttpContext.User);
+            var userId = _userManager.GetUserId(HttpContext.User);
             var user = await _userManager.FindByIdAsync(userId);
 
-            var notifications = _context.Notifications.Where(n=> n.UserName == user.UserName && n.IsRead == false).ToList();
+            var notifications = _context.Notifications
+            .Where(n => n.UserName == user.UserName && n.IsRead == false)
+            .OrderByDescending(n => n.NotificationDateTime)
+            .Take(5)
+            .ToList();
+
             return Json(notifications);
         }
+
         [HttpGet]
         public async Task<IActionResult> markedAsRead()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = await _userManager.FindByIdAsync(userId);
 
-            var notifications = _context.Notifications.Where(n => n.UserName == user.UserName && n.IsRead == true).ToList();
+            var notifications = _context.Notifications
+            .Where(n => n.UserName == user.UserName && n.IsRead == true)
+            .OrderByDescending(n=> n.NotificationDateTime)
+            .Take(5)
+            .ToList();
+
             return Json(notifications);
         }
 
@@ -47,14 +58,14 @@ namespace Jobsway2goMvc.Controllers
         public async Task<IActionResult> markAsRead(int id)
         {
             var notification = await _context.Notifications.FirstOrDefaultAsync(n => n.Id == id);
-            if(notification == null)
+            if (notification == null)
             {
                 return NotFound();
             }
-            notification.IsRead =true;
+            notification.IsRead = true;
             await _context.SaveChangesAsync();
 
-            return Json(new {success = true});
+            return Json(new { success = true });
         }
     }
 }
