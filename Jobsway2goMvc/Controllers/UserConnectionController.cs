@@ -31,6 +31,31 @@ namespace Jobsway2goMvc.Controllers
             return View(await _userManager.Users.ToListAsync());
         }
 
+        public IActionResult FriendsList()
+        {
+            var connect2 = _userManager.GetUserId(HttpContext.User);
+            if (connect2 == null)
+            {
+                return NotFound(); ;
+            }
+
+            var query = from a in _userManager.Users
+                        join c in _context.Connections on a.Id equals c.Connect1
+                        where c.Connect2 == connect2 && c.Status == ConnectionStatus.Accepted
+                        select new { a.FirstName, a.LastName, UserId = a.Id, c.Status, c.Id };
+
+            var result = query.ToList();
+            var connectionList = result.Select(r => new FriendsListViewModel
+            {
+                Id = r.Id,
+                FirstName = r.FirstName,
+                LastName = r.LastName,
+                Status = r.Status,
+                UserId = r.UserId
+            });
+            return View(connectionList);
+        }
+
         public async Task<IActionResult> Details(string Id)
         {
             var user = await _userManager.FindByIdAsync(Id);
@@ -50,7 +75,6 @@ namespace Jobsway2goMvc.Controllers
             var profile = _mapper.Map<UserProfileViewModel>(user);
             profile.CurrentConnectionList = (Connection)memberShip.Model;
             return View(profile);
-
         }
 
         [HttpPost]
