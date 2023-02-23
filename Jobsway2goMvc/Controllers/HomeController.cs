@@ -21,7 +21,7 @@ namespace Jobsway2goMvc.Controllers
             _userManager= userManager;
         }
 
-        public IActionResult Index(int pageSize = 2, int page = 1)
+        public IActionResult Index(int pageSize = 10, int page = 1)
         {
             var result = _context.Jobs.Page(pageSize, page).ToList();
             ViewBag.FeedJobs = result;

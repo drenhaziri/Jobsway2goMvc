@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Jobsway2goMvc.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Jobsway2goMvc.Extensions
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 <!DOCTYPE html>
@@ -23,9 +25,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- jQuery -->
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.5.1.js">
+    </script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.2/css/jquery.dataTables.min.css">
 </head>
 <body class="d-flex flex-column min-vh-100">
-    <header>
+<header>
         <div class="navbar-area">
             <div class="main-nav">
                 <div class="container">
@@ -36,53 +46,44 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse">
-                            <ul class="navbar-nav  flex-grow-1">
-                                <li class="nav-item">
-                                    <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                                </li>                              
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="Events" asp-controller="Events" asp-action="Index">Events</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="Collection" asp-controller="Collections" asp-action="Index">Collections</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="Groups" asp-controller="Groups" asp-action="Index">Groups</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="Role" asp-controller="Role" asp-action="Index">Roles</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Jobs" asp-action="Index">Jobs</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="JobCategories" asp-action="Index">Job Categories</a>
-                                </li>
-                                <li>
-                                @if(SignInManager.IsSignedIn(User)){
-                            
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <ul class="navbar-nav  flex-grow-1">
+                                    @Html.ActiveActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Events", "Index", "Events", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Collections", "Index", "Collections", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Groups", "Index", "Groups", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Roles", "Index", "Role", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Jobs", "Index", "Jobs", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Job Categories", "Index", "JobCategories", null, new { @class = "nav-link" })
+                                    <li>
+
+
                                         <div class="dropdown">
                                             <a class="btn dropdown-toggle dropdown-toggle-split" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="icon fa fa-bell text-light fa-1x"></i>
-                                            <span class="notification-counter" id="notificationCount"></span>
-                                        </a>
-                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <a class="nav-link" style="color:black;" asp-controller="UserConnection" asp-action="ConnectionList">View Connection Requests</a>
-                                            <li class="nav-item" id="notificationsContainer">
-                                                  
-                                            </li>
-                                            <li><hr class="dropdown-divider" /></li>
-                                            <p>Marked as read </p>
-                                             <a asp-controller="UserConnection" asp-action="ConnectionList" class="nav-item" id="notificationsMarkedAsRead">
-                                                  
-                                             </a>
-                                        </ul>
-                                    </div>
-                               }
-                                </li>
-                            </ul>
-                            <partial name="_LoginPartial" />
+                                                <i class="icon fa fa-bell text-light fa-1x"></i>
+                                                <span class="notification-counter" id="notificationCount"></span>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <a class="nav-link" style="color:black;" asp-controller="UserConnection" asp-action="ConnectionList">View Connection Requests</a>
+                                                <li class="nav-item" id="notificationsContainer">
+
+                                                </li>
+                                                <li><hr class="dropdown-divider" /></li>
+                                                <p>Marked as read </p>
+                                                <a asp-controller="UserConnection" asp-action="ConnectionList" class="nav-item" id="notificationsMarkedAsRead">
+
+                                                </a>
+                                            </ul>
+                                        </div>
+
+
+                                    </li>
+                                </ul>
+                                <partial name="_LoginPartial" />
+                            }
                         </div>
+                            
                     </nav>
                 </div>
             </div>
@@ -112,12 +113,25 @@
     <script src="~/lib/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="~/js/generate-modal-content.js"></script>
     <script src="~/js/confirm-modal.js"></script>
+    <!-- DataTables JS -->
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js">
+    </script>
     @if (TempData["Info"] != null)
     {
         <script>
             $(function () {
                 var toastrOptions = @Html.Raw(TempData["Info"]);
                 toastr.info(toastrOptions.title, toastrOptions.message);
+            });
+        </script>
+    }
+    @if (TempData["Warning"] != null)
+    {
+        <script>
+            $(function () {
+                var toastrOptions = @Html.Raw(TempData["Warning"]);
+                toastr.warning(toastrOptions.title, toastrOptions.message);
             });
         </script>
     }

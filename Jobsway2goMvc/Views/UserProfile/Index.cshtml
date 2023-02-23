@@ -1,7 +1,11 @@
 ﻿@model Jobsway2goMvc.Models.ViewModel.UserProfileViewModel
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
 
 @{
     ViewData["Title"] = "Profile";
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+    var roleOfUser = claimsIdentity != null ? claimsIdentity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value : "Business";
 }
 
 <div class="container">

@@ -102,7 +102,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
     <div class="d-flex justify-content-start">
         @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsOwner == true)
         {
-            <a id="deleteAction" class="btn btn-danger" data-name="@Model.Name"
+            <a id="deleteAction" class="btn btn-danger" style="width: 20%;" data-name="@Model.Name"
                data-delete-action-url="/Groups/DeleteConfirmed/@Model.Id"
                data-reload-url="@Url.Action("Index","Groups")">Delete Group</a>
         }
@@ -140,16 +140,16 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
     <div class="d-flex justify-content-end">
         @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsMember == true))
         {
-            <a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary">Create New Post</a>
+            <a asp-controller="Post" asp-action="Create" asp-route-groupId="@ViewBag.GroupId" class="btn btn-primary mx-1" style="width: 20%;">Create New Post</a>
         }
         @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.IsAdmin || Model.CurrentMembershipList.IsModerator))
         {
 
-            <a type="button" class="btn btn-warning" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
+            <a type="button" class="btn btn-warning mx-1" style="width: 20%;" asp-action="PendingPosts" asp-controller="Groups" asp-route-id="@ViewBag.GroupId">
                 Pending Posts : <span class="badge bg-secondary"> @Model.Posts.Where(p=>p.Status == Approval.Pending).Count()</span>
             </a>
 
-            <a class="text btn btn-light" style="text-decoration: none;" asp-action="Details" asp-route-id="@ViewBag.GroupId"> <i class="fas fa-long-arrow-alt-right me-2"></i> Manage Group</a>
+            <a class="text btn btn-light mx-1" style="text-decoration: none; width:20%;" asp-action="Details" asp-route-id="@ViewBag.GroupId"> <i class="fas fa-long-arrow-alt-right me-2"></i> Manage Group</a>
 
         }
 
@@ -165,7 +165,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
             @foreach (var item in Model.Posts)
             {
                 <!-- Post /////-->
-                @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true && item.Status == Approval.Accepted))
+                @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.Status == Approval.Accepted && Model.CurrentMembershipList.IsMember == true && item.Status == Approval.Accepted) || (Model.IsPublic == true && item.Status == Approval.Accepted))
                 {
                     <div class="card gedf-card">
                         <div class="card-header">
@@ -192,7 +192,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                     </div>
                                 </div>
                                 <div>
-                                    @if (Model.CurrentMembershipList.UserId == item.CreatedById || Model.CurrentMembershipList.IsAdmin)
+                                    @if (Model.CurrentMembershipList != null && (Model.CurrentMembershipList.UserId == item.CreatedById || Model.CurrentMembershipList.IsAdmin))
                                     {
                                         <div class="dropdown">
                                             <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -218,12 +218,14 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                 @item.Description
                             </p>
                         </div>
-                        <div class="card-footer">
-                            <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-                            <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
-                            <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
-                        </div>
-
+                        @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsMember == true)
+                        {
+                            <div class="card-footer">
+                                <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
+                                <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
+                                <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
+                            </div>
+                        }
 
                         @foreach (var comment in item.Comments)
                         {
@@ -244,15 +246,17 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                     <div class="comment-header">
                                         <span class="comment-name">@comment.FirstName @comment.LastName</span>
                                         <span class="comment-date">
-                                        @if (Model.CurrentMembershipList.UserId == comment.UserId)
+                                            @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.UserId == comment.UserId)
                                         {
                                             <div class="dropdown d-flex justify-content-end">
                                                 <button class="dropdown-toggle dropdown-toggle-split" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa fa-ellipsis-h"></i>
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                                    <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="Edit" asp-route-id="@item.Id">Edit comment</a></li>
-                                                    <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="Delete" asp-route-id="@item.Id">Delete comment</a></li>
+                                                    <li class="nav-item"><a class="dropdown-item" asp-controller="Post" asp-action="EditComment" asp-route-id="@comment.Id">Edit comment</a></li>
+                                                    <form asp-controller="Post" asp-action="DeleteComment" asp-route-id="@comment.Id">
+                                                    <li class="nav-item"><button type="submit" class="dropdown-item">Delete comment</button></li>
+                                                    </form>
                                                 </ul>
                                             </div>
                                         }
@@ -267,16 +271,18 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                         }
 
 
-
-                        <div class="card-footer">
-                            <form asp-controller="Post" asp-action="AddComment">
-                                <input name="postId" value="@item.Id" hidden />
-                                <input name="text" class="form-control rounded-corner" placeholder="Write a comment...">
-                                <span class="input-group-btn p-l-10">
-                                    <button class="btn btn-primary f-s-12 rounded-corner" type="submit">Comment</button>
-                                </span>
-                            </form>
-                        </div>
+                        @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsMember == true)
+                        {
+                            <div class="card-footer">
+                                <form asp-controller="Post" asp-action="AddComment">
+                                    <input name="postId" value="@item.Id" hidden />
+                                    <input name="text" class="form-control rounded-corner" placeholder="Write a comment...">
+                                    <span class="input-group-btn p-l-10">
+                                        <button class="btn btn-primary f-s-12 rounded-corner" type="submit">Comment</button>
+                                    </span>
+                                </form>
+                            </div>
+                        }
                     </div>
                 }
             }
@@ -286,7 +292,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
 </div>
 
 <div>
-    <a class="btn btn-outline-light" style="color:black;" asp-action="Index">Back to List</a>
+    <a class="btn btn-outline-light" style="color:black; width:20%;" asp-action="Index">Back to List</a>
 </div>
 
 
