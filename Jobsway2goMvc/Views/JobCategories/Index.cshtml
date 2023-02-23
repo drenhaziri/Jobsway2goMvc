@@ -8,7 +8,7 @@
 <hr />
 <br />
 <p>
-    <a class="btn post-btn" asp-action="Create">Create new category</a>
+    <a class="btn post-btn" style="width:20%;" asp-action="Create">Create new category</a>
 </p>
 <table id="categories" class="category-table">
     <thead>
@@ -26,8 +26,8 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                    <a class="btn post-btn" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a id="deleteAction-@item.Id" class="btn del-btn" data-name="@item.Name"
+                    <a class="btn post-btn" style="width:30%;" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a id="deleteAction-@item.Id" style="width:30%;" class="btn del-btn" data-name="@item.Name"
                                    data-delete-action-url="/JobCategories/DeleteConfirmed/@item.Id"
                                    data-reload-url="@Url.Action("Index","JobCategories")">Delete</a>
             </td>
