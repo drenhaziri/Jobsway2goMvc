@@ -21,7 +21,8 @@ namespace Jobsway2goMvc.Controllers
             var userId =  _userManager.GetUserId(HttpContext.User);
             var user = await _userManager.FindByIdAsync(userId);
 
-            var notifications = _context.Notifications.Where(n=> n.UserName == user.UserName && n.IsRead == false).ToList();
+            var notifications = _context.Notifications.Where(n=> n.UserName == user.UserName && n.IsRead == false)
+                .OrderByDescending(x => x.NotificationDateTime).Take(5).ToList();
             return Json(notifications);
         }
         [HttpGet]
