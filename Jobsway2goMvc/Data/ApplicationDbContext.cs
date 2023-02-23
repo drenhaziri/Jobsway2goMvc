@@ -90,9 +90,9 @@ namespace Jobsway2goMvc.Data
                 .HasForeignKey(eg => eg.GuestId);
 
             modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole() { Name = "User" },
-                new IdentityRole() { Name = "Business" },
-                new IdentityRole() { Name = "Admin" }
+                new IdentityRole() { Name = "User",NormalizedName="USER"},
+                new IdentityRole() { Name = "Business",NormalizedName="BUSINESS"},
+                new IdentityRole() { Name = "Admin" ,NormalizedName="ADMIN"}
             );
 
             base.OnModelCreating(modelBuilder);
