@@ -50,15 +50,6 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Jobs.First().MaxSalary)
                     </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Jobs.First().CategoryId)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Jobs.First().Applicants)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Jobs.First().Category)
-                    </th>
                 </tr>
             </thead>
 
@@ -96,17 +87,7 @@
                         <td>
                             @Html.DisplayFor(model => job.MaxSalary)
                         </td>
-                        <td>
-                            @Html.DisplayFor(model => job.CategoryId)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => job.Applicants)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => job.Category.Name)
-                        </td>
-
-                        <td>
+                       <td>
                              
                             <a class="btn btn-secondary" asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id">Details</a>
                             <a class="btn-outline-danger" href="@Url.Action("RemoveJob", "Collections")?jobId=@string.Join("&collectionId=", job.Id, ViewBag.CollectionId)">Remove</a>
