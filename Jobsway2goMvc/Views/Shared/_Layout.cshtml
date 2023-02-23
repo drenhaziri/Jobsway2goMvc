@@ -38,39 +38,44 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse">
-                            <ul class="navbar-nav  flex-grow-1">
-                                @Html.ActiveActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
-                                @Html.ActiveActionLink("Events", "Index", "Events", null, new { @class = "nav-link" })
-                                @Html.ActiveActionLink("Collections", "Index", "Collections", null, new { @class = "nav-link" })
-                                @Html.ActiveActionLink("Groups", "Index", "Groups", null, new { @class = "nav-link" })
-                                @Html.ActiveActionLink("Roles", "Index", "Role", null, new { @class = "nav-link" })
-                                @Html.ActiveActionLink("Jobs", "Index", "Jobs", null, new { @class = "nav-link" })
-                                @Html.ActiveActionLink("Job Categories", "Index", "JobCategories", null, new { @class = "nav-link" })
-                                <li>
-                                @if(SignInManager.IsSignedIn(User)){
-                            
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <ul class="navbar-nav  flex-grow-1">
+                                    @Html.ActiveActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Events", "Index", "Events", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Collections", "Index", "Collections", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Groups", "Index", "Groups", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Roles", "Index", "Role", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Jobs", "Index", "Jobs", null, new { @class = "nav-link" })
+                                    @Html.ActiveActionLink("Job Categories", "Index", "JobCategories", null, new { @class = "nav-link" })
+                                    <li>
+
+
                                         <div class="dropdown">
                                             <a class="btn dropdown-toggle dropdown-toggle-split" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="icon fa fa-bell text-light fa-1x"></i>
-                                            <span class="notification-counter" id="notificationCount"></span>
-                                        </a>
-                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <a class="nav-link" style="color:black;" asp-controller="UserConnection" asp-action="ConnectionList">View Connection Requests</a>
-                                            <li class="nav-item" id="notificationsContainer">
-                                                  
-                                            </li>
-                                            <li><hr class="dropdown-divider" /></li>
-                                            <p>Marked as read </p>
-                                             <a asp-controller="UserConnection" asp-action="ConnectionList" class="nav-item" id="notificationsMarkedAsRead">
-                                                  
-                                             </a>
-                                        </ul>
-                                    </div>
-                               }
-                                </li>
-                            </ul>
-                            <partial name="_LoginPartial" />
+                                                <i class="icon fa fa-bell text-light fa-1x"></i>
+                                                <span class="notification-counter" id="notificationCount"></span>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <a class="nav-link" style="color:black;" asp-controller="UserConnection" asp-action="ConnectionList">View Connection Requests</a>
+                                                <li class="nav-item" id="notificationsContainer">
+
+                                                </li>
+                                                <li><hr class="dropdown-divider" /></li>
+                                                <p>Marked as read </p>
+                                                <a asp-controller="UserConnection" asp-action="ConnectionList" class="nav-item" id="notificationsMarkedAsRead">
+
+                                                </a>
+                                            </ul>
+                                        </div>
+
+
+                                    </li>
+                                </ul>
+                                <partial name="_LoginPartial" />
+                            }
                         </div>
+                            
                     </nav>
                 </div>
             </div>
@@ -106,6 +111,15 @@
             $(function () {
                 var toastrOptions = @Html.Raw(TempData["Info"]);
                 toastr.info(toastrOptions.title, toastrOptions.message);
+            });
+        </script>
+    }
+    @if (TempData["Warning"] != null)
+    {
+        <script>
+            $(function () {
+                var toastrOptions = @Html.Raw(TempData["Warning"]);
+                toastr.warning(toastrOptions.title, toastrOptions.message);
             });
         </script>
     }
