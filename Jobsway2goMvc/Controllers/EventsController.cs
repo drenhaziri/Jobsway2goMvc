@@ -28,7 +28,8 @@ namespace Jobsway2goMvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Events.ToListAsync());
+            var events = _context.Events.Include(e => e.CreatedByName).ToList();
+            return View(events);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -55,10 +56,11 @@ namespace Jobsway2goMvc.Controllers
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             foreach (var user in _userManager.Users.Where(u => u.Id != currentUserId))
             {
+                string fullName = $"{user.FirstName}  {user.LastName}";
                 selectList.Add(new SelectListItem
                 {
                     Value = user.Id,
-                    Text = user.UserName
+                    Text = fullName
                 });
             }
             ViewBag.Users = selectList;
@@ -79,41 +81,49 @@ namespace Jobsway2goMvc.Controllers
                     ModelState.AddModelError("", error.ErrorMessage);
                 }
                 var selectList = new List<SelectListItem>();
-                var currentUserId = _userManager.GetUserId(HttpContext.User);
+                var currentUserId = _userManager.GetUserName(HttpContext.User);
                 foreach (var user in _userManager.Users.Where(u => u.Id != currentUserId))
                 {
+                    string fullName = $"{user.FirstName} {user.LastName}";
                     selectList.Add(new SelectListItem
                     {
                         Value = user.Id,
-                        Text = user.UserName
+                        Text = fullName
                     });
                 }
                 ViewBag.Users = selectList;
                 return View(@event);
             }
-            var guests = _userManager.Users.Where(u => guestsIds.Contains(u.Id)).ToList();
+            @event.EventDate = DateTime.Today;
+
+            // Retrieve the guests with their full names
+            var guests = _userManager.Users.Where(u => guestsIds.Contains(u.Id)).Select(u => new {
+                Id = u.Id,
+                FullName = u.FirstName + " " + u.LastName
+            }).ToList();
+
             var userid = _userManager.GetUserId(HttpContext.User);
             ApplicationUser creator = _userManager.FindByIdAsync(userid).Result;
             foreach (var guest in guests)
             {
                 var guestEvent = new EventGuest();
                 guestEvent.Event = @event;
-                guestEvent.ApplicationUser = guest;
+                guestEvent.ApplicationUser = await _userManager.FindByIdAsync(guest.Id);
                 guestEvent.Status = EApproval.Pending;
                 _context.EventGuests.Add(guestEvent);
 
                 var notification = new Notification
                 {
                     MessageType = "Personal",
-                    Message = creator.UserName+"Just invited you to the "+@event.Title+" event.",
-                    UserName = guest.UserName,
+                    Message = creator.UserName + "Just invited you to the " + @event.Title + " event.",
+                    UserName = guestEvent.ApplicationUser.UserName,
                     IsRead = false,
                     NotificationDateTime = DateTime.Now
                 };
                 _context.Notifications.Add(notification);
                 await _notificationHub.SendNotificationToClient(notification.Message, notification.UserName);
             }
-            @event.CreatedBy = creator.Id;
+            @event.CreatedBy = $"{creator.FirstName}  {creator.LastName}";
 
             _context.Add(@event);
             await _context.SaveChangesAsync();
@@ -189,7 +199,7 @@ namespace Jobsway2goMvc.Controllers
                 var notification = new Notification
                 {
                     MessageType = "Personal",
-                    Message = creator.UserName + " Just invited you to the "+@event.Title+" event.",
+                    Message = creator.UserName + " Just invited you to the " + @event.Title + " event.",
                     UserName = guest.UserName,
                     IsRead = false,
                     NotificationDateTime = DateTime.Now
@@ -219,7 +229,7 @@ namespace Jobsway2goMvc.Controllers
             originalEvent.URL = @event.URL;
             originalEvent.Location = @event.Location;
             originalEvent.EventDate = @event.EventDate;
-            originalEvent.CreatedBy = _userManager.GetUserId(User);
+            originalEvent.CreatedBy = _userManager.GetUserName(User);
             _context.Events.Update(originalEvent);
             await _context.SaveChangesAsync();
 
@@ -276,7 +286,7 @@ namespace Jobsway2goMvc.Controllers
             var notification = new Notification
             {
                 UserName = creator.UserName,
-                Message = guest.UserName +" just accepted the invitation to the "+@event.Title+" event.",
+                Message = guest.UserName + " just accepted the invitation to the " + @event.Title + " event.",
                 MessageType = "Personal",
                 NotificationDateTime = DateTime.Now,
                 IsRead = false
@@ -331,9 +341,11 @@ namespace Jobsway2goMvc.Controllers
         public IActionResult GuestsSelect(int eventId)
         {
             var eventGuests = _context.EventGuests
-                               .Include(e => e.ApplicationUser)
-                               .Include(e => e.Event)
-                               .Where(i => i.EventId == eventId);
+                                   .Include(e => e.ApplicationUser)
+                                   .Include(e => e.Event)
+                                   .Where(i => i.EventId == eventId)
+                                   .ToList();
+
             return View(eventGuests);
         }
     }

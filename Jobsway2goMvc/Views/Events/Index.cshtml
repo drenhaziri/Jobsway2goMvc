@@ -4,36 +4,28 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
+<dl class="details-title">
+    <h1> Events </h1>
+</dl>
+<hr />
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn post-btn" asp-action="Create">Create new Event</a>
 </p>
-<table id="event" class="table">
+<table id="event" class="category-table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.CompanyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.URL)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Location)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedBy)
+
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -43,27 +35,15 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.CompanyName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.URL)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Location)
-            </td>
+            </td>          
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a id="deleteAction-@item.Id" class="btn btn-link text-decoration-none px-0 delete-btn-link" data-name="@item.Title"
+                    <a class="btn post-btn" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a class="btn post-btn" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a id="deleteAction-@item.Id" class="btn del-btn" text-decoration-none px-0 delete-btn-link" data-name="@item.Title"
                                    data-delete-action-url="/Events/DeleteConfirmed/@item.Id"
                                    data-reload-url="@Url.Action("Index","Events")">Delete</a>
             </td>
@@ -71,6 +51,59 @@
 }
     </tbody>
 </table>
+<style>
+    .category-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .category-table th, .category-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .category-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .category-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .category-table tr:hover {
+            background-color: #ddd;
+        }
+    .post-btn {
+        background-color: #001935;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .del-btn {
+        background-color: #fd1616;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+</style>
 
 <script>
     $(document).ready(function () {

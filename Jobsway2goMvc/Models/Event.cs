@@ -18,5 +18,14 @@ namespace Jobsway2goMvc.Models
         public string Location { get; set; }
         public DateTime EventDate { get; set; }
         public string? CreatedBy { get; set; }
+        public virtual ApplicationUser CreatedByName { get; set; }
+        public string CreatorName
+        {
+            get
+            {
+                return CreatedByName != null ? $"{CreatedByName.FirstName} {CreatedByName.LastName}" : null;
+            }
+        }
+
     }
 }

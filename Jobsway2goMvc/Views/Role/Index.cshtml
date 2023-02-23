@@ -7,14 +7,14 @@
 
 <div style="margin:40px;">
 
-    <h1>Role Manager</h1>
-    <a class="btn btn-info mb-1" style="width: 20%; asp-controller="Role" asp-action="UserRoles">View User with Roles </a>
+    <h1 style="color: #fd1616;">Role Manager</h1>
+    <hr />
     <br/>
 <div>
     <form method="post" asp-action="Create" asp-controller="Role">
         <div class="input-group">
             <span class="input-group-btn">
-                    <button class="btn btn-primary mx-1" style="width: 100%;">Add New Role</button>
+                    <button class="btn post-btn">Add New Role</button>
             </span>
             <input name="roleName" placeholder="Write role here..." class="form-control w-25" required />
         </div>
@@ -34,9 +34,9 @@
                 <tr>
                     <td>@role.Name</td>
                     <td>
-                        <a class="btn btn-primary" style="width: 30%;" asp-action="Edit" asp-route-id="@role.Id">Edit </a>
-                        <a class="btn btn-info" style="width: 30%;"  asp-controller="Role" asp-action="Details" asp-route-id="@role.Id">Details </a>
-                        <a id="deleteAction-@role.Id" class="btn btn-danger" style="width: 30%;" data-name="@role.Name"
+                        <a class="btn post-btn" asp-action="Edit" asp-route-id="@role.Id">Edit </a>
+                        <a class="btn post-btn" asp-controller="Role" asp-action="Details" asp-route-id="@role.Id">Details </a>
+                        <a id="deleteAction-@role.Id" class="btn del-btn" data-name="@role.Name"
                                            data-delete-action-url="/Role/DeleteConfirmed/@role.Id"
                                            data-reload-url="@Url.Action("Index","Role")">Delete</a>
                     </td>
@@ -44,4 +44,57 @@
             }
         </tbody>
     </table>
+    <br />
+    <a class="btn post-btn" asp-controller="Role" asp-action="UserRoles">View User with Roles </a>
 </div>
+<style>
+    /* style the table */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    /* style the form */
+    .form-control {
+        width: 50%;
+    }
+
+    .post-btn {
+        background-color: #001935;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    .del-btn {
+        background-color: #fd1616;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+</style>
