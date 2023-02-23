@@ -9,28 +9,50 @@
 }
 
 <div class="container">
-<div class="profile-main">
-    <div class="profile-container">
-        <div class="profile-container-inner">
-            <img src=@Model.ImagePath class="profile-pic mt-2"/>
-            <h1> @Model.FirstName @Model.LastName</h1>
-            <b>@Model.Email</b>
-            <p>@Model.CompanyName</p>
-            <p>@Model?.CompanyArea</p>
-
-            <div class="row">
-                <div class="profile-btn col">
-                        <a class="btn btn-primary justify-content-center" style="width:100%;" asp-action="EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
-                </div>
-                    @if (roleOfUser == "User")
-                    {
-                        <div class="profile-btn col">
-                            <a class="btn btn-primary justify-content-center btn-sm mb-1" style="width:100%;" asp-route-id="@Model.Id" asp-controller="UserProfile" asp-action="RequestBusiness">Request Businesss Account</a>
+    <div class="profile-main">
+        <div class="profile-container">
+            <div class="profile-container-inner">
+                <div class="profile-info">
+                    <a href="#" onclick="document.getElementById('fileInput').click();">
+                        @if (string.IsNullOrEmpty(Model?.ImagePath))
+                        {
+                            <img src="~/Images/ProfilePic.jpg" alt="Profile picture" class="profile-pic mt-2" />
+                        }
+                        else
+                        {
+                            <img src="@Model.ImagePath" alt="Profile picture" class="profile-pic mt-2" />
+                        }
+                    </a>
+                    <form method="post" enctype="multipart/form-data" asp-controller="UserProfile" asp-action="UploadFile">
+                        <div class="form-group">
+                            <input type="file" name="file" id="fileInput" style="display:none" onchange="this.form.submit();" />
                         </div>
-                    }
-                    <div class="profile-btn col">
-                        <a class="btn btn-primary justify-content-center btn-sm" style="width:100%;" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
+                    </form>
+                    <div class="profile-info-text">
+                        <h1>@Model.FirstName @Model.LastName</h1>
+                        <b>@Model.Email</b>
+                        <p>@Model.CompanyName</p>
+                        <p>@Model.CompanyArea</p>
+                        @if (!string.IsNullOrEmpty(Model?.ImagePath) && Model?.ImagePath != "/Images/ProfilePic.jpg")
+                        {
+                            <button class="btn btn-danger" onclick="removeProfilePic()">Remove Profile Picture</button>
+                        }
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="profile-btn col">
+                <a class="btn btn-primary justify-content-center" style="width:100%;" asp-action="EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
+            </div>
+            @if (roleOfUser == "User")
+            {
+                <div class="profile-btn col">
+                    <a class="btn btn-primary justify-content-center btn-sm mb-1" style="width:100%;" asp-route-id="@Model.Id" asp-controller="UserProfile" asp-action="RequestBusiness">Request Businesss Account</a>
+                </div>
+            }
+            <div class="profile-btn col">
+                <a class="btn btn-primary justify-content-center btn-sm" style="width:100%;" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
             </div>
         </div>
     </div>
@@ -287,5 +309,59 @@
 
 <div class="profile-sidebar">
 </div>
-
+<div>
+    <a class="nav-link text-dark" asp-area="Collection" asp-controller="Collections" asp-action="Index">My Collections</a>
 </div>
+
+<style>
+    .profile-main {
+        margin-top: 80px;
+    }
+
+    .profile-container-inner {
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin-right: 20px;
+    }
+
+    h1 {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    b {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+</style>
+<script>
+    function removeProfilePic() {
+    $.ajax({
+        type: "POST",
+        url: "/UserProfile/UploadFile",
+        data: { imagePath: null },
+        success: function () {
+            location.reload();
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+        }
+    });
+}
+</script>
