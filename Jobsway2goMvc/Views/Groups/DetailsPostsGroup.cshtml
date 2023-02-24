@@ -220,10 +220,18 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                         </div>
                         @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsMember == true)
                         {
-                            <div class="card-footer">
-                                <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-                                <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
-                                <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
+                            <div class="card-footer row">
+                                <div class="col">
+                                <form asp-controller="Post" asp-action="AddLike">
+                                    <input name="postId" value="@item.Id" hidden />
+                                    <button type="submit" class="btn btn-primary post-btn">
+                                        Like
+                                    </button>
+                                </form>
+                                </div>
+                                <div class="col">
+                                <p>Likes: @item.Likes.Count</p>
+                                </div>
                             </div>
                         }
 
