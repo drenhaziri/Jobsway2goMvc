@@ -48,6 +48,7 @@ namespace Jobsway2goMvc.Controllers
             var post = await _context.Posts
                 .Include(p => p.Group)
                 .Include(p=> p.Comments)
+                .Include(p => p.Likes)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (post == null)
             {
@@ -323,9 +324,9 @@ namespace Jobsway2goMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddLike(int id)
+        public async Task<ActionResult> AddLike(int postId)
         {
-            var post = await _context.Posts.FindAsync(id);
+            var post = await _context.Posts.FindAsync(postId);
             if (post == null)
             {
                 return NotFound();
@@ -334,24 +335,21 @@ namespace Jobsway2goMvc.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = await _userManager.FindByIdAsync(userId);
 
-            if (post.Likes.Any(l => l.UserId == userId))
-            {
-                // User has already liked this post
-                return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
-            }
-
             var like = new Like
             {
                 Count = post.Likes.Count + 1,
-                PostId = post.Id,
+                PostId = postId,
                 UserId = userId
             };
 
             _context.Likes.Add(like);
             await _context.SaveChangesAsync();
-
+            //TempData["Info"] = Newtonsoft.Json.JsonConvert.SerializeObject(new
+            //{
+            //    title = "Info",
+            //    message = "You !"
+            //});
             return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }
-
     }
 }

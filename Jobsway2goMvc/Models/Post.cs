@@ -7,6 +7,7 @@ namespace Jobsway2goMvc.Models
         public Post()
         {
             Comments = new List<Comment>();
+            Likes = new List<Like>();
         }
 
         public int Id { get; set; }

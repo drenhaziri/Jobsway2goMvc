@@ -220,10 +220,18 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                         </div>
                         @if (Model.CurrentMembershipList != null && Model.CurrentMembershipList.IsMember == true)
                         {
-                            <div class="card-footer">
-                                <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-                                <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
-                                <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
+                            <div class="card-footer row">
+                                <div class="col">
+                                <form asp-controller="Post" asp-action="AddLike">
+                                    <input name="postId" value="@item.Id" hidden />
+                                    <button type="submit" class="btn btn-primary post-btn">
+                                        Like
+                                    </button>
+                                </form>
+                                </div>
+                                <div class="col">
+                                <p>Likes: @item.Likes.Count</p>
+                                </div>
                             </div>
                         }
 
@@ -278,7 +286,7 @@ else if (Model.CurrentMembershipList.Status == Approval.Rejected)
                                     <input name="postId" value="@item.Id" hidden />
                                     <input name="text" class="form-control rounded-corner" placeholder="Write a comment...">
                                     <span class="input-group-btn p-l-10">
-                                        <button class="btn btn-primary f-s-12 rounded-corner" type="submit">Comment</button>
+                                        <button class="btn btn-primary f-s-12 rounded-corner mt-1" type="submit">Comment</button>
                                     </span>
                                 </form>
                             </div>

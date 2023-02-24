@@ -106,6 +106,8 @@ namespace Jobsway2goMvc.Controllers
             var @group = await _context.Groups
                 .Include(g => g.Posts)
                 .ThenInclude(c=>c.Comments)
+                .Include(g => g.Posts)
+                .ThenInclude(c => c.Likes)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (@group == null)
