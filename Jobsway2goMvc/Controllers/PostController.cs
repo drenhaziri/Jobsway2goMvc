@@ -321,38 +321,37 @@ namespace Jobsway2goMvc.Controllers
             }
             return View(post);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddLike(Like like, int postId)
+        public async Task<IActionResult> AddLike(int id)
         {
-            var post = await _context.Posts.FindAsync(postId);
+            var post = await _context.Posts.FindAsync(id);
             if (post == null)
             {
                 return NotFound();
             }
 
-
             var userId = _userManager.GetUserId(HttpContext.User);
             ApplicationUser user = await _userManager.FindByIdAsync(userId);
 
-            ModelState.Remove("Count");
-            ModelState.Remove("PostId");
-            ModelState.Remove("UserId");
+            if (post.Likes.Any(l => l.UserId == userId))
+            {
+                // User has already liked this post
+                return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
+            }
 
-            like.Count = post.Likes.Count + 1;
-            like.PostId = postId;
-            like.UserId = userId;
-
+            var like = new Like
+            {
+                Count = post.Likes.Count + 1,
+                PostId = post.Id,
+                UserId = userId
+            };
 
             _context.Likes.Add(like);
             await _context.SaveChangesAsync();
-            //TempData["Info"] = Newtonsoft.Json.JsonConvert.SerializeObject(new
-            //{
-            //    title = "Info",
-            //    message = "You !"
-            //});
+
             return RedirectToAction("DetailsPostsGroup", "Groups", new { id = post.GroupId });
         }
+
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobsway2goMvc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230215145155_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230224210831_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -380,6 +380,9 @@ namespace Jobsway2goMvc.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CreatedByNameId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -407,6 +410,8 @@ namespace Jobsway2goMvc.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedByNameId");
 
                     b.ToTable("Events");
                 });
@@ -650,6 +655,33 @@ namespace Jobsway2goMvc.Migrations
                     b.ToTable("JobCategories");
                 });
 
+            modelBuilder.Entity("Jobsway2goMvc.Models.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.Notification", b =>
                 {
                     b.Property<int>("Id")
@@ -776,6 +808,26 @@ namespace Jobsway2goMvc.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "4de005c2-f164-4176-b985-afce42ad384a",
+                            ConcurrencyStamp = "1aff02b5-4b32-46dd-ac07-5db442a23aa9",
+                            Name = "User"
+                        },
+                        new
+                        {
+                            Id = "93409186-dfb4-49ac-aace-c98adc2c7626",
+                            ConcurrencyStamp = "583e57bb-df77-41de-a490-f5a46ca406bb",
+                            Name = "Business"
+                        },
+                        new
+                        {
+                            Id = "68586d8d-67bf-40ea-883f-3f8e5f140092",
+                            ConcurrencyStamp = "0c1e8449-bbee-4d43-b704-0406b00637d1",
+                            Name = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -975,6 +1027,15 @@ namespace Jobsway2goMvc.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Jobsway2goMvc.Models.Event", b =>
+                {
+                    b.HasOne("Jobsway2goMvc.Models.ApplicationUser", "CreatedByName")
+                        .WithMany()
+                        .HasForeignKey("CreatedByNameId");
+
+                    b.Navigation("CreatedByName");
+                });
+
             modelBuilder.Entity("Jobsway2goMvc.Models.EventGuest", b =>
                 {
                     b.HasOne("Jobsway2goMvc.Models.Event", "Event")
@@ -1052,6 +1113,25 @@ namespace Jobsway2goMvc.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Jobsway2goMvc.Models.Like", b =>
+                {
+                    b.HasOne("Jobsway2goMvc.Models.Post", "Post")
+                        .WithMany("Likes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Jobsway2goMvc.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Jobsway2goMvc.Models.Post", b =>
@@ -1149,6 +1229,8 @@ namespace Jobsway2goMvc.Migrations
             modelBuilder.Entity("Jobsway2goMvc.Models.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }
