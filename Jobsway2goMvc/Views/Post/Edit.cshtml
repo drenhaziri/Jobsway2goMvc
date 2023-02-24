@@ -5,13 +5,11 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Post</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<div class="job-post ptb-100">
+    <div class="container">
+        <form class="job-post-from" asp-action="Edit">
+            <h2>Edit Post</h2>
+            <div class="row">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -26,14 +24,14 @@
                 <label asp-for="Type" class="control-label"></label>
                 <select asp-for="Type" class="form-control" asp-items="Html.GetEnumSelectList<PostType>()"></select>
             </div>
+            </div>
             <input type="hidden" asp-for="GroupId" value="@Model.GroupId" />
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <div class="col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary post-btn">
+                        Save
+                    </button>
+                    <a class ="btn back-btn" asp-action="DetailsPostsGroup" asp-controller="Groups" asp-route-id="@Model.GroupId">Back to Group</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="DetailsPostsGroup" asp-controller="Groups" asp-route-id="@Model.GroupId">Back to Group</a>
 </div>

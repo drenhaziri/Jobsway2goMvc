@@ -23,11 +23,11 @@
                 <label asp-for="Type" class="control-label"></label>
                 <select asp-for="Type" class="form-control" asp-items="Html.GetEnumSelectList<PostType>()" ></select>
             </div>
+            </div>
             <input type="hidden" asp-for="GroupId" value="@Model.GroupId" />
                 <div class="col-md-12 text-center">
                     <input type="submit" value="Create" class="btn btn-primary post-btn" />
                     <a class="btn back-btn" asp-action="DetailsPostsGroup" asp-controller="Groups" asp-route-id="@Model.GroupId">Back to Group</a>
-            </div>
             </div>
         </form>
     </div>
