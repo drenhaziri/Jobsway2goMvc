@@ -34,6 +34,7 @@ namespace Jobsway2goMvc.Data
         public DbSet<Education> Educations { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Certification> Certifications { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         public DbSet<Award> Awards { get; set; }
         //public DbSet<Section> Sections { get; set; }
