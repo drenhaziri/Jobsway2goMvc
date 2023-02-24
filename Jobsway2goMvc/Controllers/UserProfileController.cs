@@ -49,6 +49,46 @@ namespace Jobsway2goMvc.Controllers
             }
         }
 
+        public async Task<IActionResult> UserConnectionsView()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> GetConnections(string Id)
+        {
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Id = user.Id;
+
+            var membershipList = currentMembershipList(Id);
+            var memberShip = membershipList as ViewResult;
+            if (memberShip == null)
+            {
+                return NotFound();
+            }
+
+            var profile = _mapper.Map<UserProfileViewModel>(user);
+            profile.CurrentConnectionList = (Connection)memberShip.Model;
+            return View(profile);
+        }
+
+        public IActionResult currentMembershipList(string? id)
+        {
+            if (id == null)
+            {
+                return Forbid();
+            }
+
+            var currentUserId = _userManager.GetUserId(HttpContext.User);
+            var membershipList = _context.Connections
+           .FirstOrDefault(c => c.Connect1 == currentUserId && c.Connect2 == id || (c.Connect2 == currentUserId && c.Connect1 == id));
+
+            return View(membershipList);
+        }
+
         [HttpPost]
         public async Task<IActionResult> UploadFile([FromForm(Name = "file")] IFormFile file)
         {

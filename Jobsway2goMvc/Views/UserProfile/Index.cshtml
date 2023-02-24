@@ -9,6 +9,20 @@
 }
 
 <div class="container">
+
+<div class="profile-main">
+    <div class="profile-container">
+        <div class="profile-container-inner">
+            <img src=@Model.ImagePath class="profile-pic mt-2"/>
+            <h1> @Model.FirstName @Model.LastName</h1>
+            <b>@Model.Email</b>
+            <p>@Model.CompanyName</p>
+            <p>@Model.CompanyArea</p>
+            <div class="profile-btn">
+                <a class="btn btn-primary">Connect</a>
+                <a class="btn btn-primary" asp-action="EditProfile" asp-controller="UserProfile">Edit Profile Picture</a>
+                <a class="btn btn-primary"asp-controller="UserConnection" asp-action="FriendsList">View Connection</a>
+
     <div class="profile-main">
         <div class="profile-container">
             <div class="profile-container-inner">
@@ -56,8 +70,7 @@
             </div>
         </div>
     </div>
-</div>
-
+</div> 
 <div class="profile-description">
     <h2>About</h2>
     <p>

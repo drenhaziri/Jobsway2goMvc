@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Jobsway2goMvc.Models.ViewModel.FriendsListViewModel>
+
+
+<link rel="stylesheet" href="~/css/UserConnectionsStyle.css" asp-append-version="true" />
+
+<div class="container">
+    <div class="row">
+
+        @if (@Model.Where(c => c.Status == ConnectionStatus.Accepted).Count() > 0)
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-3">
+                    <div class="card" style="width: 13rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.FirstName @item.LastName</h5>
+                            <p class="card-text">@item.Status</p>
+                            <form method="post" asp-controller="UserConnection" asp-action="Details" asp-route-id="@item.UserId">
+                                <button type="submit" class="btn btn-primary">View Profile</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+            
+    </div>
+</div>
