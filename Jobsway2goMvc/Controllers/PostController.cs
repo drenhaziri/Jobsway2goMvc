@@ -72,6 +72,7 @@ namespace Jobsway2goMvc.Controllers
             ModelState.Remove("Group");
             ModelState.Remove("CreatedById");
             ModelState.Remove("Comments");
+            ModelState.Remove("Likes");
             if (ModelState.IsValid)
             {
                 post.FirstName = user.FirstName;

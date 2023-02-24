@@ -24,5 +24,6 @@ namespace Jobsway2goMvc.Models
         public Group? Group { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Like> Likes { get; set; }
     }
 }
